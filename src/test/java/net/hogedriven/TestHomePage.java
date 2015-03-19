@@ -26,4 +26,11 @@ public class TestHomePage
 		//assert rendered page class
 		tester.assertRenderedPage(HomePage.class);
 	}
+
+    @Test
+    public void testVersion() {
+        tester.startPage(HomePage.class);
+
+        tester.assertLabel("version", "6.19.0");
+    }
 }
