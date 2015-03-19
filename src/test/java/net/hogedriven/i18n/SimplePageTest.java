@@ -26,4 +26,9 @@ public class SimplePageTest {
     public void simpleTagMessage() {
         tester.assertContains("hello tag attribute property");
     }
+
+    @Test
+    public void resourceModelMessage() {
+        tester.assertLabel("resource.static", "Resource Model message");
+    }
 }
