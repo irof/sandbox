@@ -1,8 +1,10 @@
 package net.hogedriven;
 
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.markup.html.basic.Label;
+import net.hogedriven.i18n.SimplePage;
 import org.apache.wicket.markup.html.WebPage;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.Link;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class HomePage extends WebPage {
 	private static final long serialVersionUID = 1L;
@@ -12,7 +14,12 @@ public class HomePage extends WebPage {
 
 		add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 
-		// TODO Add your page's components here
+        add(new Link<Void>("simplePage") {
 
+            @Override
+            public void onClick() {
+                setResponsePage(SimplePage.class);
+            }
+        });
     }
 }
