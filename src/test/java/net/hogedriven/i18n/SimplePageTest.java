@@ -31,4 +31,11 @@ public class SimplePageTest {
 
         tester.assertContains("hello simple property");
     }
+
+    @Test
+    public void simpleTagMessage() {
+        tester.startPage(SimplePage.class);
+
+        tester.assertContains("hello tag attribute property");
+    }
 }

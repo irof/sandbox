@@ -6,6 +6,9 @@
 </head>
 <body>
 <h1>simple message</h1>
-<wicket:message key="helloworld">Hello</wicket:message>
+<wicket:message key="hello.message1">wicket message</wicket:message>
+
+<h1>tag message</h1>
+<input wicket:message="value:hello.message2" value="tag attribute" />
 </body>
 </html>
