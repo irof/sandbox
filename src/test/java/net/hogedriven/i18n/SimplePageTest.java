@@ -28,7 +28,12 @@ public class SimplePageTest {
     }
 
     @Test
-    public void resourceModelMessage() {
+    public void resourceModelMessageStatic() {
         tester.assertLabel("resource.static", "Resource Model message");
+    }
+
+    @Test
+    public void resourceModelMessageDynamic() {
+        tester.assertLabel("resource.dynamic", "Dynamic Resource Model message");
     }
 }
