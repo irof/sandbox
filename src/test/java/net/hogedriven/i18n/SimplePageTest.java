@@ -36,4 +36,9 @@ public class SimplePageTest {
     public void resourceModelMessageDynamic() {
         tester.assertLabel("resource.dynamic", "Dynamic Resource Model message");
     }
+
+    @Test
+    public void helloWorld() {
+        tester.assertLabel("hello", "hello irof.");
+    }
 }
