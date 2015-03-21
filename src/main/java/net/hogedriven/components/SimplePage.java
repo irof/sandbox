@@ -20,21 +20,18 @@ public class SimplePage extends WebPage {
 
         property.add(new Label("field", new PropertyModel<String>(this, "fieldProps")));
 
-        Button button1 = new Button("button1") {
+        property.add(new Button("button1") {
             @Override
             public void onSubmit() {
                 fieldProps = fieldProps.toLowerCase();
             }
-        };
-        button1.add(new Label("field", new PropertyModel<String>(this, "fieldProps")));
-        property.add(button1);
+        }.add(new Label("field", new PropertyModel<String>(this, "fieldProps"))));
 
-        Button button2 = new Button("button2", new PropertyModel<String>(this, "fieldProps")) {
+        property.add(new Button("button2", new PropertyModel<String>(SimplePage.this, "fieldProps")) {
             @Override
             public void onSubmit() {
                 fieldProps = fieldProps.toLowerCase();
             }
-        };
-        property.add(button2);
+        });
     }
 }
