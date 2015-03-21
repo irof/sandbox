@@ -1,5 +1,6 @@
 package net.hogedriven.components;
 
+import net.hogedriven.HomePage;
 import net.hogedriven.WicketApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
@@ -16,7 +17,20 @@ public class SimplePageTest {
     }
 
     @Test
+    public void click() {
+        tester.startPage(HomePage.class);
+        tester.clickLink("components.link");
+        tester.assertRenderedPage(SimplePage.class);
+    }
+
+    @Test
     public void propertyField() {
         tester.assertLabel("property:field", "FIELD");
+    }
+
+    @Test
+    public void propertyField2() {
+        tester.newFormTester("property").submit("button1");
+        tester.assertLabel("property:field", "field");
     }
 }

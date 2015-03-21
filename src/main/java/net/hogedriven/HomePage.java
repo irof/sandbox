@@ -21,5 +21,13 @@ public class HomePage extends WebPage {
                 setResponsePage(SimplePage.class);
             }
         });
+
+        add(new Link<Void>("components.link") {
+
+            @Override
+            public void onClick() {
+                setResponsePage(net.hogedriven.components.SimplePage.class);
+            }
+        });
     }
 }
