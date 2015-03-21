@@ -44,4 +44,14 @@ public class SimplePageTest {
 
         tester.assertLabel("property:button1:field", "field");
     }
+
+    @Test
+    public void inputButtonSubmit() {
+        tester.assertModelValue("property:button2", "FIELD");
+
+        FormTester form = tester.newFormTester("property");
+        form.submit("button2");
+
+        tester.assertModelValue("property:button2", "field");
+    }
 }
