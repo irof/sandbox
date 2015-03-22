@@ -20,4 +20,11 @@ public class MyPageTest {
     public void showPage() throws Exception {
         tester.startPage(MyPage.class);
     }
+
+    @Test
+    public void myPanel() throws Exception {
+        tester.startComponentInPage(MyPanel.class);
+        tester.assertContains("inside");
+        tester.assertContainsNot("outside");
+    }
 }
