@@ -1,9 +1,9 @@
-package net.hogedriven.i18n;
+package sandbox.i18n;
 
-import net.hogedriven.WicketApplication;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
+import sandbox.WicketApplication;
 
 /**
  * Simple test using the WicketTester

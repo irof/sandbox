@@ -1,4 +1,4 @@
-package net.hogedriven.components;
+package sandbox.components;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
