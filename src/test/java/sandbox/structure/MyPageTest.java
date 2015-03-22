@@ -17,8 +17,9 @@ public class MyPageTest {
     }
 
     @Test
-    public void showPage() throws Exception {
+    public void myPage() throws Exception {
         tester.startPage(MyPage.class);
+        tester.assertContains("my panel is rendered.");
     }
 
     @Test

@@ -9,5 +9,6 @@ public class MyPage extends WebPage {
 
     public MyPage() {
         super();
+        add(new MyPanel("myPanel"));
     }
 }
