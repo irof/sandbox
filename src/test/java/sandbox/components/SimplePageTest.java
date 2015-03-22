@@ -18,13 +18,6 @@ public class SimplePageTest {
     }
 
     @Test
-    public void click() {
-        tester.startPage(HomePage.class);
-        tester.clickLink("components.link");
-        tester.assertRenderedPage(SimplePage.class);
-    }
-
-    @Test
     public void propertyField() {
         tester.assertLabel("property:field", "FIELD");
     }

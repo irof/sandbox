@@ -13,7 +13,7 @@ public class HomePage extends WebPage {
 
         add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
 
-        add(new Link<Void>("simplePage") {
+        add(new Link<Void>("i18n.link") {
 
             @Override
             public void onClick() {
