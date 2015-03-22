@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>i18n messages</title>
+</head>
+<body>
+<h1>simple message</h1>
+<wicket:message key="hello.message1">wicket message</wicket:message>
+
+<h1>tag message</h1>
+<input wicket:message="value:hello.message2" value="tag attribute" />
+
+<h1>dynamic message</h1>
+<p wicket:id="resource.static">test message</p>
+<p wicket:id="resource.dynamic">test message</p>
+<p wicket:id="hello">test message</p>
+</body>
+</html>
