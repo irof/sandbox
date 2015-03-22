@@ -34,7 +34,7 @@ public class TestHomePage {
     @Test
     public void click_components_link() throws Exception {
         tester.startPage(HomePage.class);
-        tester.clickLink("components.link");
-        tester.assertRenderedPage(sandbox.components.SimplePage.class);
+        tester.clickLink("misc.link");
+        tester.assertRenderedPage(sandbox.misc.SimplePage.class);
     }
 }

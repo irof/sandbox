@@ -21,11 +21,11 @@ public class HomePage extends WebPage {
             }
         });
 
-        add(new Link<Void>("components.link") {
+        add(new Link<Void>("misc.link") {
 
             @Override
             public void onClick() {
-                setResponsePage(sandbox.components.SimplePage.class);
+                setResponsePage(sandbox.misc.SimplePage.class);
             }
         });
     }

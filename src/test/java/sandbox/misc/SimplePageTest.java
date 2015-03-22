@@ -1,10 +1,9 @@
-package sandbox.components;
+package sandbox.misc;
 
 import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
-import sandbox.HomePage;
 import sandbox.WicketApplication;
 
 public class SimplePageTest {
