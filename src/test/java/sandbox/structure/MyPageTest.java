@@ -28,4 +28,11 @@ public class MyPageTest {
         tester.assertContains("inside");
         tester.assertContainsNot("outside");
     }
+
+    @Test
+    public void myFragment() throws Exception {
+        tester.startPage(MyPage.class);
+        tester.assertLabel("contentArea1:message", "hoge");
+        tester.assertLabel("contentArea2:message", "fuga");
+    }
 }
