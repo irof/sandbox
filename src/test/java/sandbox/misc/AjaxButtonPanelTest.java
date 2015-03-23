@@ -1,6 +1,5 @@
 package sandbox.misc;
 
-import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +17,16 @@ public class AjaxButtonPanelTest {
 
     @Test
     public void inputButtonSubmit() {
-        FormTester form = tester.newFormTester("form");
-        form.submit("button1");
+        tester.executeAjaxEvent("form:button1", "click");
 
+        tester.assertComponentOnAjaxResponse("label1");
         tester.assertLabel("label1", "fuga");
-        tester.assertLabel("label2", "hoge");
+    }
+
+    @Test
+    public void inputButtonSubmit2() {
+        tester.executeAjaxEvent("form:button2", "click");
+
+        tester.assertComponentOnAjaxResponse("label2");
     }
 }
