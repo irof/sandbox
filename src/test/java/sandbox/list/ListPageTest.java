@@ -23,4 +23,11 @@ public class ListPageTest {
         tester.startPage(ListPage.class);
         tester.assertListView("list", Collections.emptyList());
     }
+
+    @Test
+    public void singletonList() {
+        tester.startPage(ListPage.class);
+        tester.newFormTester("form").submit("singleton");
+        tester.assertListView("list", Collections.singletonList("hoge"));
+    }
 }
