@@ -13,37 +13,37 @@ public class SimplePageTest {
     @Before
     public void setup() {
         tester = new WicketTester(new WicketApplication());
-        tester.startPage(SimplePage.class);
+        tester.startComponentInPage(ButtonPanel.class);
     }
 
     @Test
     public void propertyField() {
-        tester.assertLabel("property:field", "FIELD");
+        tester.assertLabel("form:label", "FIELD");
     }
 
     @Test
     public void propertyField2() {
-        tester.newFormTester("property").submit("button1");
-        tester.assertLabel("property:field", "field");
+        tester.newFormTester("form").submit("button1");
+        tester.assertLabel("form:label", "field");
     }
 
     @Test
     public void buttonLabel() {
-        tester.assertLabel("property:button1:field", "FIELD");
+        tester.assertLabel("form:button1:label", "FIELD");
 
-        FormTester form = tester.newFormTester("property");
+        FormTester form = tester.newFormTester("form");
         form.submit("button1");
 
-        tester.assertLabel("property:button1:field", "field");
+        tester.assertLabel("form:button1:label", "field");
     }
 
     @Test
     public void inputButtonSubmit() {
-        tester.assertModelValue("property:button2", "FIELD");
+        tester.assertModelValue("form:button2", "FIELD");
 
-        FormTester form = tester.newFormTester("property");
+        FormTester form = tester.newFormTester("form");
         form.submit("button2");
 
-        tester.assertModelValue("property:button2", "field");
+        tester.assertModelValue("form:button2", "field");
     }
 }
