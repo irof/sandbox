@@ -10,5 +10,6 @@ public class SimplePage extends WebPage {
         super(parameters);
 
         add(new ButtonPanel("panel.button"));
+        add(new AjaxButtonPanel("panel.button.ajax"));
     }
 }
