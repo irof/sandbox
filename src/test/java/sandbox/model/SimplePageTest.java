@@ -9,6 +9,9 @@ public class SimplePageTest {
 
     @Test
     public void instantiation() {
-        tester.startPage(SimplePage.class);
+        SimplePage page = new SimplePage();
+        tester.startPage(page);
+
+        tester.assertLabel("label", "model value");
     }
 }
