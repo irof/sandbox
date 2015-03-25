@@ -2,9 +2,20 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <head lang="en">
     <meta charset="UTF-8">
-    <title>i18n messages</title>
+    <title>book shelf</title>
 </head>
 <body>
-    <span wicket:id="label">xxx</span>
+<table>
+    <tr>
+        <th>タイトル</th>
+        <th>著者</th>
+        <th>ページ数</th>
+    </tr>
+    <tr wicket:id="books">
+        <td wicket:id="title"></td>
+        <td wicket:id="author"></td>
+        <td wicket:id="pages"></td>
+    </tr>
+</table>
 </body>
 </html>

@@ -12,6 +12,5 @@ public class SimplePageTest {
         SimplePage page = new SimplePage();
         tester.startPage(page);
 
-        tester.assertLabel("label", "model value");
     }
 }
