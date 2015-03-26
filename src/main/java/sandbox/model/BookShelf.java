@@ -1,10 +1,11 @@
 package sandbox.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BookShelf {
-    List<Book> books = new ArrayList<>();
+public class BookShelf implements Serializable {
+    ArrayList<Book> books = new ArrayList<>();
 
     public List<Book> getBooks() {
         return books;

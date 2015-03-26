@@ -4,9 +4,6 @@ import org.apache.wicket.util.tester.FormTester;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SimplePageTest {
 
     WicketTester tester = new WicketTester();
@@ -28,6 +25,6 @@ public class SimplePageTest {
 
         form.submit("add");
 
-//        tester.assertContains("幻の本");
+        tester.assertContains("幻の本");
     }
 }

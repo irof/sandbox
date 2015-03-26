@@ -14,7 +14,7 @@ import org.apache.wicket.model.PropertyModel;
 public class SimplePage extends WebPage {
 
     public SimplePage() {
-        BookShelf model = new BookShelf();
+        final BookShelf model = new BookShelf();
         model.add(new Book("俺の本", "俺", 100));
         model.add(new Book("彼の本", "彼", 110));
 
@@ -29,11 +29,20 @@ public class SimplePage extends WebPage {
             }
         });
 
-        Model<Book> b = new Model<>(new Book("彼の本", "彼", 110));
-        form.add(new TextField<>("title", b));
-        form.add(new TextField<>("author", b));
-        form.add(new TextField<>("pages", b));
+        final TextField<String> title = new TextField<>("title", Model.of());
+        form.add(title);
+        final TextField<String> author = new TextField<>("author", Model.of());
+        form.add(author);
+        final TextField<String> pages = new TextField<>("pages", Model.of());
+        form.add(pages);
 
-        form.add(new Button("add"));
+        form.add(new Button("add") {
+            @Override
+            public void onSubmit() {
+                model.add(new Book(title.getModelObject(), author.getModelObject(),
+                        // TODO うまいやりかた。。。setTypeはなんか微妙
+                        Integer.valueOf(pages.getModelObject())));
+            }
+        });
     }
 }
