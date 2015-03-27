@@ -5,9 +5,8 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextField;
-import org.apache.wicket.markup.repeater.Item;
-import org.apache.wicket.markup.repeater.data.DataView;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
@@ -20,9 +19,9 @@ public class SimplePage extends WebPage {
 
         Form form = new Form("form");
         add(form);
-        form.add(new DataView<Book>("books", new ListDataProvider<>(model.getBooks())) {
+        form.add(new ListView<Book>("books", model.getBooks()) {
             @Override
-            protected void populateItem(Item<Book> item) {
+            protected void populateItem(ListItem<Book> item) {
                 item.add(new Label("title", new PropertyModel<>(item.getModelObject(), "title")));
                 item.add(new Label("author", new PropertyModel<>(item.getModelObject(), "author")));
                 item.add(new Label("pages", new PropertyModel<>(item.getModelObject(), "pages")));
