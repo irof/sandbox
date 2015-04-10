@@ -29,7 +29,7 @@ public class Login extends Application {
         grid.setPadding(new Insets(25, 25, 25, 25));
 
         Text scenetitle = new Text("Welcome");
-        scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
+        scenetitle.setId("welcome-text");
         grid.add(scenetitle, 0, 0, 2, 1);
 
         Label userName = new Label("User Name:");
@@ -51,10 +51,10 @@ public class Login extends Application {
         grid.add(hBox, 1, 4);
 
         Text actionTarget = new Text();
+        actionTarget.setId("actiontarget");
         grid.add(actionTarget, 1, 6);
 
         button.setOnAction(e -> {
-            actionTarget.setFill(Color.FIREBRICK);
             actionTarget.setText("Sign in button pressed");
         });
 
