@@ -58,7 +58,10 @@ public class Login extends Application {
             actionTarget.setText("Sign in button pressed");
         });
 
-        primaryStage.setScene(new Scene(grid, 300, 275));
+        Scene scene = new Scene(grid, 300, 275);
+        scene.getStylesheets()
+                .add(Login.class.getResource("Login.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }
