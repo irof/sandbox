@@ -10,6 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -51,6 +52,11 @@ public class Login extends Application {
 
         Text actionTarget = new Text();
         grid.add(actionTarget, 1, 6);
+
+        button.setOnAction(e -> {
+            actionTarget.setFill(Color.FIREBRICK);
+            actionTarget.setText("Sign in button pressed");
+        });
 
         primaryStage.setScene(new Scene(grid, 300, 275));
         primaryStage.show();
