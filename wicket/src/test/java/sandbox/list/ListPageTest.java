@@ -16,18 +16,23 @@ public class ListPageTest {
     @Before
     public void setUp() {
         tester = new WicketTester(new WicketApplication());
+        tester.startPage(ListPage.class);
     }
 
     @Test
     public void emptyList() throws Exception {
-        tester.startPage(ListPage.class);
         tester.assertListView("list", Collections.emptyList());
     }
 
     @Test
     public void singletonList() {
-        tester.startPage(ListPage.class);
         tester.newFormTester("form").submit("singleton");
         tester.assertListView("list", Collections.singletonList("hoge"));
+    }
+
+    @Test
+    public void repeatingView() {
+        tester.assertContains("repeating1");
+        tester.assertContains("repeating2");
     }
 }
