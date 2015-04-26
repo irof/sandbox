@@ -18,6 +18,7 @@ dependencies {
   compile "org.gebish:geb-spock:0.10.0"
   compile "org.gebish:geb-junit4:0.10.0"
   compile "org.seleniumhq.selenium:selenium-firefox-driver:2.45.0"
+  compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.45.0"
   compile "org.seleniumhq.selenium:selenium-support:2.45.0"
 
   testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
