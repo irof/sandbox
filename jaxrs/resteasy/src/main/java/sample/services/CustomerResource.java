@@ -5,6 +5,8 @@ import sample.domain.Customer;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,6 +24,12 @@ public class CustomerResource {
         db.put(customer.id, customer);
         System.out.println("Created customer " + customer.id);
         return Response.created(URI.create("/customers/" + customer.id)).build();
+    }
+
+    @GET
+    @Produces("application/xml")
+    public Collection<Customer> getCustomers() {
+        return db.values();
     }
 
     @GET
