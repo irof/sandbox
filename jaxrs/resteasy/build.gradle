@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'jetty'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.9.Final'
+  compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.9.Final'
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
