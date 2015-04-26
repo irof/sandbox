@@ -1,0 +1,14 @@
+.root {
+    -fx-alignment: center;
+    -fx-padding: 20;
+}
+
+.container {
+    -fx-hgap: 50;
+    -fx-vgap: 5;
+}
+
+.title-label {
+   -fx-font-size: 20px;
+   -fx-font-weight: bold;
+}

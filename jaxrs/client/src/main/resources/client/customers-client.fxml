@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import java.lang.*?>
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+          fx:controller="client.Controller"
+          styleClass="root">
+
+    <GridPane styleClass="container">
+        <Text text="Request" styleClass="title-label"
+              GridPane.columnIndex="0" GridPane.rowIndex="0"
+              GridPane.columnSpan="2"/>
+        <Label text="URL:"
+               GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="uri"
+                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        <Label text="Method:"
+               GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <fx:define>
+                <ToggleGroup fx:id="method"/>
+            </fx:define>
+            <children>
+                <RadioButton fx:id="get" text="GET" toggleGroup="$method"/>
+                <RadioButton fx:id="post" text="POST" toggleGroup="$method"/>
+            </children>
+        </HBox>
+        <Label text="Payload:"
+               GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextArea fx:id="payload" prefRowCount="3"
+                  GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        <Label text="Content-Type:"
+               GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <ChoiceBox fx:id="contentType"
+                   GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="application/xml"/>
+                </FXCollections>
+            </items>
+        </ChoiceBox>
+
+        <HBox spacing="10" alignment="bottom_right"
+              GridPane.columnIndex="0" GridPane.rowIndex="5"
+              GridPane.columnSpan="2">
+            <Button text="Send" onAction="#send"/>
+        </HBox>
+    </GridPane>
+
+    <VBox styleClass="container">
+        <Text text="Response" styleClass="title-label"/>
+        <HBox>
+            <Label text="Status:"/>
+            <Text fx:id="responseStatus"/>
+        </HBox>
+        <TableView fx:id="responseHeaders" maxHeight="100">
+            <columns>
+                <TableColumn text="name" fx:id="responseHeaderName" minWidth="200"/>
+                <TableColumn text="value" fx:id="responseHeaderValue" minWidth="400"/>
+            </columns>
+        </TableView>
+        <TextArea fx:id="responseBody"/>
+    </VBox>
+
+    <stylesheets>
+        <URL value="@client.css"/>
+    </stylesheets>
+</VBox>

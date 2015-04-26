@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+mainClassName = "client.TinyRestClient"
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile 'org.jboss.resteasy:resteasy-client:3.0.9.Final'
+}
+
