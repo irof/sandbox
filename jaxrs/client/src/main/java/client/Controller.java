@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -86,9 +88,14 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         uri.setText("http://localhost:8080/resteasy/customers");
-        payload.setText("<customer/>");
+        try {
+            payload.setText(new String(Files.readAllBytes(Paths.get(
+                    this.getClass().getResource("default/payload.xml").toURI()))));
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        }
         contentType.setValue("application/xml");
-        get.setSelected(true);
+        post.setSelected(true);
         responseHeaders.setPlaceholder(new Label("ボタン押したらなんか出るはず"));
 
         // lambdaで誤魔化せてるように見えるけど、力技すぎる気がする
