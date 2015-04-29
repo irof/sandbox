@@ -16,23 +16,35 @@ import java.util.Collection;
  * @author irof
  */
 @Path("kitakyu")
+@Produces(MediaType.APPLICATION_XML)
 public class Kitakyu {
 
+    private final String BASE_URL = "http://localhost:18080/jersey";
+
     @GET
-    @Produces(MediaType.APPLICATION_XML)
     public Collection<Station> get() {
         return ClientBuilder.newClient()
-                .target("http://localhost:18080/jersey/kitakyu/stations")
+                .target(BASE_URL).path("kitakyu/stations")
                 .request()
                 .get(new GenericType<Collection<Station>>() {
                 });
     }
 
+
     @GET
-    @Produces(MediaType.APPLICATION_XML)
+    @Path("{number}")
+    public Station get(@PathParam("number") String number) {
+        return ClientBuilder.newClient()
+                .target(BASE_URL).path("kitakyu/stations").path(number)
+                .queryParam("number", number)
+                .request()
+                .get(Station.class);
+    }
+
+    @GET
     @Path("proxy")
     public Collection<Station> getWithProxy() {
-        return new ResteasyClientBuilder().build().target("http://localhost:18080/jersey")
+        return new ResteasyClientBuilder().build().target(BASE_URL)
                 .proxy(JerseyServiceProxy.class)
                 .stations();
     }
