@@ -9,7 +9,7 @@ import geb.Page
 class IndexPage extends Page {
 
     static at = {
-        title == "JettyServerRuleIndexPage"
+        title == "IndexPage"
     }
 
     static content = {

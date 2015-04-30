@@ -1,9 +1,8 @@
-driver = "htmlunit"
+import org.openqa.selenium.htmlunit.HtmlUnitDriver
+
+driver = { new HtmlUnitDriver(true) }
 
 environments {
-    'htmlunit' {
-        driver = "htmlunit"
-    }
     'firefox' {
         driver = "firefox"
     }
