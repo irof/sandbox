@@ -1,1 +1,4 @@
-include 'resteasy', 'client'
+include 'resteasy'
+include 'jersey'
+include 'client'
+

@@ -1,0 +1,21 @@
+apply plugin: 'java'
+apply plugin: 'jetty'
+
+compileJava {
+    options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+httpPort = 18080
+
+dependencies {
+    compile 'org.glassfish.jersey.core:jersey-server:2.17'
+    compile 'org.glassfish.jersey.core:jersey-client:2.17'
+    compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.17'
+}

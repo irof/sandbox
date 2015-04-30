@@ -12,8 +12,11 @@ repositories {
   mavenCentral()
 }
 
+httpPort = 28080
+
 dependencies {
   compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.9.Final'
+  compile 'org.jboss.resteasy:resteasy-client:3.0.9.Final'
   compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.9.Final'
   testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-library:1.3'
