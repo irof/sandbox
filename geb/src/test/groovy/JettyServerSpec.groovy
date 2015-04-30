@@ -2,6 +2,8 @@ import com.github.mjeanroy.junit.servers.jetty.EmbeddedJetty
 import com.github.mjeanroy.junit.servers.rules.JettyServerRule
 import geb.spock.GebSpec
 import org.junit.ClassRule
+import pages.AdminPage
+import pages.IndexPage
 import spock.lang.Shared
 
 class JettyServerSpec extends GebSpec {
@@ -15,7 +17,12 @@ class JettyServerSpec extends GebSpec {
 
     def "indexを表示する"() {
         expect:
-        title == "JettyServerRuleIndexPage"
+        at IndexPage
+
+        when:
+        管理メニューリンクをクリック()
+        then:
+        at AdminPage
     }
 
     def "テキストの内容で選り分ける_HtmlUnit"() {
