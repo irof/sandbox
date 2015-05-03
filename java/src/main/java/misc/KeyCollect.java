@@ -5,6 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.*;
+import java.util.stream.Collector;
 
 import static java.util.stream.Collectors.*;
 
@@ -32,12 +33,13 @@ public interface KeyCollect {
     }
 
     /**
+     * 単項目なら最初のcollectでキーと合計値のMapになり、それでいいなら多分一番シンプル。
+     *
      * @return Streamを使った実装その2
      */
     @FactoryMethod
     static KeyCollect withStreamToSummaryMap() {
         return data -> {
-            // 単項目ならこれで Map<キー, 値の合計> になる。多分一番シンプル。
             Map<String, Integer> collected = data.stream()
                     .collect(groupingBy(Input::getKey, summingInt(Input::getValue)));
             // Map<String, Integer> → List<Output> の変換
@@ -45,6 +47,25 @@ public interface KeyCollect {
                     .map(e -> new Output(e.getKey(), e.getValue()))
                     .collect(toList());
         };
+    }
+
+    /**
+     * legacyに近い形の実装。Outputがミュータブルであり、スレッドセーフでもないのが気にくわない。
+     *
+     * @return Streamを使った実装その3
+     */
+    @FactoryMethod
+    static KeyCollect withStreamAndDownstream() {
+        return data -> data.stream()
+                .collect(groupingBy(Input::getKey,
+                        Collector.of(
+                                () -> new Output(null, 0),
+                                (a, b) -> {
+                                    a.key = b.key;
+                                    a.value += b.value;
+                                },
+                                (a, b) -> new Output(b.key, a.value + b.value)
+                        ))).values();
     }
 
     /**
@@ -110,5 +131,6 @@ public interface KeyCollect {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    @interface FactoryMethod {}
+    @interface FactoryMethod {
+    }
 }
