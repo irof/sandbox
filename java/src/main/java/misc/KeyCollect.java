@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 /**
  * @author irof
  */
@@ -27,6 +29,22 @@ public interface KeyCollect {
                             entry.getKey(),
                             entry.getValue().stream()
                                     .mapToInt(Input::getValue).sum()))
+                    .collect(Collectors.toList());
+        };
+    }
+
+    /**
+     * @return Streamを使った実装その2
+     */
+    @FactoryMethod
+    static KeyCollect withStreamToSummaryMap() {
+        return data -> {
+            // 単項目ならこれで Map<キー, 値の合計> になる。多分一番シンプル。
+            Map<String, Integer> collected = data.stream()
+                    .collect(groupingBy(Input::getKey, summingInt(Input::getValue)));
+            // Map<String, Integer> → List<Output> の変換
+            return collected.entrySet().stream()
+                    .map(e -> new Output(e.getKey(), e.getValue()))
                     .collect(Collectors.toList());
         };
     }
