@@ -5,7 +5,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -23,13 +22,12 @@ public interface KeyCollect {
     static KeyCollect withStream() {
         return data -> {
             Map<String, List<Input>> collected = data.stream()
-                    .collect(Collectors.groupingBy(Input::getKey));
+                    .collect(groupingBy(Input::getKey));
             return collected.entrySet().stream()
-                    .map((entry) -> new Output(
-                            entry.getKey(),
-                            entry.getValue().stream()
-                                    .mapToInt(Input::getValue).sum()))
-                    .collect(Collectors.toList());
+                    .map(e -> new Output(
+                            e.getKey(),
+                            e.getValue().stream().mapToInt(Input::getValue).sum()))
+                    .collect(toList());
         };
     }
 
@@ -45,7 +43,7 @@ public interface KeyCollect {
             // Map<String, Integer> → List<Output> の変換
             return collected.entrySet().stream()
                     .map(e -> new Output(e.getKey(), e.getValue()))
-                    .collect(Collectors.toList());
+                    .collect(toList());
         };
     }
 
