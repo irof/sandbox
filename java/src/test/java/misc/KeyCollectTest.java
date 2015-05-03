@@ -6,10 +6,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.emptyCollectionOf;
 import static org.junit.Assert.assertThat;
 
@@ -47,7 +51,7 @@ public class KeyCollectTest {
     public void 元データが1件なら1件ののリスト() throws Exception {
         List<KeyCollect.Input> data = Collections.singletonList(new KeyCollect.Input("A01", "hoge", 100));
         Collection<KeyCollect.Output> result = sut.collectByKey(data);
-        assertThat(result, is(Collections.singletonList(new KeyCollect.Output("A01", 100))));
+        assertThat(result, is(containsInAnyOrder(new KeyCollect.Output("A01", 100))));
     }
 
     @Test
@@ -60,7 +64,7 @@ public class KeyCollectTest {
                 new KeyCollect.Input("A03", "piyo", 500));
 
         Collection<KeyCollect.Output> result = sut.collectByKey(data);
-        assertThat(result, is(Arrays.asList(
+        assertThat(result, is(containsInAnyOrder(
                 new KeyCollect.Output("A01", 300),
                 new KeyCollect.Output("A02", 300),
                 new KeyCollect.Output("A03", 900)
