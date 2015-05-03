@@ -1,8 +1,13 @@
 package misc;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.emptyCollectionOf;
@@ -11,9 +16,25 @@ import static org.junit.Assert.assertThat;
 /**
  * @author irof
  */
+@RunWith(Parameterized.class)
 public class KeyCollectTest {
 
-    private KeyCollect sut = new KeyCollect();
+    @Parameterized.Parameters(name = "{index} {0}")
+    public static Collection<Method> factoryMethods() {
+        return Arrays.stream(KeyCollect.class.getDeclaredMethods())
+                .filter(m -> m.isAnnotationPresent(KeyCollect.FactoryMethod.class))
+                .collect(Collectors.toList());
+    }
+
+    @Parameterized.Parameter
+    public Method factoryMethod;
+
+    private KeyCollect sut;
+
+    @Before
+    public void setup() throws Exception {
+        sut = (KeyCollect) factoryMethod.invoke(null);
+    }
 
     @Test
     public void 元データが何もないなら空のリスト() throws Exception {
