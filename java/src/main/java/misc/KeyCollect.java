@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  */
 public interface KeyCollect {
 
-    Collection<Output> collectByCode(List<Input> data);
+    Collection<Output> collectByKey(List<Input> data);
 
     /**
      * @return Streamを使った実装

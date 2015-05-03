@@ -39,14 +39,14 @@ public class KeyCollectTest {
     @Test
     public void 元データが何もないなら空のリスト() throws Exception {
         List<KeyCollect.Input> data = Collections.emptyList();
-        Collection<KeyCollect.Output> result = sut.collectByCode(data);
+        Collection<KeyCollect.Output> result = sut.collectByKey(data);
         assertThat(result, is(emptyCollectionOf(KeyCollect.Output.class)));
     }
 
     @Test
     public void 元データが1件なら1件ののリスト() throws Exception {
         List<KeyCollect.Input> data = Collections.singletonList(new KeyCollect.Input("A01", "hoge", 100));
-        Collection<KeyCollect.Output> result = sut.collectByCode(data);
+        Collection<KeyCollect.Output> result = sut.collectByKey(data);
         assertThat(result, is(Collections.singletonList(new KeyCollect.Output("A01", 100))));
     }
 
@@ -59,7 +59,7 @@ public class KeyCollectTest {
                 new KeyCollect.Input("A03", "hoge", 400),
                 new KeyCollect.Input("A03", "piyo", 500));
 
-        Collection<KeyCollect.Output> result = sut.collectByCode(data);
+        Collection<KeyCollect.Output> result = sut.collectByKey(data);
         assertThat(result, is(Arrays.asList(
                 new KeyCollect.Output("A01", 300),
                 new KeyCollect.Output("A02", 300),
