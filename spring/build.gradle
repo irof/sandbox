@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    def springVersion = "3.0.5.RELEASE"
+    def springVersion = "4.1.6.RELEASE"
     compile "org.springframework:spring-core:${springVersion}"
     compile "org.springframework:spring-context:${springVersion}"
     compile "org.springframework:spring-beans:${springVersion}"
