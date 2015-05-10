@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="hello.message1">hello simple property</entry>
+    <entry key="hello.message2">hello tag attribute property</entry>
+    <entry key="hello.message3">Resource Model message</entry>
+    <entry key="hello.message4">{0} Resource Model message</entry>
+    <entry key="hello.message5">hello ${name}.</entry>
+</properties>
