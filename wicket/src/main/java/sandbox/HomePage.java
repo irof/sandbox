@@ -26,5 +26,30 @@ public class HomePage extends WebPage {
                 setResponsePage(sandbox.misc.SimplePage.class);
             }
         });
+
+        add(new Link<Void>("list.link") {
+
+            @Override
+            public void onClick() {
+
+                setResponsePage(sandbox.list.ListPage.class);
+            }
+        });
+
+        add(new Link<Void>("structure.link") {
+
+            @Override
+            public void onClick() {
+                setResponsePage(sandbox.structure.MyPage.class);
+            }
+        });
+
+        add(new Link<Void>("model.link") {
+
+            @Override
+            public void onClick() {
+                setResponsePage(sandbox.model.SimplePage.class);
+            }
+        });
     }
 }
