@@ -31,13 +31,13 @@
         <h2>&lt;wicket:message&gt;</h2>
         <ul>
             <li>
-                <wicket:message key="markup.pattern1">pattern1</wicket:message>
+                <wicket:message key="markup.pattern1" id="m.p1">pattern1</wicket:message>
             </li>
             <li>
-                <wicket:message key="markup.pattern2">pattern2</wicket:message>
+                <wicket:message key="markup.pattern2" id="m.p2">pattern2</wicket:message>
             </li>
             <li>
-                <wicket:message key="markup.pattern3">pattern3</wicket:message>
+                <wicket:message key="markup.pattern3" id="m.p3">pattern3</wicket:message>
             </li>
         </ul>
     </section>
@@ -45,30 +45,30 @@
         <h2>&lt;wicket:message escaped="true"&gt;</h2>
         <ul>
             <li>
-                <wicket:message key="markup.pattern1" escape="true">pattern1</wicket:message>
+                <wicket:message key="markup.pattern1" escape="true" id="m.p1.esc">pattern1</wicket:message>
             </li>
             <li>
-                <wicket:message key="markup.pattern2" escape="true">pattern2</wicket:message>
+                <wicket:message key="markup.pattern2" escape="true" id="m.p2.esc">pattern2</wicket:message>
             </li>
             <li>
-                <wicket:message key="markup.pattern3" escape="true">pattern3</wicket:message>
+                <wicket:message key="markup.pattern3" escape="true" id="m.p3.esc">pattern3</wicket:message>
             </li>
         </ul>
     </section>
     <section>
         <h2>new Label()</h2>
         <ul>
-            <li wicket:id="markup.label.pattern1">pattern1</li>
-            <li wicket:id="markup.label.pattern2">pattern2</li>
-            <li wicket:id="markup.label.pattern3">pattern3</li>
+            <li wicket:id="markup.label.pattern1" id="m.l.p1">pattern1</li>
+            <li wicket:id="markup.label.pattern2" id="m.l.p2">pattern2</li>
+            <li wicket:id="markup.label.pattern3" id="m.l.p3">pattern3</li>
         </ul>
     </section>
     <section>
         <h2>new Label().setEscapeModelStrings(false)</h2>
         <ul>
-            <li wicket:id="markup.label.pattern1.unescape">pattern1</li>
-            <li wicket:id="markup.label.pattern2.unescape">pattern2</li>
-            <li wicket:id="markup.label.pattern3.unescape">pattern3</li>
+            <li wicket:id="markup.label.pattern1.unescape" id="m.l.p1.unesc">pattern1</li>
+            <li wicket:id="markup.label.pattern2.unescape" id="m.l.p2.unesc">pattern2</li>
+            <li wicket:id="markup.label.pattern3.unescape" id="m.l.p3.unesc">pattern3</li>
         </ul>
     </section>
 </section>
