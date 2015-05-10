@@ -3,6 +3,7 @@ package sandbox;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
+import sandbox.i18n.ResourcePage;
 
 /**
  * Simple test using the WicketTester
@@ -28,7 +29,7 @@ public class TestHomePage {
     public void click_i18n_link() throws Exception {
         tester.startPage(HomePage.class);
         tester.clickLink("i18n.link");
-        tester.assertRenderedPage(sandbox.i18n.SimplePage.class);
+        tester.assertRenderedPage(ResourcePage.class);
     }
 
     @Test

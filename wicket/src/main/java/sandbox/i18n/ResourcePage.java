@@ -9,10 +9,10 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.Collections;
 
-public class SimplePage extends WebPage {
+public class ResourcePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    public SimplePage(final PageParameters parameters) {
+    public ResourcePage(final PageParameters parameters) {
         super(parameters);
 
         add(new Label("resource.static", new ResourceModel("hello.message3")));

@@ -1,9 +1,9 @@
 package sandbox;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import sandbox.i18n.ResourcePage;
 
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
@@ -15,7 +15,7 @@ public class HomePage extends WebPage {
 
             @Override
             public void onClick() {
-                setResponsePage(sandbox.i18n.SimplePage.class);
+                setResponsePage(ResourcePage.class);
             }
         });
 

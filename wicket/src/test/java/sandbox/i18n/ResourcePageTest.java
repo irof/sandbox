@@ -8,13 +8,13 @@ import sandbox.WicketApplication;
 /**
  * Simple test using the WicketTester
  */
-public class SimplePageTest {
+public class ResourcePageTest {
     private WicketTester tester;
 
     @Before
     public void setUp() {
         tester = new WicketTester(new WicketApplication());
-        tester.startPage(SimplePage.class);
+        tester.startPage(ResourcePage.class);
     }
 
     @Test
