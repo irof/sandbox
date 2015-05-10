@@ -20,5 +20,13 @@ public class ResourcePage extends WebPage {
 
         add(new Label("hello", new StringResourceModel("hello.message5", this,
                 new MapModel<String, String>(Collections.singletonMap("name", "irof")))));
+
+        add(new Label("markup.label.pattern1", new ResourceModel("markup.pattern1")));
+        add(new Label("markup.label.pattern2", new ResourceModel("markup.pattern2")));
+        add(new Label("markup.label.pattern3", new ResourceModel("markup.pattern3")));
+
+        add(new Label("markup.label.pattern1.unescape", new ResourceModel("markup.pattern1")).setEscapeModelStrings(false));
+        add(new Label("markup.label.pattern2.unescape", new ResourceModel("markup.pattern2")).setEscapeModelStrings(false));
+        add(new Label("markup.label.pattern3.unescape", new ResourceModel("markup.pattern3")).setEscapeModelStrings(false));
     }
 }

@@ -9,11 +9,70 @@
 <wicket:message key="hello.message1">wicket message</wicket:message>
 
 <h1>tag message</h1>
-<input wicket:message="value:hello.message2" value="tag attribute" />
+<input wicket:message="value:hello.message2" value="tag attribute"/>
 
 <h1>dynamic message</h1>
+
 <p wicket:id="resource.static">test message</p>
+
 <p wicket:id="resource.dynamic">test message</p>
+
 <p wicket:id="hello">test message</p>
+
+<section>
+    <h1>property.xmlの記述</h1>
+    <ul>
+        <li>&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;</li>
+        <li>&lt;![CDATA[&lt;b&gt;BOLD&lt;/b&gt;]]&gt;</li>
+        <li>&lt;![CDATA[&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;]]&gt;</li>
+    </ul>
+
+    <section>
+        <h2>&lt;wicket:message&gt;</h2>
+        <ul>
+            <li>
+                <wicket:message key="markup.pattern1">pattern1</wicket:message>
+            </li>
+            <li>
+                <wicket:message key="markup.pattern2">pattern2</wicket:message>
+            </li>
+            <li>
+                <wicket:message key="markup.pattern3">pattern3</wicket:message>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>&lt;wicket:message escaped="true"&gt;</h2>
+        <ul>
+            <li>
+                <wicket:message key="markup.pattern1" escape="true">pattern1</wicket:message>
+            </li>
+            <li>
+                <wicket:message key="markup.pattern2" escape="true">pattern2</wicket:message>
+            </li>
+            <li>
+                <wicket:message key="markup.pattern3" escape="true">pattern3</wicket:message>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>new Label()</h2>
+        <ul>
+            <li wicket:id="markup.label.pattern1">pattern1</li>
+            <li wicket:id="markup.label.pattern2">pattern2</li>
+            <li wicket:id="markup.label.pattern3">pattern3</li>
+        </ul>
+    </section>
+    <section>
+        <h2>new Label().setEscapeModelStrings(false)</h2>
+        <ul>
+            <li wicket:id="markup.label.pattern1.unescape">pattern1</li>
+            <li wicket:id="markup.label.pattern2.unescape">pattern2</li>
+            <li wicket:id="markup.label.pattern3.unescape">pattern3</li>
+        </ul>
+    </section>
+</section>
+
+
 </body>
 </html>

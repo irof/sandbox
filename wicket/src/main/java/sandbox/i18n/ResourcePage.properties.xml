@@ -6,4 +6,8 @@
     <entry key="hello.message3">Resource Model message</entry>
     <entry key="hello.message4">{0} Resource Model message</entry>
     <entry key="hello.message5">hello ${name}.</entry>
+
+    <entry key="markup.pattern1">&lt;b&gt;BOLD&lt;/b&gt;</entry>
+    <entry key="markup.pattern2"><![CDATA[<b>BOLD</b>]]></entry>
+    <entry key="markup.pattern3"><![CDATA[&lt;b&gt;BOLD&lt;/b&gt;]]></entry>
 </properties>
