@@ -7,19 +7,19 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-public class SimplePageTest {
+public class BookShelfPageTest {
 
     WicketTester tester = new WicketTester();
 
     @Test
     public void instantiation() {
-        SimplePage page = new SimplePage();
+        BookShelfPage page = new BookShelfPage();
         tester.startPage(page);
     }
 
     @Test
     public void addBook() throws Exception {
-        tester.startPage(SimplePage.class);
+        tester.startPage(BookShelfPage.class);
 
         FormTester form = tester.newFormTester("form");
         form.setValue("title", "幻の本");

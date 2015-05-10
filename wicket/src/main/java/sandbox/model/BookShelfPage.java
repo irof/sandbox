@@ -10,9 +10,9 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
-public class SimplePage extends WebPage {
+public class BookShelfPage extends WebPage {
 
-    public SimplePage() {
+    public BookShelfPage() {
         final BookShelf model = new BookShelf();
         model.add(new Book("俺の本", "俺", 100));
         model.add(new Book("彼の本", "彼", 110));

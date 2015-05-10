@@ -5,36 +5,28 @@ import org.junit.Before;
 import org.junit.Test;
 import sandbox.i18n.ResourcePage;
 
-/**
- * Simple test using the WicketTester
- */
-public class TestHomePage {
+public class HomePageTest {
     private WicketTester tester;
 
     @Before
     public void setUp() {
         tester = new WicketTester(new WicketApplication());
+        tester.startPage(HomePage.class);
     }
 
     @Test
-    public void homepageRendersSuccessfully() {
-        //start and render the test page
-        tester.startPage(HomePage.class);
-
-        //assert rendered page class
+    public void 初期状態の確認() {
         tester.assertRenderedPage(HomePage.class);
     }
 
     @Test
-    public void click_i18n_link() throws Exception {
-        tester.startPage(HomePage.class);
+    public void リンク確認_Resouce() throws Exception {
         tester.clickLink("i18n.link");
         tester.assertRenderedPage(ResourcePage.class);
     }
 
     @Test
-    public void click_components_link() throws Exception {
-        tester.startPage(HomePage.class);
+    public void リンク確認_misc() throws Exception {
         tester.clickLink("misc.link");
         tester.assertRenderedPage(sandbox.misc.SimplePage.class);
     }

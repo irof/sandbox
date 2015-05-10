@@ -16,12 +16,12 @@ public class SimplePageTest {
     }
 
     @Test
-    public void hasButtonPanel() {
+    public void ButtonPanelが表示できてる() {
         tester.assertComponent("panel.button", ButtonPanel.class);
     }
 
     @Test
-    public void hasAjaxButtonPanel() {
+    public void AjaxButtonPanelが表示できてる() {
         tester.assertComponent("panel.button.ajax", AjaxButtonPanel.class);
     }
 }
