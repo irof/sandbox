@@ -2,12 +2,13 @@ package sandbox.i18n;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.model.util.MapModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResourcePage extends WebPage {
     private static final long serialVersionUID = 1L;
@@ -15,11 +16,15 @@ public class ResourcePage extends WebPage {
     public ResourcePage(final PageParameters parameters) {
         super(parameters);
 
-        add(new Label("resource.static", new ResourceModel("hello.message3")));
-        add(new Label("resource.dynamic", new StringResourceModel("hello.message4", this, null, null, "Dynamic")));
+        add(new Label("resource.static", new ResourceModel("simple")));
 
-        add(new Label("hello", new StringResourceModel("hello.message5", this,
-                new MapModel<String, String>(Collections.singletonMap("name", "irof")))));
+        Object[] args = {"Dynamic", "Args"};
+        add(new Label("resource.dynamic1", new StringResourceModel("dynamic1", Model.of(), args)));
+
+        Map<String, String> valueMap = new HashMap<>();
+        valueMap.put("arg1", "Argument1");
+        valueMap.put("arg3", "Argument3");
+        add(new Label("resource.dynamic2", new StringResourceModel("dynamic2", Model.ofMap(valueMap))));
 
         add(new Label("markup.label.pattern1", new ResourceModel("markup.pattern1")));
         add(new Label("markup.label.pattern2", new ResourceModel("markup.pattern2")));

@@ -3,29 +3,45 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>i18n messages</title>
+    <style type="text/css">
+        section {
+        border: 1px solid #000;
+        padding: 5px 30px;
+        margin: 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>simple message</h1>
-<wicket:message key="hello.message1">wicket message</wicket:message>
-
-<h1>tag message</h1>
-<input wicket:message="value:hello.message2" value="tag attribute"/>
-
-<h1>dynamic message</h1>
-
-<p wicket:id="resource.static">test message</p>
-
-<p wicket:id="resource.dynamic">test message</p>
-
-<p wicket:id="hello">test message</p>
+<section>
+    <h1>htmlとリソースファイルだけのやつ</h1>
+    <p>wicket:messageで使用:
+        <wicket:message key="simple" id="simple1">メッセージが入る</wicket:message>
+    </p>
+    <p>inputタグのvalueで使用:
+        <input wicket:message="value:simple" value="メッセージが入る" id="simple2"/>
+    </p>
+</section>
 
 <section>
-    <h1>property.xmlの記述</h1>
+    <h1>Pageクラスで設定するやつ</h1>
     <ul>
-        <li>&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;</li>
-        <li>&lt;![CDATA[&lt;b&gt;BOLD&lt;/b&gt;]]&gt;</li>
-        <li>&lt;![CDATA[&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;]]&gt;</li>
+        <li wicket:id="resource.static">test message</li>
+        <li wicket:id="resource.dynamic1">test message</li>
+        <li wicket:id="resource.dynamic2">test message</li>
     </ul>
+</section>
+
+<section>
+    <h1>escapeの挙動確認</h1>
+
+    <section>
+        <h2>property.xmlの記述</h2>
+        <ul>
+            <li>&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;</li>
+            <li>&lt;![CDATA[&lt;b&gt;BOLD&lt;/b&gt;]]&gt;</li>
+            <li>&lt;![CDATA[&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;]]&gt;</li>
+        </ul>
+    </section>
 
     <section>
         <h2>&lt;wicket:message&gt;</h2>
