@@ -11,5 +11,6 @@ public class SimplePage extends WebPage {
 
         add(new ButtonPanel("panel.button"));
         add(new AjaxButtonPanel("panel.button.ajax"));
+        add(new ListPanel("panel.list"));
     }
 }

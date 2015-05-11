@@ -24,4 +24,9 @@ public class SimplePageTest {
     public void AjaxButtonPanelが表示できてる() {
         tester.assertComponent("panel.button.ajax", AjaxButtonPanel.class);
     }
+
+    @Test
+    public void ListPanelが表示できてる() {
+        tester.assertComponent("panel.list", ListPanel.class);
+    }
 }
