@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ひょうし</title>
+    <style type="text/css">
+        .box {
+        border: 1px solid #000;
+        margin: 10px; padding: 10px;
+        }
+    </style>
+    <script language="javascript">
+        function delayDisplay(name) {
+            setTimeout( function() { displayInline(name) }, 1000)
+        }
+        function displayInline(name) {
+            document.getElementById(name).style.display='inline-block';
+        }
+    </script>
+</head>
+<body>
+
+<section class="box">
+    <p>フォームに適当に値を入れていく感じ。</p>
+
+    <form action="sub.html">
+        <ul>
+            <li>TEXT: <input type="text" name="textForm"/></li>
+            <li>PASS: <input type="password" name="passwordForm"/></li>
+            <li>SELECT:
+                <select name="selectForm">
+                    <option value="1">aaa</option>
+                    <option>bbb</option>
+                    <option value="3">ccc</option>
+                </select>
+            </li>
+            <li>RADIO:
+                <label>x <input type="radio" name="radioForm" value="a"></label>
+                <label>y <input type="radio" name="radioForm" value="b"></label>
+            </li>
+            <li>SUBMIT: <input type="submit" name="submitForm" value="SubmitValue"/></li>
+            <li>BUTTON:
+                <button name="buttonSubmit" value="ButtonValue">BUTTON</button>
+            </li>
+        </ul>
+    </form>
+</section>
+
+<section class="box">
+    <p>ボタンを押すと表示したり非表示になったり。中のボタンを押すとメッセージ出る。</p>
+    <section>
+        <button id="saikaButton" onclick="displayInline('saika')">
+            せっかち雑賀
+        </button>
+        <button id="fukiageButton" onclick="delayDisplay('fukiage')">
+            のんびり吹上
+        </button>
+        <span id="message"></span>
+    </section>
+    <section class="box" style="display: none;" id="saika">
+        <button onclick="document.getElementById('message').innerHTML='雑賀'">
+            隠れたボタン
+        </button>
+    </section>
+    <section class="box" style="display: none;" id="fukiage">
+        <button onclick="document.getElementById('message').innerHTML='吹上'">
+            隠れたボタン
+        </button>
+    </section>
+</section>
+
+</body>
+</html>
