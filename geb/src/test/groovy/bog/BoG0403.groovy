@@ -46,7 +46,7 @@ class BoG0403 extends GebSpec {
         expect:
         $("#id0403 .a").first().nextUntil(".a")*.text() == ['hogehoge', 'fugafuga', 'piyopiyo']
 
-        and: "検索範囲はsiblingsになる"
+        and: "見つからなかったらsiblingsの最後まで取れる"
         $("#id0403 .a .b .d").nextUntil("#id0403x")*.text() == ['baz', 'qux']
         $("#id0403 .a .b .d").nextUntil("xxxx")*.text() == ['baz', 'qux']
     }
