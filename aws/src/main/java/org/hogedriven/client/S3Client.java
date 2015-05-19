@@ -9,7 +9,6 @@ import com.amazonaws.services.s3.model.Bucket;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
@@ -47,26 +46,26 @@ public class S3Client extends Application implements Initializable {
         stage.show();
     }
 
-    public void chooseFile(ActionEvent actionEvent) {
+    public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
         file = fileChooser.showOpenDialog(null);
     }
 
-    public void uploadFile(ActionEvent actionEvent) {
+    public void uploadFile() {
         s3Operation(client ->
                 client.putObject(bucketName.getText(), keyName.getText(), file));
     }
 
-    public void getBuckets(ActionEvent actionEvent) {
+    public void getBuckets() {
         this.buckets.clear();
         s3Operation(client -> this.buckets.addAll(client.listBuckets()));
     }
 
-    public void createBucket(ActionEvent actionEvent) {
+    public void createBucket() {
         s3Operation(client -> client.createBucket(bucketName.getText()));
     }
 
-    public void deleteBucket(ActionEvent actionEvent) {
+    public void deleteBucket() {
         s3Operation(client -> {
             client.deleteBucket(bucketName.getText());
             buckets.removeIf(s -> s.getName().equals(bucketName.getText()));
