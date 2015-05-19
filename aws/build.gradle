@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.amazonaws:aws-java-sdk-s3:1.9.0'
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
