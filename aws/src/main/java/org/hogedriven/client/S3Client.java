@@ -2,10 +2,10 @@ package org.hogedriven.client;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
+import com.amazonaws.services.s3.model.ObjectListing;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -33,32 +33,26 @@ public class S3Client extends Application implements Initializable {
     public TextField keyName;
     public Label status;
     public ListView<Bucket> bucketList;
+    public ListView<S3ObjectSummary> objectList;
+    public Label selectedFile;
 
     private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
+    private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage stage) throws Exception {
         Object root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
         stage.setTitle(this.getClass().getSimpleName());
-        stage.setScene(new Scene((Parent) root, 600, 200));
+        stage.setScene(new Scene((Parent) root, 500, 520));
+        stage.setResizable(false);
 
         stage.show();
     }
 
-    public void chooseFile() {
-        FileChooser fileChooser = new FileChooser();
-        file = fileChooser.showOpenDialog(null);
-    }
-
-    public void uploadFile() {
-        s3Operation(client ->
-                client.putObject(bucketName.getText(), keyName.getText(), file));
-    }
-
     public void getBuckets() {
-        this.buckets.clear();
-        s3Operation(client -> this.buckets.addAll(client.listBuckets()));
+        buckets.clear();
+        s3Operation(client -> buckets.addAll(client.listBuckets()));
     }
 
     public void createBucket() {
@@ -72,6 +66,25 @@ public class S3Client extends Application implements Initializable {
         });
     }
 
+    public void chooseFile() {
+        FileChooser fileChooser = new FileChooser();
+        file = fileChooser.showOpenDialog(null);
+        selectedFile.setText(file.getName());
+    }
+
+    public void uploadFile() {
+        s3Operation(client ->
+                client.putObject(bucketName.getText(), keyName.getText(), file));
+        s3Operation(this::refleshObjects);
+    }
+
+    public void deleteFile() {
+        s3Operation(client ->
+                client.deleteObject(bucketName.getText(),
+                        objectList.getSelectionModel().getSelectedItem().getKey()));
+        s3Operation(this::refleshObjects);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bucketList.setItems(buckets);
@@ -79,13 +92,36 @@ public class S3Client extends Application implements Initializable {
             @Override
             protected void updateItem(Bucket item, boolean empty) {
                 super.updateItem(item, empty);
-                if (!empty) setText(item.getName());
+                setText(empty ? "" : item.getName());
             }
         });
-        bucketList.setOnMouseClicked(event ->
-                bucketName.setText(bucketList.getSelectionModel().getSelectedItem().getName()));
+        bucketList.setOnMouseClicked(event -> {
+                    String name = bucketList.getSelectionModel().getSelectedItem().getName();
+                    bucketName.setText(name);
+                    s3Operation(this::refleshObjects);
+                }
+        );
+
+        objectList.setItems(objects);
+        objectList.setCellFactory(list -> new ListCell<S3ObjectSummary>() {
+            @Override
+            protected void updateItem(S3ObjectSummary item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getKey());
+            }
+        });
 
         status.setText("");
+        selectedFile.setText("");
+    }
+
+    private void refleshObjects(AmazonS3Client client) {
+        objects.clear();
+        ObjectListing listing = client.listObjects(bucketName.getText());
+        do {
+            objects.addAll(listing.getObjectSummaries());
+            listing = client.listNextBatchOfObjects(listing);
+        } while (listing.getMarker() != null);
     }
 
     private void s3Operation(Consumer<AmazonS3Client> r) {
@@ -101,8 +137,6 @@ public class S3Client extends Application implements Initializable {
 
     private AmazonS3Client getClient() {
         AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
-        AmazonS3Client client = new AmazonS3Client(credentials);
-        client.setRegion(Region.getRegion(Regions.AP_NORTHEAST_1));
-        return client;
+        return new AmazonS3Client(credentials);
     }
 }
