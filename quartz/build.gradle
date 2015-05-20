@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
   compile 'org.quartz-scheduler:quartz:2.2.1'
+  compile 'org.slf4j:slf4j-simple:1.6.6'
   testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
