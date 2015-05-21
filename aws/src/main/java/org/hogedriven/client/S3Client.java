@@ -39,6 +39,7 @@ public class S3Client extends Application implements Initializable {
     private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
+    private AmazonS3Client client;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -113,6 +114,9 @@ public class S3Client extends Application implements Initializable {
 
         status.setText("");
         selectedFile.setText("");
+
+        AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
+        client = new AmazonS3Client(credentials);
     }
 
     private void refleshObjects(AmazonS3Client client) {
@@ -136,7 +140,6 @@ public class S3Client extends Application implements Initializable {
     }
 
     private AmazonS3Client getClient() {
-        AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
-        return new AmazonS3Client(credentials);
+        return client;
     }
 }
