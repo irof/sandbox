@@ -13,17 +13,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 
 /**
  * @author irof
@@ -31,7 +31,6 @@ import java.util.function.Consumer;
 public class S3Client extends Application implements Initializable {
     public TextField bucketName;
     public TextField keyName;
-    public Label status;
     public ListView<Bucket> bucketList;
     public ListView<S3ObjectSummary> objectList;
     public Label selectedFile;
@@ -45,26 +44,48 @@ public class S3Client extends Application implements Initializable {
     public void start(Stage stage) throws Exception {
         Object root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
         stage.setTitle(this.getClass().getSimpleName());
-        stage.setScene(new Scene((Parent) root, 500, 520));
+        stage.setScene(new Scene((Parent) root, 500, 500));
         stage.setResizable(false);
+
+        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("こまりました！");
+            alert.setHeaderText("なんか例外だよ");
+            alert.setContentText("気になる人のためのスタックトレース");
+            try (StringWriter stringWriter = new StringWriter();
+                 PrintWriter writer = new PrintWriter(stringWriter);) {
+                if (e instanceof RuntimeException
+                        && e.getCause() instanceof InvocationTargetException) {
+                    Throwable ite = e.getCause();
+                    Throwable cause = ite.getCause();
+                    cause.printStackTrace(writer);
+                } else {
+                    e.printStackTrace(writer);
+                }
+                alert.getDialogPane().setExpandableContent(new TextArea(stringWriter.toString()));
+            } catch (IOException e1) {
+                // きにしない
+                e1.printStackTrace();
+            }
+            alert.show();
+        });
 
         stage.show();
     }
 
     public void getBuckets() {
         buckets.clear();
-        s3Operation(client -> buckets.addAll(client.listBuckets()));
+        buckets.addAll(client.listBuckets());
     }
 
     public void createBucket() {
-        s3Operation(client -> client.createBucket(bucketName.getText()));
+        Bucket bucket = client.createBucket(bucketName.getText());
+        buckets.add(bucket);
     }
 
     public void deleteBucket() {
-        s3Operation(client -> {
-            client.deleteBucket(bucketName.getText());
-            buckets.removeIf(s -> s.getName().equals(bucketName.getText()));
-        });
+        client.deleteBucket(bucketName.getText());
+        buckets.removeIf(s -> s.getName().equals(bucketName.getText()));
     }
 
     public void chooseFile() {
@@ -74,16 +95,14 @@ public class S3Client extends Application implements Initializable {
     }
 
     public void uploadFile() {
-        s3Operation(client ->
-                client.putObject(bucketName.getText(), keyName.getText(), file));
-        s3Operation(this::refleshObjects);
+        client.putObject(bucketName.getText(), keyName.getText(), file);
+        refleshObjects(client);
     }
 
     public void deleteFile() {
-        s3Operation(client ->
-                client.deleteObject(bucketName.getText(),
-                        objectList.getSelectionModel().getSelectedItem().getKey()));
-        s3Operation(this::refleshObjects);
+        client.deleteObject(bucketName.getText(),
+                objectList.getSelectionModel().getSelectedItem().getKey());
+        refleshObjects(client);
     }
 
     @Override
@@ -99,7 +118,7 @@ public class S3Client extends Application implements Initializable {
         bucketList.setOnMouseClicked(event -> {
                     String name = bucketList.getSelectionModel().getSelectedItem().getName();
                     bucketName.setText(name);
-                    s3Operation(this::refleshObjects);
+                    refleshObjects(client);
                 }
         );
 
@@ -112,7 +131,6 @@ public class S3Client extends Application implements Initializable {
             }
         });
 
-        status.setText("");
         selectedFile.setText("");
 
         AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
@@ -126,20 +144,5 @@ public class S3Client extends Application implements Initializable {
             objects.addAll(listing.getObjectSummaries());
             listing = client.listNextBatchOfObjects(listing);
         } while (listing.getMarker() != null);
-    }
-
-    private void s3Operation(Consumer<AmazonS3Client> r) {
-        status.setText("processing...");
-        try {
-            r.accept(getClient());
-            status.setText("success!!");
-        } catch (RuntimeException e) {
-            status.setText("failed... : " + e.getMessage());
-            throw e;
-        }
-    }
-
-    private AmazonS3Client getClient() {
-        return client;
     }
 }
