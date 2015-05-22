@@ -108,33 +108,46 @@ public class S3Client extends Application implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         bucketList.setItems(buckets);
-        bucketList.setCellFactory(list -> new ListCell<Bucket>() {
-            @Override
-            protected void updateItem(Bucket item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item.getName());
-            }
-        });
-        bucketList.setOnMouseClicked(event -> {
-                    String name = bucketList.getSelectionModel().getSelectedItem().getName();
-                    bucketName.setText(name);
-                    refleshObjects(client);
-                }
-        );
+        bucketList.setCellFactory(this::createBucketCell);
 
         objectList.setItems(objects);
-        objectList.setCellFactory(list -> new ListCell<S3ObjectSummary>() {
-            @Override
-            protected void updateItem(S3ObjectSummary item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty ? "" : item.getKey());
-            }
-        });
+        objectList.setCellFactory(this::createObjectCell);
 
         selectedFile.setText("");
 
         AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
         client = new AmazonS3Client(credentials);
+    }
+
+    private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
+        ListCell<Bucket> cell = new ListCell<Bucket>() {
+            @Override
+            protected void updateItem(Bucket item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getName());
+            }
+        };
+        cell.setOnMouseClicked(event -> {
+            Bucket bucket = cell.getItem();
+            if (bucket != null)
+                bucketName.setText(bucket.getName());
+            refleshObjects(client);
+        });
+        return cell;
+    }
+
+    private ListCell<S3ObjectSummary> createObjectCell(ListView<S3ObjectSummary> s3ObjectSummaryListView) {
+        ListCell<S3ObjectSummary> listCell = new ListCell<S3ObjectSummary>() {
+            @Override
+            protected void updateItem(S3ObjectSummary item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? "" : item.getKey());
+            }
+        };
+        listCell.setOnMouseClicked(event -> {
+            new Alert(Alert.AlertType.INFORMATION).show();
+        });
+        return listCell;
     }
 
     private void refleshObjects(AmazonS3Client client) {
