@@ -124,13 +124,13 @@ public class S3Client extends Application implements Initializable {
             @Override
             protected void updateItem(Bucket item, boolean empty) {
                 super.updateItem(item, empty);
+                setDisable(empty);
                 setText(empty ? "" : item.getName());
             }
         };
         cell.setOnMouseClicked(event -> {
             Bucket bucket = cell.getItem();
-            if (bucket != null)
-                bucketName.setText(bucket.getName());
+            bucketName.setText(bucket.getName());
             refreshObjects(client);
         });
         return cell;
@@ -141,6 +141,7 @@ public class S3Client extends Application implements Initializable {
             @Override
             protected void updateItem(S3ObjectSummary item, boolean empty) {
                 super.updateItem(item, empty);
+                setDisable(empty);
                 setText(empty ? "" : item.getKey());
             }
         };
