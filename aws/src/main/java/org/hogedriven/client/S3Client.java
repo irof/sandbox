@@ -96,13 +96,13 @@ public class S3Client extends Application implements Initializable {
 
     public void uploadFile() {
         client.putObject(bucketName.getText(), keyName.getText(), file);
-        refleshObjects(client);
+        refreshObjects(client);
     }
 
     public void deleteFile() {
         client.deleteObject(bucketName.getText(),
                 objectList.getSelectionModel().getSelectedItem().getKey());
-        refleshObjects(client);
+        refreshObjects(client);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class S3Client extends Application implements Initializable {
             Bucket bucket = cell.getItem();
             if (bucket != null)
                 bucketName.setText(bucket.getName());
-            refleshObjects(client);
+            refreshObjects(client);
         });
         return cell;
     }
@@ -150,7 +150,7 @@ public class S3Client extends Application implements Initializable {
         return listCell;
     }
 
-    private void refleshObjects(AmazonS3Client client) {
+    private void refreshObjects(AmazonS3Client client) {
         objects.clear();
         ObjectListing listing = client.listObjects(bucketName.getText());
         do {
