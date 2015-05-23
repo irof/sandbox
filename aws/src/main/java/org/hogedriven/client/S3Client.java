@@ -16,11 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -150,9 +148,23 @@ public class S3Client extends Application implements Initializable {
             }
         };
         listCell.setOnMouseClicked(event -> {
-            new Alert(Alert.AlertType.INFORMATION).show();
+            S3ObjectSummary item = listCell.getItem();
+            Stage s3ObjectDetailWindow = createS3ObjectDetailWindow(item);
+            s3ObjectDetailWindow.show();
         });
         return listCell;
+    }
+
+    private Stage createS3ObjectDetailWindow(S3ObjectSummary item) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3object.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage(StageStyle.DECORATED);
+            stage.setScene(new Scene(root));
+            return stage;
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private void refreshObjects(AmazonS3Client client) {
