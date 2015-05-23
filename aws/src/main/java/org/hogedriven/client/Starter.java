@@ -23,7 +23,6 @@ public class Starter extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
         stage.setTitle(this.getClass().getSimpleName());
         stage.setScene(new Scene(root));
-        stage.setResizable(false);
 
         setExceptionHandler();
 
