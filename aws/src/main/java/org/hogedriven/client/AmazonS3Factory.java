@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -38,7 +39,9 @@ public class AmazonS3Factory {
                     return Arrays.asList(createBucket("hoge"), createBucket("fuga"));
                 case "listObjects":
                     ObjectListing listing = new ObjectListing();
-                    listing.getObjectSummaries().add(createS3ObjectSummary());
+                    listing.getObjectSummaries().addAll(
+                            Collections.nCopies(50,
+                                    createS3ObjectSummary()));
                     return listing;
                 case "listNextBatchOfObjects":
                     return new ObjectListing();
