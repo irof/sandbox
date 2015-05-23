@@ -148,8 +148,11 @@ public class S3Controller implements Initializable {
             ObjectIdentifier id = new ObjectIdentifier(item);
             if (objectWindows.containsKey(id)) {
                 objectWindows.get(id).requestFocus();
-            } else {
+            } else if (event.getClickCount() == 2) {
                 Stage objectWindow = createS3ObjectWindow(item);
+                // 上を合わせて右に並べて出す
+                objectWindow.setX(stage.getX() + stage.getWidth());
+                objectWindow.setY(stage.getY());
                 objectWindow.show();
                 objectWindows.put(id, objectWindow);
                 objectWindow.setOnCloseRequest(e -> objectWindows.remove(id));
