@@ -6,27 +6,30 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
  * @author irof
  */
-public class S3Client extends Application implements Initializable {
+public class S3Controller implements Initializable {
     public TextField bucketName;
     public TextField keyName;
     public ListView<Bucket> bucketList;
@@ -37,43 +40,6 @@ public class S3Client extends Application implements Initializable {
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
     private AmazonS3Client client;
-
-    @Override
-    public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
-        stage.setTitle(this.getClass().getSimpleName());
-        stage.setScene(new Scene(root, 500, 500));
-        stage.setResizable(false);
-
-        setExceptionHandler();
-
-        stage.show();
-    }
-
-    private void setExceptionHandler() {
-        Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("こまりました！");
-            alert.setHeaderText("なんか例外だよ");
-            alert.setContentText("気になる人のためのスタックトレース");
-            try (StringWriter stringWriter = new StringWriter();
-                 PrintWriter writer = new PrintWriter(stringWriter);) {
-                if (e instanceof RuntimeException
-                        && e.getCause() instanceof InvocationTargetException) {
-                    Throwable ite = e.getCause();
-                    Throwable cause = ite.getCause();
-                    cause.printStackTrace(writer);
-                } else {
-                    e.printStackTrace(writer);
-                }
-                alert.getDialogPane().setExpandableContent(new TextArea(stringWriter.toString()));
-            } catch (IOException e1) {
-                // きにしない
-                e1.printStackTrace();
-            }
-            alert.show();
-        });
-    }
 
     public void getBuckets() {
         buckets.clear();

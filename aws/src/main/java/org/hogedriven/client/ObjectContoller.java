@@ -7,7 +7,7 @@ import javafx.scene.control.TextArea;
 /**
  * @author irof
  */
-public class ObjectStageController {
+public class ObjectContoller {
     public TextArea observationWindow;
     public Label bucketLabel;
     public Label keyLabel;

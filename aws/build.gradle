@@ -1,10 +1,13 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
 compileJava {
   options.encoding = 'utf-8'
 }
 
 sourceCompatibility = targetCompatibility = 1.8
+
+mainClassName = "org.hogedriven.client.Starter"
 
 repositories {
   mavenLocal()
