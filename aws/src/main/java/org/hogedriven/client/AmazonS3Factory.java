@@ -4,10 +4,7 @@ import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ObjectListing;
-import com.amazonaws.services.s3.model.Owner;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
@@ -45,9 +42,17 @@ public class AmazonS3Factory {
                     return listing;
                 case "listNextBatchOfObjects":
                     return new ObjectListing();
+                case "getObjectMetadata":
+                    return getObjectMetadata();
             }
             throw new UnsupportedOperationException(method.toString());
         };
+    }
+
+    private static ObjectMetadata getObjectMetadata() {
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentType("text/plane");
+        return objectMetadata;
     }
 
     private static Bucket createBucket(String name) {
@@ -62,7 +67,7 @@ public class AmazonS3Factory {
         objectSummary.setBucketName("S3ObjectSummaryBucketNameByMock");
         objectSummary.setKey("S3ObjectSummaryKeyByMock");
         objectSummary.setLastModified(new Date());
-        objectSummary.setSize(9999);
+        objectSummary.setSize(12345678);
         objectSummary.setStorageClass("S3ObjectSummaryStorageClassByMock");
         return objectSummary;
     }

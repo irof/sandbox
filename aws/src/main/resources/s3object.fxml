@@ -1,37 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.paint.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.ObjectController">
    <children>
       <GridPane>
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="248.0" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="422.0" minWidth="10.0" prefWidth="408.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Bucket" />
             <Label text="Key" GridPane.rowIndex="1" />
-            <Label text="ファイル名" GridPane.rowIndex="2" />
-            <Label fx:id="bucketLabel" text="(バケット名を表示)" GridPane.columnIndex="1" />
-            <Label fx:id="keyLabel" text="(キー名を全部表示)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="fileNameLabel" text="(ファイル名を表示)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Content-Type" GridPane.rowIndex="3" />
+            <Label fx:id="bucket" text="(バケット名を表示)" GridPane.columnIndex="1" />
+            <Label fx:id="key" text="(キー名を全部表示)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="contentType" text="(ContentTypeを表示)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="size" GridPane.rowIndex="2" />
+            <Label fx:id="size" text="(サイズをbyteで表示)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <HBox spacing="10.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#onDelete" text="Delete" />
-            <Button mnemonicParsing="false" onAction="#onShow" text="Show" />
             <Button mnemonicParsing="false" onAction="#onDownload" text="Download" />
+            <Button fx:id="observationButton" mnemonicParsing="false" onAction="#onObservation" text="ファイルをチラ見する" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
