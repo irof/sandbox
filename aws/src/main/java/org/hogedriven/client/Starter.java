@@ -31,6 +31,10 @@ public class Starter extends Application {
 
     private void setExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+            // 標準出力にも吐いておく
+            e.printStackTrace();
+
+            // ダイアログだしとく
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("こまりました！");
             alert.setHeaderText("なんか例外だよ");
