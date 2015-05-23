@@ -5,43 +5,29 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.S3Controller">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" />
-    <ColumnConstraints hgrow="ALWAYS" />
-      <ColumnConstraints hgrow="SOMETIMES" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints vgrow="ALWAYS" />
-  </rowConstraints>
+
+<VBox spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.S3Controller">
    <children>
-      <HBox spacing="5.0">
+      <HBox spacing="5.0" VBox.vgrow="NEVER">
          <children>
-            <Button mnemonicParsing="false" onAction="#getBuckets" text="一覧更新" />
-            <Button mnemonicParsing="false" onAction="#createBucket" text="Bucket作成" />
-            <Button mnemonicParsing="false" onAction="#deleteBucket" text="Delete" />
+            <ComboBox fx:id="bucket" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="ALWAYS" />
+            <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#getBuckets" text="再取得" />
+            <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#createBucket" text="+" />
+            <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBucket" text="-" />
          </children>
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
       </HBox>
-      <HBox spacing="5.0" GridPane.columnIndex="1">
+      <HBox spacing="5.0">
          <children>
             <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#uploadFile" text="Upload" />
             <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteFile" text="Delete" />
          </children>
-         <GridPane.margin>
-            <Insets />
-         </GridPane.margin>
       </HBox>
-      <ListView fx:id="bucketList" GridPane.rowIndex="1" />
-      <ListView fx:id="objectList" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <ListView fx:id="objectList" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" VBox.vgrow="ALWAYS" />
    </children>
-   <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-   </padding>
    <opaqueInsets>
       <Insets />
    </opaqueInsets>
-</GridPane>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

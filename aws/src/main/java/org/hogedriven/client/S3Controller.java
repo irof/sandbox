@@ -10,13 +10,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.StringConverter;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,10 +29,11 @@ import java.util.ResourceBundle;
  * @author irof
  */
 public class S3Controller implements Initializable {
-    public ListView<Bucket> bucketList;
     public ListView<S3ObjectSummary> objectList;
 
     public Button deleteButton;
+    public Button uploadButton;
+    public ComboBox<Bucket> bucket;
 
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
@@ -42,7 +41,7 @@ public class S3Controller implements Initializable {
     private final Stage stage;
     private final AmazonS3 client;
 
-    private Optional<String> currentBucket = Optional.empty();
+    private Optional<Bucket> currentBucket = Optional.empty();
 
     private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
 
@@ -69,8 +68,9 @@ public class S3Controller implements Initializable {
     }
 
     public void deleteBucket() {
-        currentBucket.ifPresent(client::deleteBucket);
-        getBuckets();
+        currentBucket.map(Bucket::getName).ifPresent(client::deleteBucket);
+        currentBucket.ifPresent(buckets::remove);
+        bucket.getSelectionModel().clearSelection();
     }
 
     public void uploadFile() {
@@ -85,21 +85,39 @@ public class S3Controller implements Initializable {
         dialog.setContentText("Key :");
 
         dialog.showAndWait().ifPresent(name -> {
-            client.putObject(currentBucket.get(), name, file);
+            client.putObject(currentBucket.get().getName(), name, file);
             refreshObjects();
         });
     }
 
     public void deleteFile() {
-        client.deleteObject(currentBucket.get(),
+        client.deleteObject(currentBucket.get().getName(),
                 objectList.getSelectionModel().getSelectedItem().getKey());
         refreshObjects();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        bucketList.setItems(buckets);
-        bucketList.setCellFactory(this::createBucketCell);
+        getBuckets();
+        bucket.setItems(buckets);
+        bucket.setCellFactory(this::createBucketCell);
+        bucket.setPromptText("Bucketを選択してください");
+        bucket.setConverter(new StringConverter<Bucket>() {
+            @Override
+            public String toString(Bucket object) {
+                return object.getName();
+            }
+
+            @Override
+            public Bucket fromString(String string) {
+                // StringからBucketへの変換はしない
+                throw new UnsupportedOperationException();
+            }
+        });
+        bucket.valueProperty().addListener((observable, oldValue, newValue) -> {
+            currentBucket = Optional.ofNullable(newValue);
+            refreshObjects();
+        });
 
         objectList.setItems(objects);
         objectList.setCellFactory(this::createObjectCell);
@@ -110,15 +128,9 @@ public class S3Controller implements Initializable {
             @Override
             protected void updateItem(Bucket item, boolean empty) {
                 super.updateItem(item, empty);
-                setDisable(empty);
                 setText(empty ? "" : item.getName());
             }
         };
-        cell.setOnMouseClicked(event -> {
-            Bucket bucket = cell.getItem();
-            currentBucket = Optional.of(bucket.getName());
-            refreshObjects();
-        });
         return cell;
     }
 
@@ -161,7 +173,7 @@ public class S3Controller implements Initializable {
 
     private void refreshObjects() {
         objects.clear();
-        currentBucket.ifPresent(name -> {
+        currentBucket.map(Bucket::getName).ifPresent(name -> {
             ObjectListing listing = client.listObjects(name);
             do {
                 objects.addAll(listing.getObjectSummaries());

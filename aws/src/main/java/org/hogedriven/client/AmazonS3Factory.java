@@ -36,7 +36,7 @@ public class AmazonS3Factory {
         return (proxy, method, args) -> {
             switch (method.getName()) {
                 case "listBuckets":
-                    return Arrays.asList(createBucket("hoge"), createBucket("fuga"));
+                    return Arrays.asList(createBucket("hoge"), createBucket("fuga"), createBucket("piyo"));
                 case "listObjects":
                     ObjectListing listing = new ObjectListing();
                     listing.getObjectSummaries().addAll(
@@ -47,6 +47,8 @@ public class AmazonS3Factory {
                     return new ObjectListing();
                 case "getObjectMetadata":
                     return getObjectMetadata();
+                case "deleteBucket":
+                    return null;
             }
             throw new UnsupportedOperationException(method.toString());
         };
