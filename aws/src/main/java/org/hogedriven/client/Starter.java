@@ -20,9 +20,11 @@ public class Starter extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3client.fxml"));
+        loader.setControllerFactory(clz -> new S3Controller(stage, AmazonS3Factory.createAmazonS3Client()));
+
         stage.setTitle(this.getClass().getSimpleName());
-        stage.setScene(new Scene(root));
+        stage.setScene(new Scene(loader.load()));
 
         setExceptionHandler();
 

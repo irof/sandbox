@@ -4,16 +4,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import javafx.beans.binding.Bindings;
+import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -35,13 +34,21 @@ public class S3Controller implements Initializable {
     public ListView<Bucket> bucketList;
     public ListView<S3ObjectSummary> objectList;
     public Label selectedFile;
+    public Button uploadButton;
 
     private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
-    private final AmazonS3 client = AmazonS3Factory.createAmazonS3Client();
+
+    private final Stage stage;
+    private final AmazonS3 client;
 
     private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
+
+    public S3Controller(Stage stage, AmazonS3 client) {
+        this.stage = stage;
+        this.client = client;
+    }
 
     public void getBuckets() {
         buckets.clear();
@@ -60,8 +67,8 @@ public class S3Controller implements Initializable {
 
     public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
-        file = fileChooser.showOpenDialog(null);
-        selectedFile.setText(file.getName());
+        file = fileChooser.showOpenDialog(stage);
+        selectedFile.setText(file == null ? null : file.getName());
     }
 
     public void uploadFile() {
@@ -84,6 +91,10 @@ public class S3Controller implements Initializable {
         objectList.setCellFactory(this::createObjectCell);
 
         selectedFile.setText("");
+
+        uploadButton.disableProperty().bind(
+                Bindings.isEmpty(selectedFile.textProperty())
+                        .or(Bindings.isEmpty(keyName.textProperty())));
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
