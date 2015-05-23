@@ -68,7 +68,8 @@ public class S3Controller implements Initializable {
     public void chooseFile() {
         FileChooser fileChooser = new FileChooser();
         file = fileChooser.showOpenDialog(stage);
-        selectedFile.setText(file == null ? null : file.getName());
+        selectedFile.setText(file == null ? null : file.getPath());
+        keyName.setText(file.getName());
     }
 
     public void uploadFile() {
