@@ -22,6 +22,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -38,6 +40,8 @@ public class S3Controller implements Initializable {
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
     private final AmazonS3 client = AmazonS3Factory.createAmazonS3Client();
+
+    private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
 
     public void getBuckets() {
         buckets.clear();
@@ -110,13 +114,20 @@ public class S3Controller implements Initializable {
         };
         listCell.setOnMouseClicked(event -> {
             S3ObjectSummary item = listCell.getItem();
-            Stage s3ObjectDetailWindow = createS3ObjectDetailWindow(item);
-            s3ObjectDetailWindow.show();
+            ObjectIdentifier id = new ObjectIdentifier(item);
+            if (objectWindows.containsKey(id)) {
+                objectWindows.get(id).requestFocus();
+            } else {
+                Stage objectWindow = createS3ObjectWindow(item);
+                objectWindow.show();
+                objectWindows.put(id, objectWindow);
+                objectWindow.setOnCloseRequest(e -> objectWindows.remove(id));
+            }
         });
         return listCell;
     }
 
-    private Stage createS3ObjectDetailWindow(S3ObjectSummary item) {
+    private Stage createS3ObjectWindow(S3ObjectSummary item) {
         try {
             Stage stage = new Stage(StageStyle.DECORATED);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3object.fxml"));
