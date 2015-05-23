@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableObjectValue;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -23,18 +23,20 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
  * @author irof
  */
 public class S3Controller implements Initializable {
-    public TextField bucketName;
     public TextField keyName;
     public ListView<Bucket> bucketList;
     public ListView<S3ObjectSummary> objectList;
     public Label selectedFile;
+
     public Button uploadButton;
+    public Button deleteButton;
 
     private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
@@ -42,6 +44,8 @@ public class S3Controller implements Initializable {
 
     private final Stage stage;
     private final AmazonS3 client;
+
+    private Optional<String> currentBucket = Optional.empty();
 
     private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
 
@@ -56,13 +60,20 @@ public class S3Controller implements Initializable {
     }
 
     public void createBucket() {
-        Bucket bucket = client.createBucket(bucketName.getText());
-        buckets.add(bucket);
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("新しいBucketの作成");
+        dialog.setHeaderText("作りたいBucketの名前を入力してください");
+        dialog.setContentText("new Bucket Name :");
+
+        dialog.showAndWait().ifPresent(name -> {
+            Bucket bucket = client.createBucket(name);
+            buckets.add(bucket);
+        });
     }
 
     public void deleteBucket() {
-        client.deleteBucket(bucketName.getText());
-        buckets.removeIf(s -> s.getName().equals(bucketName.getText()));
+        currentBucket.ifPresent(client::deleteBucket);
+        getBuckets();
     }
 
     public void chooseFile() {
@@ -73,12 +84,12 @@ public class S3Controller implements Initializable {
     }
 
     public void uploadFile() {
-        client.putObject(bucketName.getText(), keyName.getText(), file);
+        client.putObject(currentBucket.get(), keyName.getText(), file);
         refreshObjects();
     }
 
     public void deleteFile() {
-        client.deleteObject(bucketName.getText(),
+        client.deleteObject(currentBucket.get(),
                 objectList.getSelectionModel().getSelectedItem().getKey());
         refreshObjects();
     }
@@ -93,9 +104,10 @@ public class S3Controller implements Initializable {
 
         selectedFile.setText("");
 
-        uploadButton.disableProperty().bind(
-                Bindings.isEmpty(selectedFile.textProperty())
-                        .or(Bindings.isEmpty(keyName.textProperty())));
+        BooleanBinding disableCondition = Bindings.isEmpty(selectedFile.textProperty())
+                .or(Bindings.isEmpty(keyName.textProperty()));
+        uploadButton.disableProperty().bind(disableCondition);
+        deleteButton.disableProperty().bind(disableCondition);
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
@@ -109,7 +121,7 @@ public class S3Controller implements Initializable {
         };
         cell.setOnMouseClicked(event -> {
             Bucket bucket = cell.getItem();
-            bucketName.setText(bucket.getName());
+            currentBucket = Optional.of(bucket.getName());
             refreshObjects();
         });
         return cell;
@@ -154,10 +166,12 @@ public class S3Controller implements Initializable {
 
     private void refreshObjects() {
         objects.clear();
-        ObjectListing listing = client.listObjects(bucketName.getText());
-        do {
-            objects.addAll(listing.getObjectSummaries());
-            listing = client.listNextBatchOfObjects(listing);
-        } while (listing.getMarker() != null);
+        currentBucket.ifPresent(name -> {
+            ObjectListing listing = client.listObjects(name);
+            do {
+                objects.addAll(listing.getObjectSummaries());
+                listing = client.listNextBatchOfObjects(listing);
+            } while (listing.getMarker() != null);
+        });
     }
 }

@@ -18,11 +18,10 @@
       <RowConstraints vgrow="ALWAYS" />
   </rowConstraints>
    <children>
-      <TextField fx:id="bucketName" />
       <HBox spacing="5.0" GridPane.rowIndex="1">
          <children>
-            <Button mnemonicParsing="false" onAction="#getBuckets" text="List" />
-            <Button mnemonicParsing="false" onAction="#createBucket" text="Add" />
+            <Button mnemonicParsing="false" onAction="#getBuckets" text="一覧更新" />
+            <Button mnemonicParsing="false" onAction="#createBucket" text="Bucket作成" />
             <Button mnemonicParsing="false" onAction="#deleteBucket" text="Delete" />
          </children>
          <GridPane.margin>
