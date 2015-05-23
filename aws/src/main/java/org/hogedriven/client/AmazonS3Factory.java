@@ -34,6 +34,8 @@ public class AmazonS3Factory {
 
     private static InvocationHandler createInvocationHandler() {
         return (proxy, method, args) -> {
+            System.out.println(method);
+            System.out.println(Arrays.toString(args));
             switch (method.getName()) {
                 case "listBuckets":
                     return Arrays.asList(createBucket("hoge"), createBucket("fuga"), createBucket("piyo"));
@@ -47,7 +49,10 @@ public class AmazonS3Factory {
                     return new ObjectListing();
                 case "getObjectMetadata":
                     return getObjectMetadata();
+                case "createBucket":
+                    return createBucket((String) args[0]);
                 case "deleteBucket":
+                case "putObject":
                     return null;
             }
             throw new UnsupportedOperationException(method.toString());
