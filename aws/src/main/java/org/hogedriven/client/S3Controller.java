@@ -119,6 +119,7 @@ public class S3Controller implements Initializable {
     private Stage createS3ObjectDetailWindow(S3ObjectSummary item) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3object.fxml"));
+            loader.setControllerFactory(clz -> new ObjectController(item));
             Parent root = loader.load();
             Stage stage = new Stage(StageStyle.DECORATED);
             stage.setScene(new Scene(root));
