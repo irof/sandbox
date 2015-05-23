@@ -42,11 +42,17 @@ public class S3Client extends Application implements Initializable {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Object root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("../../../s3client.fxml"));
         stage.setTitle(this.getClass().getSimpleName());
-        stage.setScene(new Scene((Parent) root, 500, 500));
+        stage.setScene(new Scene(root, 500, 500));
         stage.setResizable(false);
 
+        setExceptionHandler();
+
+        stage.show();
+    }
+
+    private void setExceptionHandler() {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("こまりました！");
@@ -69,8 +75,6 @@ public class S3Client extends Application implements Initializable {
             }
             alert.show();
         });
-
-        stage.show();
     }
 
     public void getBuckets() {
