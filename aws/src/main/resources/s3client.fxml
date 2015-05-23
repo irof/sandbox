@@ -13,12 +13,10 @@
   </columnConstraints>
   <rowConstraints>
     <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
       <RowConstraints vgrow="ALWAYS" />
   </rowConstraints>
    <children>
-      <HBox spacing="5.0" GridPane.rowIndex="1">
+      <HBox spacing="5.0">
          <children>
             <Button mnemonicParsing="false" onAction="#getBuckets" text="一覧更新" />
             <Button mnemonicParsing="false" onAction="#createBucket" text="Bucket作成" />
@@ -28,10 +26,8 @@
             <Insets />
          </GridPane.margin>
       </HBox>
-      <TextField fx:id="keyName" GridPane.columnIndex="1" />
-      <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      <HBox spacing="5.0" GridPane.columnIndex="1">
          <children>
-            <Button mnemonicParsing="false" onAction="#chooseFile" text="Select" />
             <Button fx:id="uploadButton" mnemonicParsing="false" onAction="#uploadFile" text="Upload" />
             <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteFile" text="Delete" />
          </children>
@@ -39,9 +35,8 @@
             <Insets />
          </GridPane.margin>
       </HBox>
-      <Label fx:id="selectedFile" text="(file name)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <ListView fx:id="bucketList" GridPane.rowIndex="3" />
-      <ListView fx:id="objectList" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.vgrow="ALWAYS" />
+      <ListView fx:id="bucketList" GridPane.rowIndex="1" />
+      <ListView fx:id="objectList" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
    </children>
    <padding>
       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

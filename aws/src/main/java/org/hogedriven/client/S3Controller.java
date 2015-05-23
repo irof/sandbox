@@ -4,15 +4,16 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -30,15 +31,11 @@ import java.util.ResourceBundle;
  * @author irof
  */
 public class S3Controller implements Initializable {
-    public TextField keyName;
     public ListView<Bucket> bucketList;
     public ListView<S3ObjectSummary> objectList;
-    public Label selectedFile;
 
-    public Button uploadButton;
     public Button deleteButton;
 
-    private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
 
@@ -76,16 +73,21 @@ public class S3Controller implements Initializable {
         getBuckets();
     }
 
-    public void chooseFile() {
-        FileChooser fileChooser = new FileChooser();
-        file = fileChooser.showOpenDialog(stage);
-        selectedFile.setText(file == null ? null : file.getPath());
-        keyName.setText(file.getName());
-    }
-
     public void uploadFile() {
-        client.putObject(currentBucket.get(), keyName.getText(), file);
-        refreshObjects();
+        // ファイルを選択してもらう
+        FileChooser fileChooser = new FileChooser();
+        File file = fileChooser.showOpenDialog(stage);
+        if (file == null) return;
+
+        TextInputDialog dialog = new TextInputDialog(file.getName());
+        dialog.setTitle("Bucketに格納するキーを入力してください");
+        dialog.setHeaderText(file.getPath());
+        dialog.setContentText("Key :");
+
+        dialog.showAndWait().ifPresent(name -> {
+            client.putObject(currentBucket.get(), name, file);
+            refreshObjects();
+        });
     }
 
     public void deleteFile() {
@@ -101,13 +103,6 @@ public class S3Controller implements Initializable {
 
         objectList.setItems(objects);
         objectList.setCellFactory(this::createObjectCell);
-
-        selectedFile.setText("");
-
-        BooleanBinding disableCondition = Bindings.isEmpty(selectedFile.textProperty())
-                .or(Bindings.isEmpty(keyName.textProperty()));
-        uploadButton.disableProperty().bind(disableCondition);
-        deleteButton.disableProperty().bind(disableCondition);
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
