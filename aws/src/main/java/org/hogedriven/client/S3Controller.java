@@ -1,8 +1,6 @@
 package org.hogedriven.client;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -39,7 +37,7 @@ public class S3Controller implements Initializable {
     private File file;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
-    private AmazonS3Client client;
+    private final AmazonS3 client = AmazonS3Factory.createAmazonS3Client();
 
     public void getBuckets() {
         buckets.clear();
@@ -64,13 +62,13 @@ public class S3Controller implements Initializable {
 
     public void uploadFile() {
         client.putObject(bucketName.getText(), keyName.getText(), file);
-        refreshObjects(client);
+        refreshObjects();
     }
 
     public void deleteFile() {
         client.deleteObject(bucketName.getText(),
                 objectList.getSelectionModel().getSelectedItem().getKey());
-        refreshObjects(client);
+        refreshObjects();
     }
 
     @Override
@@ -82,9 +80,6 @@ public class S3Controller implements Initializable {
         objectList.setCellFactory(this::createObjectCell);
 
         selectedFile.setText("");
-
-        AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
-        client = new AmazonS3Client(credentials);
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
@@ -99,7 +94,7 @@ public class S3Controller implements Initializable {
         cell.setOnMouseClicked(event -> {
             Bucket bucket = cell.getItem();
             bucketName.setText(bucket.getName());
-            refreshObjects(client);
+            refreshObjects();
         });
         return cell;
     }
@@ -133,7 +128,7 @@ public class S3Controller implements Initializable {
         }
     }
 
-    private void refreshObjects(AmazonS3Client client) {
+    private void refreshObjects() {
         objects.clear();
         ObjectListing listing = client.listObjects(bucketName.getText());
         do {
