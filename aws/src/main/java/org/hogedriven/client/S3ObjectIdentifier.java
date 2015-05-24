@@ -7,15 +7,15 @@ import java.util.Objects;
 /**
  * @author irof
  */
-public class ObjectIdentifier {
+public class S3ObjectIdentifier {
     private final String bucket;
     private final String key;
 
-    public ObjectIdentifier(S3ObjectSummary summary) {
+    public S3ObjectIdentifier(S3ObjectSummary summary) {
         this(summary.getBucketName(), summary.getKey());
     }
 
-    public ObjectIdentifier(String bucket, String key) {
+    public S3ObjectIdentifier(String bucket, String key) {
         this.bucket = bucket;
         this.key = key;
     }
@@ -24,7 +24,7 @@ public class ObjectIdentifier {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ObjectIdentifier that = (ObjectIdentifier) o;
+        S3ObjectIdentifier that = (S3ObjectIdentifier) o;
         return Objects.equals(bucket, that.bucket) &&
                 Objects.equals(key, that.key);
     }

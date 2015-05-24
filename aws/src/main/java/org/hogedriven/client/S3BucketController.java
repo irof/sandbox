@@ -30,12 +30,12 @@ import java.util.ResourceBundle;
 /**
  * @author irof
  */
-public class S3Controller implements Initializable {
+public class S3BucketController implements Initializable {
     private final AmazonS3 client;
     private Optional<Bucket> currentBucket = Optional.empty();
 
     private final Stage stage;
-    private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
+    private final Map<S3ObjectIdentifier, Stage> objectWindows = new HashMap<>();
 
     public ComboBox<Bucket> bucket;
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
@@ -47,7 +47,7 @@ public class S3Controller implements Initializable {
     public Button createBucketButton;
     public Button deleteBucketButton;
 
-    public S3Controller(Stage stage, AmazonS3 client) {
+    public S3BucketController(Stage stage, AmazonS3 client) {
         this.stage = stage;
         this.client = client;
     }
@@ -163,7 +163,7 @@ public class S3Controller implements Initializable {
         };
         listCell.setOnMouseClicked(event -> {
             S3ObjectSummary item = listCell.getItem();
-            ObjectIdentifier id = new ObjectIdentifier(item);
+            S3ObjectIdentifier id = new S3ObjectIdentifier(item);
             if (objectWindows.containsKey(id)) {
                 objectWindows.get(id).requestFocus();
             } else if (event.getClickCount() == 2) {
@@ -183,7 +183,7 @@ public class S3Controller implements Initializable {
         try {
             Stage stage = new Stage(StageStyle.DECORATED);
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3object.fxml"));
-            loader.setControllerFactory(clz -> new ObjectController(stage, client, item));
+            loader.setControllerFactory(clz -> new S3ObjectController(stage, client, item));
             Parent root = loader.load();
             stage.setScene(new Scene(root));
             return stage;

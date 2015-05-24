@@ -16,7 +16,7 @@ import java.util.ResourceBundle;
 /**
  * @author irof
  */
-public class ObjectController implements Initializable {
+public class S3ObjectController implements Initializable {
     public Label bucket;
     public Label key;
     public Label contentType;
@@ -28,7 +28,7 @@ public class ObjectController implements Initializable {
     private final AmazonS3 client;
     private final S3ObjectSummary summary;
 
-    public ObjectController(Stage stage, AmazonS3 client, S3ObjectSummary summary) {
+    public S3ObjectController(Stage stage, AmazonS3 client, S3ObjectSummary summary) {
         this.stage = stage;
         this.client = client;
         this.summary = summary;
