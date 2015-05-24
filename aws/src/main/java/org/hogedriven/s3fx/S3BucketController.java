@@ -1,6 +1,5 @@
 package org.hogedriven.s3fx;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -17,6 +16,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
+import org.hogedriven.s3fx.client.S3Wrapper;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +31,7 @@ import java.util.ResourceBundle;
  * @author irof
  */
 public class S3BucketController implements Initializable {
-    private final AmazonS3 client;
+    private final S3Wrapper client;
     private Optional<Bucket> currentBucket = Optional.empty();
 
     private final Stage stage;
@@ -47,7 +47,7 @@ public class S3BucketController implements Initializable {
     public Button createBucketButton;
     public Button deleteBucketButton;
 
-    public S3BucketController(Stage stage, AmazonS3 client) {
+    public S3BucketController(Stage stage, S3Wrapper client) {
         this.stage = stage;
         this.client = client;
     }

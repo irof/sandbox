@@ -1,12 +1,12 @@
 package org.hogedriven.s3fx;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import org.hogedriven.s3fx.client.S3Wrapper;
 
 import java.io.File;
 import java.net.URL;
@@ -28,12 +28,12 @@ public class S3ObjectController implements Initializable {
     public TextArea observationWindow;
 
     private final Stage stage;
-    private final AmazonS3 client;
+    private final S3Wrapper client;
     private final S3ObjectSummary summary;
     public ComboBox<Charset> observationCharset;
     public Slider observationSize;
 
-    public S3ObjectController(Stage stage, AmazonS3 client, S3ObjectSummary summary) {
+    public S3ObjectController(Stage stage, S3Wrapper client, S3ObjectSummary summary) {
         this.stage = stage;
         this.client = client;
         this.summary = summary;

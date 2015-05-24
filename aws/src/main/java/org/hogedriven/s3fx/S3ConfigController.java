@@ -6,6 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import org.hogedriven.s3fx.client.AmazonS3Builder;
 import org.hogedriven.s3fx.client.AmazonS3MockBuilder;
+import org.hogedriven.s3fx.client.S3Wrapper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,11 +24,11 @@ public class S3ConfigController implements Initializable {
     public RadioButton mockMode;
     public RadioButton basicMode;
 
-    public S3ConfigController(Dialog<AmazonS3> dialog) {
+    public S3ConfigController(Dialog<S3Wrapper> dialog) {
         dialog.setResultConverter(this::createResult);
     }
 
-    private AmazonS3 createResult(ButtonType button) {
+    private S3Wrapper createResult(ButtonType button) {
         if (button.getButtonData().isCancelButton()) return null;
 
         if (mockMode.isSelected()) {

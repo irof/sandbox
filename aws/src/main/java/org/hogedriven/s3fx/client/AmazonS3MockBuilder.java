@@ -1,6 +1,5 @@
 package org.hogedriven.s3fx.client;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 
 import java.lang.reflect.InvocationHandler;
@@ -16,10 +15,10 @@ import java.util.stream.Stream;
  */
 public class AmazonS3MockBuilder {
 
-    public AmazonS3 build() {
-        return (AmazonS3) Proxy.newProxyInstance(
+    public S3Wrapper build() {
+        return (S3Wrapper) Proxy.newProxyInstance(
                 ClassLoader.getSystemClassLoader(),
-                new Class[]{AmazonS3.class},
+                new Class[]{S3Wrapper.class},
                 createInvocationHandler());
     }
 
@@ -32,12 +31,9 @@ public class AmazonS3MockBuilder {
                 case "listBuckets":
                     return Arrays.asList(createBucket("hoge"), createBucket("fuga"), createBucket("piyo"));
                 case "listObjects":
-                    ObjectListing listing = new ObjectListing();
-                    listing.getObjectSummaries().addAll(
-                            Stream.generate(AmazonS3MockBuilder::createS3ObjectSummary)
-                                    .limit(20)
-                                    .collect(Collectors.toList()));
-                    return listing;
+                    return Stream.generate(AmazonS3MockBuilder::createS3ObjectSummary)
+                            .limit(20)
+                            .collect(Collectors.toList());
                 case "listNextBatchOfObjects":
                     return new ObjectListing();
                 case "getObjectMetadata":
