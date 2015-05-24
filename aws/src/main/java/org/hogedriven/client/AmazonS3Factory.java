@@ -1,19 +1,17 @@
 package org.hogedriven.client;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
-import com.amazonaws.util.Md5Utils;
-import sun.security.provider.MD5;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -22,16 +20,18 @@ import java.util.stream.Stream;
  */
 public class AmazonS3Factory {
 
-    public AmazonS3 createAmazonS3Client() {
-        // 別インスタンスにする
-        if (System.getProperty("debug", "false").equals("true")) {
-            return createMock();
-        }
-        AWSCredentials credentials = new ProfileCredentialsProvider().getCredentials();
-        return new AmazonS3Client(credentials);
+    public AmazonS3 createAmazonS3Client() throws IOException {
+        Dialog<AmazonS3> dialog = new Dialog<>();
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3config.fxml"));
+        loader.setControllerFactory(clz -> new S3ConfigController(dialog));
+        dialog.getDialogPane().setContent(loader.load());
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        return dialog.showAndWait().orElseThrow(() -> new RuntimeException("キャンセルしたので起動しません"));
     }
 
-    private static AmazonS3 createMock() {
+    static AmazonS3 createMock() {
         return (AmazonS3) Proxy.newProxyInstance(
                 ClassLoader.getSystemClassLoader(),
                 new Class[]{AmazonS3.class},
