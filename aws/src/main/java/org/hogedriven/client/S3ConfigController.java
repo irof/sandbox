@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.Owner;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
@@ -40,7 +41,15 @@ public class S3ConfigController implements Initializable {
     }
 
     private AmazonS3Client createRealClient(AWSCredentials credentials) {
-        return new AmazonS3Client(credentials);
+        AmazonS3Client client = new AmazonS3Client(credentials);
+        Owner owner = client.getS3AccountOwner();
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("S3に接続しました");
+        alert.setContentText("Owner Name: " + owner.getDisplayName());
+        alert.showAndWait();
+
+        return client;
     }
 
     @Override
