@@ -40,7 +40,7 @@ public class S3ObjectController implements Initializable {
     }
 
     public void onObservation() throws Exception {
-        S3Object object = client.getObject(getGetObjectRequest());
+        S3Object object = client.getObject(summary);
         try (S3ObjectInputStream content = object.getObjectContent()) {
             byte[] bytes = new byte[(int) observationSize.getValue()];
             content.read(bytes);
@@ -62,20 +62,16 @@ public class S3ObjectController implements Initializable {
                 if (destFile.exists()) {
                     throw new UnsupportedOperationException("同じ名前のファイルがあるよ");
                 }
-                client.getObject(getGetObjectRequest(), destFile);
+                client.getObject(summary, destFile);
             }
         } finally {
             stage.setTitle(title);
         }
     }
 
-    private GetObjectRequest getGetObjectRequest() {
-        return new GetObjectRequest(bucket.getText(), key.getText());
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObjectMetadata meta = client.getObjectMetadata(summary.getBucketName(), summary.getKey());
+        ObjectMetadata meta = client.getObjectMetadata(summary);
         bucket.setText(summary.getBucketName());
         key.setText(summary.getKey());
         contentType.setText(meta.getContentType());

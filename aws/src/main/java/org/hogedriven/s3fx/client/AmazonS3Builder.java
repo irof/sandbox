@@ -27,10 +27,7 @@ public class AmazonS3Builder {
     public S3Wrapper build() {
         AmazonS3Client client = new AmazonS3Client(credentials, createClientConfig());
         if (verifier != null) verifier.accept(client);
-        return (S3Wrapper) Proxy.newProxyInstance(this.getClass().getClassLoader(),
-                new Class[]{S3Wrapper.class},
-                createHandler(client)
-        );
+        return new S3WrapperImpl(client);
     }
 
     private InvocationHandler createHandler(AmazonS3Client client) {

@@ -1,7 +1,6 @@
 package org.hogedriven.s3fx;
 
 import com.amazonaws.services.s3.model.Bucket;
-import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -63,14 +62,11 @@ public class S3BucketController implements Initializable {
         dialog.setHeaderText("作りたいBucketの名前を入力してください");
         dialog.setContentText("new Bucket Name :");
 
-        dialog.showAndWait().ifPresent(name -> {
-            Bucket bucket = client.createBucket(name);
-            buckets.add(bucket);
-        });
+        dialog.showAndWait().ifPresent(name -> buckets.add(client.createBucket(name)));
     }
 
     public void deleteBucket() {
-        currentBucket.map(Bucket::getName).ifPresent(client::deleteBucket);
+        currentBucket.ifPresent(client::deleteBucket);
         currentBucket.ifPresent(buckets::remove);
         bucket.getSelectionModel().clearSelection();
     }
@@ -87,14 +83,14 @@ public class S3BucketController implements Initializable {
         dialog.setContentText("Key :");
 
         dialog.showAndWait().ifPresent(name -> {
-            client.putObject(currentBucket.get().getName(), name, file);
+            client.putObject(currentBucket.get(), name, file);
             refreshObjects();
         });
     }
 
     public void deleteFile() {
         S3ObjectSummary selectedItem = objectList.getSelectionModel().getSelectedItem();
-        client.deleteObject(currentBucket.get().getName(), selectedItem.getKey());
+        client.deleteObject(selectedItem);
         objects.remove(selectedItem);
         S3ObjectIdentifier id = new S3ObjectIdentifier(selectedItem);
         if (objectWindows.containsKey(id)) {
@@ -104,13 +100,7 @@ public class S3BucketController implements Initializable {
 
     private void refreshObjects() {
         objects.clear();
-        currentBucket.map(Bucket::getName).ifPresent(name -> {
-            ObjectListing listing = client.listObjects(name);
-            do {
-                objects.addAll(listing.getObjectSummaries());
-                listing = client.listNextBatchOfObjects(listing);
-            } while (listing.getMarker() != null);
-        });
+        currentBucket.ifPresent(bucket -> objects.addAll(client.listObjects(bucket)));
     }
 
     @Override
