@@ -5,12 +5,15 @@ import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
+import com.amazonaws.util.Md5Utils;
+import sun.security.provider.MD5;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -38,6 +41,7 @@ public class AmazonS3Factory {
         return (proxy, method, args) -> {
             System.out.printf("invoke: %s %s(%s)%n",
                     method.getReturnType().getSimpleName(), method.getName(), Arrays.toString(args));
+            //TimeUnit.SECONDS.sleep(3);
             switch (method.getName()) {
                 case "listBuckets":
                     return Arrays.asList(createBucket("hoge"), createBucket("fuga"), createBucket("piyo"));
@@ -83,6 +87,7 @@ public class AmazonS3Factory {
         objectSummary.setLastModified(new Date());
         objectSummary.setSize(12345678);
         objectSummary.setStorageClass("S3ObjectSummaryStorageClassByMock");
+        objectSummary.setETag("DUMMY ETag Value");
         return objectSummary;
     }
 }

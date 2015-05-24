@@ -8,26 +8,32 @@
 
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.S3ObjectController">
    <children>
-      <GridPane maxHeight="-Infinity" minHeight="-Infinity" prefHeight="90.0">
+      <GridPane maxHeight="-Infinity" minHeight="-Infinity">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
           <ColumnConstraints hgrow="ALWAYS" maxWidth="1.7976931348623157E308" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
             <Label text="Bucket" />
             <Label text="Key" GridPane.rowIndex="1" />
-            <Label text="Content-Type" GridPane.rowIndex="3" />
+            <Label text="Content-Type" GridPane.rowIndex="5" />
             <Label fx:id="bucket" text="(バケット名を表示)" GridPane.columnIndex="1" />
             <Label fx:id="key" text="(キー名を全部表示)" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label fx:id="contentType" text="(ContentTypeを表示)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label fx:id="contentType" text="(ContentTypeを表示)" GridPane.columnIndex="1" GridPane.rowIndex="5" />
             <Label text="size" GridPane.rowIndex="2" />
             <Label fx:id="size" text="(サイズをbyteで表示)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="ETag" GridPane.rowIndex="4" />
+            <Label fx:id="eTag" text="(ETagを表示)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="LastModified" GridPane.rowIndex="3" />
+            <Label fx:id="lastModified" text="(最終更新日時を表示)" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <HBox maxHeight="-Infinity" minHeight="-Infinity" prefHeight="46.0" spacing="10.0">

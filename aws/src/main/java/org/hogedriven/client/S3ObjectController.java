@@ -21,6 +21,8 @@ public class S3ObjectController implements Initializable {
     public Label key;
     public Label contentType;
     public Label size;
+    public Label eTag;
+    public Label lastModified;
     public Button observationButton;
     public TextArea observationWindow;
 
@@ -75,6 +77,8 @@ public class S3ObjectController implements Initializable {
         key.setText(summary.getKey());
         contentType.setText(meta.getContentType());
         size.setText(String.format("%,3d byte", summary.getSize()));
+        eTag.setText(summary.getETag());
+        lastModified.setText(summary.getLastModified().toString());
 
         String contentType = meta.getContentType();
         boolean isText = contentType != null && contentType.startsWith("text");
