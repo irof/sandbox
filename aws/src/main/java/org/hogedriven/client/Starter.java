@@ -2,7 +2,6 @@ package org.hogedriven.client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
@@ -21,7 +20,7 @@ public class Starter extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3client.fxml"));
-        loader.setControllerFactory(clz -> new S3Controller(stage, AmazonS3Factory.createAmazonS3Client()));
+        loader.setControllerFactory(clz -> new S3BucketController(stage, AmazonS3Factory.createAmazonS3Client()));
 
         stage.setTitle(this.getClass().getSimpleName());
         stage.setScene(new Scene(loader.load()));

@@ -96,6 +96,10 @@ public class S3BucketController implements Initializable {
         S3ObjectSummary selectedItem = objectList.getSelectionModel().getSelectedItem();
         client.deleteObject(currentBucket.get().getName(), selectedItem.getKey());
         objects.remove(selectedItem);
+        S3ObjectIdentifier id = new S3ObjectIdentifier(selectedItem);
+        if (objectWindows.containsKey(id)) {
+            objectWindows.get(id).close();
+        }
     }
 
     private void refreshObjects() {
