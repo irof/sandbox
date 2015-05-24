@@ -9,8 +9,10 @@ import com.amazonaws.services.s3.model.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author irof
@@ -34,16 +36,17 @@ public class AmazonS3Factory {
 
     private static InvocationHandler createInvocationHandler() {
         return (proxy, method, args) -> {
-            System.out.println(method);
-            System.out.println(Arrays.toString(args));
+            System.out.printf("invoke: %s %s(%s)%n",
+                    method.getReturnType().getSimpleName(), method.getName(), Arrays.toString(args));
             switch (method.getName()) {
                 case "listBuckets":
                     return Arrays.asList(createBucket("hoge"), createBucket("fuga"), createBucket("piyo"));
                 case "listObjects":
                     ObjectListing listing = new ObjectListing();
                     listing.getObjectSummaries().addAll(
-                            Collections.nCopies(50,
-                                    createS3ObjectSummary()));
+                            Stream.generate(AmazonS3Factory::createS3ObjectSummary)
+                                    .limit(20)
+                                    .collect(Collectors.toList()));
                     return listing;
                 case "listNextBatchOfObjects":
                     return new ObjectListing();
@@ -53,6 +56,7 @@ public class AmazonS3Factory {
                     return createBucket((String) args[0]);
                 case "deleteBucket":
                 case "putObject":
+                case "deleteObject":
                     return null;
             }
             throw new UnsupportedOperationException(method.toString());
@@ -75,7 +79,7 @@ public class AmazonS3Factory {
     private static S3ObjectSummary createS3ObjectSummary() {
         S3ObjectSummary objectSummary = new S3ObjectSummary();
         objectSummary.setBucketName("S3ObjectSummaryBucketNameByMock");
-        objectSummary.setKey("S3ObjectSummaryKeyByMock");
+        objectSummary.setKey("KeyByMock" + UUID.randomUUID());
         objectSummary.setLastModified(new Date());
         objectSummary.setSize(12345678);
         objectSummary.setStorageClass("S3ObjectSummaryStorageClassByMock");
