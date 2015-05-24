@@ -5,8 +5,11 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import org.hogedriven.s3fx.client.AmazonS3Builder;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,21 +21,30 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Starter extends Application {
 
-    private final AmazonS3Factory factory = new AmazonS3Factory();
+    private final AmazonS3Builder factory = new AmazonS3Builder();
 
     @Override
     public void start(Stage stage) throws Exception {
-        AmazonS3 amazonS3Client = factory.createAmazonS3Client();
+        AmazonS3 client = createAmazonS3Client();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("s3client.fxml"));
-        loader.setControllerFactory(clz -> new S3BucketController(stage, amazonS3Client));
-
+        loader.setControllerFactory(clz -> new S3BucketController(stage, client));
         stage.setTitle("S34FX - JavaFX S3 Client");
         stage.setScene(new Scene(loader.load()));
 
         setExceptionHandler();
-
         stage.show();
+    }
+
+    private AmazonS3 createAmazonS3Client() throws IOException {
+        Dialog<AmazonS3> dialog = new Dialog<>();
+
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("s3config.fxml"));
+        loader.setControllerFactory(clz -> new S3ConfigController(dialog));
+        dialog.getDialogPane().setContent(loader.load());
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        return dialog.showAndWait().orElseThrow(() -> new RuntimeException("キャンセルしたので起動しません"));
     }
 
     private void setExceptionHandler() {

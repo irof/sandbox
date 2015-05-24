@@ -1,12 +1,8 @@
-package org.hogedriven.s3fx;
+package org.hogedriven.s3fx.client;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
@@ -18,27 +14,16 @@ import java.util.stream.Stream;
 /**
  * @author irof
  */
-public class AmazonS3Factory {
+public class AmazonS3MockBuilder {
 
-    public AmazonS3 createAmazonS3Client() throws IOException {
-        Dialog<AmazonS3> dialog = new Dialog<>();
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("s3config.fxml"));
-        loader.setControllerFactory(clz -> new S3ConfigController(dialog));
-        dialog.getDialogPane().setContent(loader.load());
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        return dialog.showAndWait().orElseThrow(() -> new RuntimeException("キャンセルしたので起動しません"));
-    }
-
-    static AmazonS3 createMock() {
+    public AmazonS3 build() {
         return (AmazonS3) Proxy.newProxyInstance(
                 ClassLoader.getSystemClassLoader(),
                 new Class[]{AmazonS3.class},
                 createInvocationHandler());
     }
 
-    private static InvocationHandler createInvocationHandler() {
+    private InvocationHandler createInvocationHandler() {
         return (proxy, method, args) -> {
             System.out.printf("invoke: %s %s(%s)%n",
                     method.getReturnType().getSimpleName(), method.getName(), Arrays.toString(args));
@@ -49,7 +34,7 @@ public class AmazonS3Factory {
                 case "listObjects":
                     ObjectListing listing = new ObjectListing();
                     listing.getObjectSummaries().addAll(
-                            Stream.generate(AmazonS3Factory::createS3ObjectSummary)
+                            Stream.generate(AmazonS3MockBuilder::createS3ObjectSummary)
                                     .limit(20)
                                     .collect(Collectors.toList()));
                     return listing;

@@ -1,19 +1,14 @@
 package org.hogedriven.s3fx;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Owner;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.hogedriven.s3fx.client.AmazonS3Builder;
+import org.hogedriven.s3fx.client.AmazonS3MockBuilder;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author irof
@@ -34,37 +29,32 @@ public class S3ConfigController implements Initializable {
 
     private AmazonS3 createResult(ButtonType button) {
         if (button.getButtonData().isCancelButton()) return null;
+
         if (mockMode.isSelected()) {
-            return AmazonS3Factory.createMock();
+            return new AmazonS3MockBuilder().build();
         }
+
         if (basicMode.isSelected()) {
-            return createRealClient(new BasicAWSCredentials(accessKey.getText(), secretKey.getText()));
+            return new AmazonS3Builder()
+                    .withProxy(proxy.getText())
+                    .basic(accessKey.getText(), secretKey.getText())
+                    .verify(this::ownerCheck)
+                    .build();
         }
-        return createRealClient(new ProfileCredentialsProvider().getCredentials());
+
+        return new AmazonS3Builder()
+                .withProxy(proxy.getText())
+                .defaultProfile()
+                .verify(this::ownerCheck)
+                .build();
     }
 
-    private AmazonS3Client createRealClient(AWSCredentials credentials) {
-        AmazonS3Client client = new AmazonS3Client(credentials, createClientConfig());
+    private void ownerCheck(AmazonS3 client) {
         Owner owner = client.getS3AccountOwner();
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("S3に接続しました");
         alert.setContentText("Account Owner Name: " + owner.getDisplayName());
         alert.showAndWait();
-
-        return client;
-    }
-
-    private ClientConfiguration createClientConfig() {
-        ClientConfiguration config = new ClientConfiguration();
-        String proxyText = proxy.getText();
-        Pattern pattern = Pattern.compile("(.+):(\\d+)");
-        Matcher matcher = pattern.matcher(proxyText);
-        if (matcher.matches()) {
-            config.setProxyHost(matcher.group(1));
-            config.setProxyPort(Integer.valueOf(matcher.group(2)));
-        }
-        return config;
     }
 
     @Override
