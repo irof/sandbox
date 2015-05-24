@@ -11,6 +11,7 @@
 
 <VBox spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.s3fx.S3ConfigController">
    <children>
+      <CheckBox fx:id="readOnly" mnemonicParsing="false" selected="true" text="うっかり更新防止ロック" />
       <RadioButton fx:id="mockMode" mnemonicParsing="false" text="モックモード(S3に接続しない)">
          <toggleGroup>
             <ToggleGroup fx:id="modeGroup" />

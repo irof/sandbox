@@ -23,11 +23,12 @@ public class AmazonS3Builder {
     private AWSCredentials credentials;
 
     private Consumer<AmazonS3> verifier;
+    private boolean readOnly = false;
 
     public S3Wrapper build() {
         AmazonS3Client client = new AmazonS3Client(credentials, createClientConfig());
         if (verifier != null) verifier.accept(client);
-        return new S3WrapperImpl(client);
+        return new S3WrapperImpl(client, readOnly);
     }
 
     private InvocationHandler createHandler(AmazonS3Client client) {
@@ -67,6 +68,11 @@ public class AmazonS3Builder {
 
     public AmazonS3Builder defaultProfile() {
         credentials = new ProfileCredentialsProvider().getCredentials();
+        return this;
+    }
+
+    public AmazonS3Builder readOnlyLock(boolean flg) {
+        this.readOnly = flg;
         return this;
     }
 }

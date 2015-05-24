@@ -23,6 +23,7 @@ public class S3ConfigController implements Initializable {
     public RadioButton defaultMode;
     public RadioButton mockMode;
     public RadioButton basicMode;
+    public CheckBox readOnly;
 
     public S3ConfigController(Dialog<S3Wrapper> dialog) {
         dialog.setResultConverter(this::createResult);
@@ -38,6 +39,7 @@ public class S3ConfigController implements Initializable {
         if (basicMode.isSelected()) {
             return new AmazonS3Builder()
                     .withProxy(proxy.getText())
+                    .readOnlyLock(readOnly.isSelected())
                     .basic(accessKey.getText(), secretKey.getText())
                     .verify(this::ownerCheck)
                     .build();
@@ -45,6 +47,7 @@ public class S3ConfigController implements Initializable {
 
         return new AmazonS3Builder()
                 .withProxy(proxy.getText())
+                .readOnlyLock(readOnly.isSelected())
                 .defaultProfile()
                 .verify(this::ownerCheck)
                 .build();
