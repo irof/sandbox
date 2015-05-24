@@ -71,5 +71,6 @@ public class S3ConfigController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         accessKey.disableProperty().bind(basicMode.selectedProperty().not());
         secretKey.disableProperty().bind(basicMode.selectedProperty().not());
+        proxy.disableProperty().bind(mockMode.selectedProperty());
     }
 }
