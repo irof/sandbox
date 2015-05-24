@@ -31,23 +31,21 @@ import java.util.ResourceBundle;
  * @author irof
  */
 public class S3Controller implements Initializable {
-    public ListView<S3ObjectSummary> objectList;
-
-    public Button deleteButton;
-    public Button uploadButton;
-    public ComboBox<Bucket> bucket;
-    public Button createBucketButton;
-    public Button deleteBucketButton;
-
-    private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
-    private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
-
-    private final Stage stage;
     private final AmazonS3 client;
-
     private Optional<Bucket> currentBucket = Optional.empty();
 
+    private final Stage stage;
     private final Map<ObjectIdentifier, Stage> objectWindows = new HashMap<>();
+
+    public ComboBox<Bucket> bucket;
+    private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
+    public Button deleteButton;
+    public Button uploadButton;
+
+    public ListView<S3ObjectSummary> objectList;
+    private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
+    public Button createBucketButton;
+    public Button deleteBucketButton;
 
     public S3Controller(Stage stage, AmazonS3 client) {
         this.stage = stage;
@@ -100,6 +98,17 @@ public class S3Controller implements Initializable {
         refreshObjects();
     }
 
+    private void refreshObjects() {
+        objects.clear();
+        currentBucket.map(Bucket::getName).ifPresent(name -> {
+            ObjectListing listing = client.listObjects(name);
+            do {
+                objects.addAll(listing.getObjectSummaries());
+                listing = client.listNextBatchOfObjects(listing);
+            } while (listing.getMarker() != null);
+        });
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         getBuckets();
@@ -134,14 +143,13 @@ public class S3Controller implements Initializable {
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
-        ListCell<Bucket> cell = new ListCell<Bucket>() {
+        return new ListCell<Bucket>() {
             @Override
             protected void updateItem(Bucket item, boolean empty) {
                 super.updateItem(item, empty);
                 setText(empty ? "" : item.getName());
             }
         };
-        return cell;
     }
 
     private ListCell<S3ObjectSummary> createObjectCell(ListView<S3ObjectSummary> s3ObjectSummaryListView) {
@@ -182,16 +190,5 @@ public class S3Controller implements Initializable {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-    }
-
-    private void refreshObjects() {
-        objects.clear();
-        currentBucket.map(Bucket::getName).ifPresent(name -> {
-            ObjectListing listing = client.listObjects(name);
-            do {
-                objects.addAll(listing.getObjectSummaries());
-                listing = client.listNextBatchOfObjects(listing);
-            } while (listing.getMarker() != null);
-        });
     }
 }
