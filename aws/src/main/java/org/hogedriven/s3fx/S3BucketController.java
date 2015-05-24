@@ -144,6 +144,10 @@ public class S3BucketController implements Initializable {
         uploadButton.disableProperty().bind(bucketNotSelected);
         deleteButton.disableProperty().bind(bucketNotSelected
                 .or(objectList.getSelectionModel().selectedItemProperty().isNull()));
+
+        // 一旦bucket窓閉じたら全部閉じるようにしとく
+        stage.setOnCloseRequest(event ->
+                objectWindows.values().stream().forEach(Stage::close));
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {
