@@ -93,9 +93,9 @@ public class S3Controller implements Initializable {
     }
 
     public void deleteFile() {
-        client.deleteObject(currentBucket.get().getName(),
-                objectList.getSelectionModel().getSelectedItem().getKey());
-        refreshObjects();
+        S3ObjectSummary selectedItem = objectList.getSelectionModel().getSelectedItem();
+        client.deleteObject(currentBucket.get().getName(), selectedItem.getKey());
+        objects.remove(selectedItem);
     }
 
     private void refreshObjects() {
