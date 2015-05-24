@@ -8,7 +8,6 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
-import org.hogedriven.s3fx.client.AmazonS3Builder;
 import org.hogedriven.s3fx.client.S3Wrapper;
 
 import java.io.IOException;
@@ -20,8 +19,6 @@ import java.lang.reflect.InvocationTargetException;
  * @author irof
  */
 public class Starter extends Application {
-
-    private final AmazonS3Builder factory = new AmazonS3Builder();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -58,7 +55,7 @@ public class Starter extends Application {
             alert.setHeaderText("なんか例外だよ");
             alert.setContentText("気になる人のためのスタックトレース");
             try (StringWriter stringWriter = new StringWriter();
-                 PrintWriter writer = new PrintWriter(stringWriter);) {
+                 PrintWriter writer = new PrintWriter(stringWriter)) {
                 if (e instanceof RuntimeException
                         && e.getCause() instanceof InvocationTargetException) {
                     Throwable ite = e.getCause();

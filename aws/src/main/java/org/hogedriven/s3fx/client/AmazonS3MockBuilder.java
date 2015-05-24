@@ -34,8 +34,6 @@ public class AmazonS3MockBuilder {
                     return Stream.generate(AmazonS3MockBuilder::createS3ObjectSummary)
                             .limit(20)
                             .collect(Collectors.toList());
-                case "listNextBatchOfObjects":
-                    return new ObjectListing();
                 case "getObjectMetadata":
                     return getObjectMetadata();
                 case "createBucket":
