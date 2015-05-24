@@ -4,6 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectListing;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -34,6 +36,8 @@ public class S3Controller implements Initializable {
     public Button deleteButton;
     public Button uploadButton;
     public ComboBox<Bucket> bucket;
+    public Button createBucketButton;
+    public Button deleteBucketButton;
 
     private ObservableList<Bucket> buckets = FXCollections.observableArrayList();
     private ObservableList<S3ObjectSummary> objects = FXCollections.observableArrayList();
@@ -121,6 +125,12 @@ public class S3Controller implements Initializable {
 
         objectList.setItems(objects);
         objectList.setCellFactory(this::createObjectCell);
+
+        BooleanBinding bucketNotSelected = Bindings.isNull(bucket.valueProperty());
+        deleteBucketButton.disableProperty().bind(bucketNotSelected);
+        uploadButton.disableProperty().bind(bucketNotSelected);
+        deleteButton.disableProperty().bind(bucketNotSelected
+                .or(objectList.getSelectionModel().selectedItemProperty().isNull()));
     }
 
     private ListCell<Bucket> createBucketCell(ListView<Bucket> listView) {

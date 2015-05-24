@@ -5,15 +5,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
 <VBox spacing="10.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.S3Controller">
    <children>
       <HBox spacing="5.0" VBox.vgrow="NEVER">
          <children>
             <ComboBox fx:id="bucket" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="ALWAYS" />
             <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#getBuckets" text="再取得" />
-            <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#createBucket" text="+" />
-            <Button maxWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBucket" text="-" />
+            <Button fx:id="createBucketButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#createBucket" text="+" />
+            <Button fx:id="deleteBucketButton" maxWidth="-Infinity" mnemonicParsing="false" onAction="#deleteBucket" text="-" />
          </children>
       </HBox>
       <HBox spacing="5.0">
