@@ -1,4 +1,4 @@
-package org.hogedriven.client;
+package org.hogedriven.s3fx;
 
 import com.amazonaws.services.s3.AmazonS3;
 import javafx.application.Application;
@@ -24,10 +24,10 @@ public class Starter extends Application {
     public void start(Stage stage) throws Exception {
         AmazonS3 amazonS3Client = factory.createAmazonS3Client();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3client.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("s3client.fxml"));
         loader.setControllerFactory(clz -> new S3BucketController(stage, amazonS3Client));
 
-        stage.setTitle(this.getClass().getSimpleName());
+        stage.setTitle("S34FX - JavaFX S3 Client");
         stage.setScene(new Scene(loader.load()));
 
         setExceptionHandler();

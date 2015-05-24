@@ -1,4 +1,4 @@
-package org.hogedriven.client;
+package org.hogedriven.s3fx;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;

@@ -9,7 +9,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.client.S3ConfigController">
+<VBox spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.hogedriven.s3fx.S3ConfigController">
    <children>
       <RadioButton fx:id="mockMode" mnemonicParsing="false" text="モックモード(S3に接続しない)">
          <toggleGroup>

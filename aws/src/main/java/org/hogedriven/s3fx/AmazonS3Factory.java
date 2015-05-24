@@ -1,4 +1,4 @@
-package org.hogedriven.client;
+package org.hogedriven.s3fx;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
@@ -23,7 +23,7 @@ public class AmazonS3Factory {
     public AmazonS3 createAmazonS3Client() throws IOException {
         Dialog<AmazonS3> dialog = new Dialog<>();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3config.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("s3config.fxml"));
         loader.setControllerFactory(clz -> new S3ConfigController(dialog));
         dialog.getDialogPane().setContent(loader.load());
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);

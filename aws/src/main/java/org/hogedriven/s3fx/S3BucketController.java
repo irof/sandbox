@@ -1,4 +1,4 @@
-package org.hogedriven.client;
+package org.hogedriven.s3fx;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.Bucket;
@@ -186,7 +186,7 @@ public class S3BucketController implements Initializable {
     private Stage createS3ObjectWindow(S3ObjectSummary item) {
         try {
             Stage stage = new Stage(StageStyle.DECORATED);
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../s3object.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("s3object.fxml"));
             loader.setControllerFactory(clz -> new S3ObjectController(stage, client, item));
             Parent root = loader.load();
             stage.setScene(new Scene(root));

@@ -1,4 +1,4 @@
-package org.hogedriven.client;
+package org.hogedriven.s3fx;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentials;
@@ -49,7 +49,7 @@ public class S3ConfigController implements Initializable {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("S3に接続しました");
-        alert.setContentText("Owner Name: " + owner.getDisplayName());
+        alert.setContentText("Account Owner Name: " + owner.getDisplayName());
         alert.showAndWait();
 
         return client;
