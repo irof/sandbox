@@ -22,7 +22,8 @@ import java.util.stream.Stream;
  */
 public class AmazonS3Factory {
 
-    public static AmazonS3 createAmazonS3Client() {
+    public AmazonS3 createAmazonS3Client() {
+        // 別インスタンスにする
         if (System.getProperty("debug", "false").equals("true")) {
             return createMock();
         }
