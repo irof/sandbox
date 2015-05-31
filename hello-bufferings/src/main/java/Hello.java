@@ -17,8 +17,12 @@ public class Hello {
         List<Integer> coins2 = new ArrayList<>();
         int sum = 0;
         try {
-            if (in.getSelected() != null && in.getSelected() > 0 && in.getSelected() < 11) {
-                if (in.getCoins() != null && in.getCoins().size() > 0 && in.getCoins().size() < 101) {
+            if (in.getSelected() == null || in.getSelected() <= 0 || in.getSelected() >= 11) {
+                throw new IllegalArgumentException();
+            } else {
+                if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
+                    throw new IllegalArgumentException();
+                } else {
                     sum = 0;
                     for (Integer coin : in.getCoins()) {
                         if (coin == 1) {
@@ -64,11 +68,7 @@ public class Hello {
                         result.setCoins(in.getCoins());
                         result.setProduct(null);
                     }
-                } else {
-                    throw new IllegalArgumentException();
                 }
-            } else {
-                throw new IllegalArgumentException();
             }
         } catch (Exception e) {
             LOG.error(e);
