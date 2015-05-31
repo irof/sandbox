@@ -43,7 +43,7 @@ public class Hello {
                         result = new Result();
                         result.setCoins(in.getCoins());
                         result.setProduct(null);
-                    } else if (product.getPrice() < sum) {
+                    } else if (product.getPrice() <= sum) {
                         result.setProduct(product);
                         sum -= product.getPrice();
 
@@ -53,7 +53,7 @@ public class Hello {
                         coins3.add(50);
                         coins3.add(10);
                         for (Integer coin : coins3) {
-                            while (sum > coin) {
+                            while (sum >= coin) {
                                 coins2.add(coin);
                                 sum -= coin;
                             }
