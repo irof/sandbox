@@ -10,7 +10,7 @@ import java.util.List;
 public class Hello {
 
     private static final Log LOG = LogFactory.getLog(Hello.class);
-    private Dao dao;
+    private Dao dao = new Dao();
 
     public Result execute(Input in) {
         Result result = new Result();
