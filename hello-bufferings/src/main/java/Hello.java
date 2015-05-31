@@ -20,10 +20,7 @@ public class Hello {
 
             Product product = dao.findById(in.getSelected());
             if (product == null) {
-                Result result = new Result();
-                result.setCoins(in.getCoins());
-                result.setProduct(null);
-                return result;
+                return cancel(in);
             } else if (product.getPrice() <= amount) {
                 Result result = new Result();
                 result.setProduct(product);
@@ -43,18 +40,19 @@ public class Hello {
                 result.setCoins(payBack);
                 return result;
             } else {
-                Result result = new Result();
-                result.setCoins(in.getCoins());
-                result.setProduct(null);
-                return result;
+                return cancel(in);
             }
         } catch (Exception e) {
             LOG.error(e);
-            Result result = new Result();
-            result.setCoins(in.getCoins());
-            result.setProduct(null);
-            return result;
+            return cancel(in);
         }
+    }
+
+    private Result cancel(Input in) {
+        Result result = new Result();
+        result.setCoins(in.getCoins());
+        result.setProduct(null);
+        return result;
     }
 
     private int calculateAvailableAmount(Input in, List<Integer> coins2) {
