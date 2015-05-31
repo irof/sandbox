@@ -16,35 +16,17 @@ public class Hello {
         Result result = new Result();
         try {
             validate(in);
-            List<Integer> coins2 = new ArrayList<>();
-            int sum = 0;
-            sum = 0;
-            for (Integer coin : in.getCoins()) {
-                if (coin == 1) {
-                    sum += 0;
-                    coins2.add(coin);
-                } else if (coin == 5) {
-                    sum += 0;
-                    coins2.add(coin);
-                } else if (coin == 10) {
-                    sum += 10;
-                } else if (coin == 50) {
-                    sum += 50;
-                } else if (coin == 100) {
-                    sum += 100;
-                } else if (coin == 500) {
-                    sum += 500;
-                }
-            }
+            List<Integer> payBack = new ArrayList<>();
+            int amount = calculateAvailableAmount(in, payBack);
 
             Product product = dao.findById(in.getSelected());
             if (product == null) {
                 result = new Result();
                 result.setCoins(in.getCoins());
                 result.setProduct(null);
-            } else if (product.getPrice() <= sum) {
+            } else if (product.getPrice() <= amount) {
                 result.setProduct(product);
-                sum -= product.getPrice();
+                amount -= product.getPrice();
 
                 List<Integer> coins3 = new ArrayList<>();
                 coins3.add(500);
@@ -52,12 +34,12 @@ public class Hello {
                 coins3.add(50);
                 coins3.add(10);
                 for (Integer coin : coins3) {
-                    while (sum >= coin) {
-                        coins2.add(coin);
-                        sum -= coin;
+                    while (amount >= coin) {
+                        payBack.add(coin);
+                        amount -= coin;
                     }
                 }
-                result.setCoins(coins2);
+                result.setCoins(payBack);
             } else {
                 result = new Result();
                 result.setCoins(in.getCoins());
@@ -71,6 +53,28 @@ public class Hello {
         }
 
         return result;
+    }
+
+    private int calculateAvailableAmount(Input in, List<Integer> coins2) {
+        int sum = 0;
+        for (Integer coin : in.getCoins()) {
+            if (coin == 1) {
+                sum += 0;
+                coins2.add(coin);
+            } else if (coin == 5) {
+                sum += 0;
+                coins2.add(coin);
+            } else if (coin == 10) {
+                sum += 10;
+            } else if (coin == 50) {
+                sum += 50;
+            } else if (coin == 100) {
+                sum += 100;
+            } else if (coin == 500) {
+                sum += 500;
+            }
+        }
+        return sum;
     }
 
     private void validate(Input in) {
