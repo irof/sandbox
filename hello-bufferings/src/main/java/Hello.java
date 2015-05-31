@@ -55,15 +55,13 @@ public class Hello {
     }
 
     private int calculateAvailableAmount(Input in, List<Integer> coins2) {
-        int sum = 0;
-        for (Integer coin : in.getCoins()) {
-            if (coin == 1 || coin == 5) {
-                coins2.add(coin);
-            } else if (availableCoins.contains(coin)) {
-                sum += coin;
-            }
-        }
-        return sum;
+        in.getCoins().stream()
+                .filter(coin -> coin == 1 || coin == 5)
+                .forEach(coins2::add);
+        return in.getCoins().stream()
+                .filter(availableCoins::contains)
+                .mapToInt(coins -> coins)
+                .sum();
     }
 
     private void validate(Input in) {
