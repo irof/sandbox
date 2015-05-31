@@ -19,29 +19,26 @@ public class Hello {
             int amount = calculateAvailableAmount(in, payBack);
 
             Product product = dao.findById(in.getSelected());
-            if (product == null) {
-                return cancel(in);
-            } else if (product.getPrice() <= amount) {
-                Result result = new Result();
-                result.setProduct(product);
-                amount -= product.getPrice();
-
-                List<Integer> coins3 = new ArrayList<>();
-                coins3.add(500);
-                coins3.add(100);
-                coins3.add(50);
-                coins3.add(10);
-                for (Integer coin : coins3) {
-                    while (amount >= coin) {
-                        payBack.add(coin);
-                        amount -= coin;
-                    }
-                }
-                result.setCoins(payBack);
-                return result;
-            } else {
+            if (product == null || product.getPrice() > amount) {
                 return cancel(in);
             }
+            Result result = new Result();
+            result.setProduct(product);
+            amount -= product.getPrice();
+
+            List<Integer> coins3 = new ArrayList<>();
+            coins3.add(500);
+            coins3.add(100);
+            coins3.add(50);
+            coins3.add(10);
+            for (Integer coin : coins3) {
+                while (amount >= coin) {
+                    payBack.add(coin);
+                    amount -= coin;
+                }
+            }
+            result.setCoins(payBack);
+            return result;
         } catch (Exception e) {
             LOG.error(e);
             return cancel(in);
