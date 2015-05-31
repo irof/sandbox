@@ -14,10 +14,10 @@ public class Hello {
 
     public Result execute(Input in) {
         Result result = new Result();
-        List<Integer> coins2 = new ArrayList<>();
-        int sum = 0;
         try {
             validate(in);
+            List<Integer> coins2 = new ArrayList<>();
+            int sum = 0;
             sum = 0;
             for (Integer coin : in.getCoins()) {
                 if (coin == 1) {
