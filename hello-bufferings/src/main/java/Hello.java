@@ -26,22 +26,26 @@ public class Hello {
             result.setProduct(product);
             amount -= product.getPrice();
 
-            List<Integer> coins3 = new ArrayList<>();
-            coins3.add(500);
-            coins3.add(100);
-            coins3.add(50);
-            coins3.add(10);
-            for (Integer coin : coins3) {
-                while (amount >= coin) {
-                    payBack.add(coin);
-                    amount -= coin;
-                }
-            }
+            calculatePayBack(payBack, amount);
             result.setCoins(payBack);
             return result;
         } catch (Exception e) {
             LOG.error(e);
             return cancel(in);
+        }
+    }
+
+    private void calculatePayBack(List<Integer> payBack, int amount) {
+        List<Integer> coins3 = new ArrayList<>();
+        coins3.add(500);
+        coins3.add(100);
+        coins3.add(50);
+        coins3.add(10);
+        for (Integer coin : coins3) {
+            while (amount >= coin) {
+                payBack.add(coin);
+                amount -= coin;
+            }
         }
     }
 
