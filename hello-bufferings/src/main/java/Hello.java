@@ -17,11 +17,7 @@ public class Hello {
         List<Integer> coins2 = new ArrayList<>();
         int sum = 0;
         try {
-            if (in.getSelected() == null || in.getSelected() <= 0 || in.getSelected() >= 11) {
-                throw new IllegalArgumentException();
-            } else if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
-                throw new IllegalArgumentException();
-            }
+            validate(in);
             sum = 0;
             for (Integer coin : in.getCoins()) {
                 if (coin == 1) {
@@ -75,5 +71,13 @@ public class Hello {
         }
 
         return result;
+    }
+
+    private void validate(Input in) {
+        if (in.getSelected() == null || in.getSelected() <= 0 || in.getSelected() >= 11) {
+            throw new IllegalArgumentException();
+        } else if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
+            throw new IllegalArgumentException();
+        }
     }
 }
