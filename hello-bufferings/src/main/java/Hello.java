@@ -2,6 +2,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -11,6 +12,8 @@ public class Hello {
 
     private static final Log LOG = LogFactory.getLog(Hello.class);
     private Dao dao = new Dao();
+
+    private final List<Integer> availableCoins = Arrays.asList(500, 100, 50, 10);
 
     public Result execute(Input in) {
         try {
@@ -36,12 +39,7 @@ public class Hello {
     }
 
     private void calculatePayBack(List<Integer> payBack, int amount) {
-        List<Integer> coins3 = new ArrayList<>();
-        coins3.add(500);
-        coins3.add(100);
-        coins3.add(50);
-        coins3.add(10);
-        for (Integer coin : coins3) {
+        for (Integer coin : availableCoins) {
             while (amount >= coin) {
                 payBack.add(coin);
                 amount -= coin;
@@ -59,20 +57,10 @@ public class Hello {
     private int calculateAvailableAmount(Input in, List<Integer> coins2) {
         int sum = 0;
         for (Integer coin : in.getCoins()) {
-            if (coin == 1) {
-                sum += 0;
+            if (coin == 1 || coin == 5) {
                 coins2.add(coin);
-            } else if (coin == 5) {
-                sum += 0;
-                coins2.add(coin);
-            } else if (coin == 10) {
-                sum += 10;
-            } else if (coin == 50) {
-                sum += 50;
-            } else if (coin == 100) {
-                sum += 100;
-            } else if (coin == 500) {
-                sum += 500;
+            } else if (availableCoins.contains(coin)) {
+                sum += coin;
             }
         }
         return sum;
