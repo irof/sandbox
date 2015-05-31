@@ -13,7 +13,6 @@ public class Hello {
     private Dao dao = new Dao();
 
     public Result execute(Input in) {
-        Result result = new Result();
         try {
             validate(in);
             List<Integer> payBack = new ArrayList<>();
@@ -21,10 +20,12 @@ public class Hello {
 
             Product product = dao.findById(in.getSelected());
             if (product == null) {
-                result = new Result();
+                Result result = new Result();
                 result.setCoins(in.getCoins());
                 result.setProduct(null);
+                return result;
             } else if (product.getPrice() <= amount) {
+                Result result = new Result();
                 result.setProduct(product);
                 amount -= product.getPrice();
 
@@ -40,19 +41,20 @@ public class Hello {
                     }
                 }
                 result.setCoins(payBack);
+                return result;
             } else {
-                result = new Result();
+                Result result = new Result();
                 result.setCoins(in.getCoins());
                 result.setProduct(null);
+                return result;
             }
         } catch (Exception e) {
             LOG.error(e);
-            result = new Result();
+            Result result = new Result();
             result.setCoins(in.getCoins());
             result.setProduct(null);
+            return result;
         }
-
-        return result;
     }
 
     private int calculateAvailableAmount(Input in, List<Integer> coins2) {
