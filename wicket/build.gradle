@@ -10,13 +10,16 @@ tasks.withType(GroovyCompile)*.groovyOptions*.encoding = defaultEncoding
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-  jcenter()
+    jcenter()
 }
 
 dependencies {
     compile 'org.apache.wicket:wicket-core:6.19.0'
+    compile 'org.apache.wicket:wicket-spring:6.19.0'
     compile 'org.slf4j:slf4j-log4j12:1.6.4'
     compile 'log4j:log4j:1.2.16'
+    compile 'org.springframework:spring-web:4.1.6.RELEASE'
+
     providedCompile 'javax.servlet:servlet-api:2.5'
 
     testCompile 'junit:junit:4.12'
@@ -25,12 +28,12 @@ dependencies {
 }
 
 sourceSets {
-  main {
-    java { srcDir 'src/main/java' }
-    resources {
-      srcDir 'src/main/resources'
-      srcDir 'src/main/java'
+    main {
+        java { srcDir 'src/main/java' }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/main/java'
+        }
     }
-  }
 }
 

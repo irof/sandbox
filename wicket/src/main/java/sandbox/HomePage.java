@@ -6,6 +6,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import sandbox.i18n.ResourcePage;
 import sandbox.misc.SimplePage;
 import sandbox.model.BookShelfPage;
+import sandbox.spring.SpringPage;
 import sandbox.structure.MyPage;
 
 public class HomePage extends WebPage {
@@ -18,5 +19,6 @@ public class HomePage extends WebPage {
         add(new BookmarkablePageLink<>("misc.link", SimplePage.class));
         add(new BookmarkablePageLink<>("structure.link", MyPage.class));
         add(new BookmarkablePageLink<>("model.link", BookShelfPage.class));
+        add(new BookmarkablePageLink<>("spring.link", SpringPage.class));
     }
 }
