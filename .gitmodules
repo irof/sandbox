@@ -2,6 +2,3 @@
 	path = gh-pages
 	url = git@github.com:irof/sandbox.git
 	branch = gh-pages
-[submodule "s3fx"]
-	path = s3fx
-	url = git@github.com:irof/s3fx.git
