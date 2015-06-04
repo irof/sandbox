@@ -7,17 +7,22 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
  * @author irof
  */
 public class DynamoDBTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(DynamoDBTest.class);
 
     private AmazonDynamoDBClient dynamoDB;
 
@@ -39,7 +44,7 @@ public class DynamoDBTest {
     @Test
     public void tableCreateAndDelete() throws Exception {
         assertThat(Tables.doesTableExist(dynamoDB, "myTable"), is(false));
-        System.out.println(stopwatch.runtime(TimeUnit.MILLISECONDS));
+        logger.info("start at {}ms", stopwatch.runtime(TimeUnit.MILLISECONDS));
 
         CreateTableRequest tableRequest = new CreateTableRequest()
                 .withTableName("myTable")
@@ -47,17 +52,18 @@ public class DynamoDBTest {
                 .withAttributeDefinitions(new AttributeDefinition("myName", ScalarAttributeType.S))
                 .withProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
         CreateTableResult createResult = dynamoDB.createTable(tableRequest);
-        System.out.println(stopwatch.runtime(TimeUnit.MILLISECONDS));
+        assertNotNull(createResult);
+        logger.info("createTable: {}ms", stopwatch.runtime(TimeUnit.MILLISECONDS));
 
         // 20秒くらいかかる
         Tables.awaitTableToBecomeActive(dynamoDB, "myTable");
+        logger.info("awaitTableToBecomeActive: {}ms", stopwatch.runtime(TimeUnit.MILLISECONDS));
         assertThat(Tables.doesTableExist(dynamoDB, "myTable"), is(true));
-        System.out.println(stopwatch.runtime(TimeUnit.MILLISECONDS));
 
         DeleteTableResult deleteResult = dynamoDB.deleteTable("myTable");
-        System.out.println(stopwatch.runtime(TimeUnit.MILLISECONDS));
+        assertNotNull(deleteResult);
+        logger.info("deleteTable: {}ms", stopwatch.runtime(TimeUnit.MILLISECONDS));
 
         assertThat(Tables.doesTableExist(dynamoDB, "myTable"), is(false));
-        System.out.println(stopwatch.runtime(TimeUnit.MILLISECONDS));
     }
 }
