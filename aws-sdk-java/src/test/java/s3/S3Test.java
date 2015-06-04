@@ -1,9 +1,10 @@
 package s3;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.Bucket;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -15,10 +16,12 @@ import static org.junit.Assert.assertThat;
  */
 public class S3Test {
 
+    private static final Logger logger = LoggerFactory.getLogger(S3Test.class);
+    private AmazonS3Client s3 = new AmazonS3Client();
+
     @Test
-    public void listObjects() throws Exception {
-        AmazonS3 client = new AmazonS3Client();
-        List<Bucket> buckets = client.listBuckets();
+    public void listBuckets() throws Exception {
+        List<Bucket> buckets = s3.listBuckets();
         assertThat(buckets, notNullValue());
     }
 }
