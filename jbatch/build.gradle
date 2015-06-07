@@ -1,0 +1,17 @@
+apply plugin: 'java'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'com.ibm.jbatch:com.ibm.jbatch-runtime:1.0'
+  compile 'org.apache.derby:derby:10.11.1.1'
+}
+
