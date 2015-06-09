@@ -1,7 +1,7 @@
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * SimpleScheduleBuilderを使用したTriggerの設定。
@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class SimpleTriggerSample {
 
     public static void main(String... args) throws Exception {
+        HelloJob.testLatch = new CountDownLatch(10);
         JobDetail job = JobBuilder.newJob(HelloJob.class)
                 .withIdentity("job1", "group1")
                 .build();
@@ -30,7 +31,9 @@ public class SimpleTriggerSample {
         Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
         scheduler.scheduleJob(job, trigger);
         scheduler.start();
-        TimeUnit.SECONDS.sleep(5);
+
+        // 満足するまで待つ
+        HelloJob.testLatch.await();
         scheduler.shutdown(true);
     }
 }
