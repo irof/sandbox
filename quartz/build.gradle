@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
   compile 'org.quartz-scheduler:quartz:2.2.1'
-  compile 'org.slf4j:slf4j-simple:1.7+'
+  compile 'ch.qos.logback:logback-classic:1.1.+'
   compile 'org.slf4j:jcl-over-slf4j:1.7+'
   compile 'com.mchange:c3p0:0.9.5'
   compile 'org.springframework:spring-context-support:4.1.+'
