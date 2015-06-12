@@ -3,12 +3,15 @@ package sqs;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClient;
-import com.amazonaws.services.sqs.model.CreateQueueResult;
-import com.amazonaws.services.sqs.model.ListQueuesResult;
+import com.amazonaws.services.sqs.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -37,5 +40,28 @@ public class SQSTest {
 
         // キューを消しちゃうよ
         sqs.deleteQueue(myQueue.getQueueUrl());
+    }
+
+    @Test
+    public void メッセージの送受信() throws Exception {
+        ListQueuesResult list = sqs.listQueues("myTestQueue2");
+        if (!list.getQueueUrls().stream().anyMatch(url -> url.endsWith("/myTestQueue2")))
+            sqs.createQueue("myTestQueue2");
+
+        GetQueueUrlResult queue = sqs.getQueueUrl("myTestQueue2");
+
+        // メッセージを詰める
+        SendMessageResult sendMessage = sqs.sendMessage(queue.getQueueUrl(), "test message.");
+        assertThat(sendMessage.getMessageId(), is(notNullValue()));
+
+        // メッセージを取り出す
+        ReceiveMessageResult receiveMessage = sqs.receiveMessage(queue.getQueueUrl());
+        List<Message> messages = receiveMessage.getMessages();
+        assertThat(messages, hasSize(1));
+        Message message = messages.get(0);
+        assertThat(message.getBody(), is("test message."));
+
+        // メッセージを消す
+        sqs.deleteMessage(queue.getQueueUrl(), message.getReceiptHandle());
     }
 }
