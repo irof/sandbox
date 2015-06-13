@@ -9,9 +9,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -63,5 +61,82 @@ public class SQSTest {
 
         // メッセージを消す
         sqs.deleteMessage(queue.getQueueUrl(), message.getReceiptHandle());
+    }
+
+    @Test
+    public void 複数メッセージの送受信といくつかの属性を使用() throws Exception {
+        ListQueuesResult list = sqs.listQueues("myTestQueue2");
+        if (!list.getQueueUrls().stream().anyMatch(url -> url.endsWith("/myTestQueue2")))
+            sqs.createQueue("myTestQueue2");
+
+        GetQueueUrlResult queue = sqs.getQueueUrl("myTestQueue2");
+
+        // 2件登録する
+        sqs.sendMessage(new SendMessageRequest()
+                .withQueueUrl(queue.getQueueUrl())
+                .withMessageBody("hello message 1."));
+        sqs.sendMessage(new SendMessageRequest()
+                .withQueueUrl(queue.getQueueUrl())
+                .withMessageBody("hello message 2."));
+
+        // 複数件入っている状態で受信する
+        ReceiveMessageResult receiveMessage1 = sqs.receiveMessage(
+                new ReceiveMessageRequest(queue.getQueueUrl()));
+        // 特に何もしなければ1件取得される
+        assertThat(receiveMessage1.getMessages(), hasSize(1));
+
+        // visibilityTimeoutを0にして受信する（デフォルトは30秒）
+        // 指定した秒間は他のリクエストでは取得できなくなる
+        ReceiveMessageResult receiveMessage2 = sqs.receiveMessage(
+                new ReceiveMessageRequest(queue.getQueueUrl()).withVisibilityTimeout(0));
+        // 何も指定せずもう一度受信する
+        ReceiveMessageResult receiveMessage3 = sqs.receiveMessage(
+                new ReceiveMessageRequest(queue.getQueueUrl()));
+        // 2回目のリクエストのvisibilityTimeoutが0なので即タイムアウトして同じメッセージが取得できる
+        // messageIdが同じだけどreceiptHandleは異なっている
+        Message message2 = receiveMessage2.getMessages().get(0);
+        Message message3 = receiveMessage3.getMessages().get(0);
+        assertThat(message2.getMessageId(), is(message3.getMessageId()));
+        assertThat(message2.getReceiptHandle(), is(not(message3.getReceiptHandle())));
+
+        // 2件ともreceiveされた状態で取得を試みる
+        ReceiveMessageResult receiveMessage4 = sqs.receiveMessage(
+                new ReceiveMessageRequest(queue.getQueueUrl()));
+        // 全部不可視となっているため何も取得できない
+        assertThat(receiveMessage4.getMessages(), is(empty()));
+
+        // メッセージのおおよその件数を取得する　
+        GetQueueAttributesResult queueAttributes = sqs.getQueueAttributes(new GetQueueAttributesRequest(queue.getQueueUrl())
+                .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessages)
+                .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessagesNotVisible));
+        // 不可視2件
+        assertThat(queueAttributes.getAttributes(),
+                hasEntry(QueueAttributeName.ApproximateNumberOfMessages.toString(), "0"));
+        assertThat(queueAttributes.getAttributes(),
+                hasEntry(QueueAttributeName.ApproximateNumberOfMessagesNotVisible.toString(), "2"));
+
+        // バッチで削除する
+        // バッチに指定するIDはリクエウトとレスポンスの紐付け用でリクエスト内でユニークならなんでも良い
+        // 削除にはreceiptHandler必要
+        // message2のようなタイムアウトしているreceiptHandleでも削除できる
+        DeleteMessageBatchResult batchResult = sqs.deleteMessageBatch(new DeleteMessageBatchRequest()
+                .withQueueUrl(queue.getQueueUrl())
+                .withEntries(new DeleteMessageBatchRequestEntry()
+                        .withId("ID1")
+                        .withReceiptHandle(receiveMessage1.getMessages().get(0).getReceiptHandle()))
+                .withEntries(new DeleteMessageBatchRequestEntry("ID2", message2.getReceiptHandle())));
+        // deleteMessageは結果返ってこず失敗したら例外ぽいけど、deleteMessageBatchは返ってくる
+        assertThat(batchResult.getSuccessful(), hasSize(2));
+        assertThat(batchResult.getFailed(), hasSize(0));
+
+        // メッセージのおおよその件数を取得する　
+        GetQueueAttributesResult queueAttributes2 = sqs.getQueueAttributes(new GetQueueAttributesRequest(queue.getQueueUrl())
+                .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessages)
+                .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessagesNotVisible));
+        // メッセージなし
+        assertThat(queueAttributes2.getAttributes(),
+                hasEntry(QueueAttributeName.ApproximateNumberOfMessages.toString(), "0"));
+        assertThat(queueAttributes2.getAttributes(),
+                hasEntry(QueueAttributeName.ApproximateNumberOfMessagesNotVisible.toString(), "0"));
     }
 }
