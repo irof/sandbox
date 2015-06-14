@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static aws.matchers.ReceiveMessageResultMatchers.hasMessage;
+import static aws.matchers.ReceiveMessageResultMatchers.messageCount;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
@@ -138,5 +140,45 @@ public class SQSTest {
                 hasEntry(QueueAttributeName.ApproximateNumberOfMessages.toString(), "0"));
         assertThat(queueAttributes2.getAttributes(),
                 hasEntry(QueueAttributeName.ApproximateNumberOfMessagesNotVisible.toString(), "0"));
+    }
+
+    @Test
+    public void DelayQueueとLongPolling() throws Exception {
+        ListQueuesResult list = sqs.listQueues("myTestQueue3");
+        if (!list.getQueueUrls().stream().anyMatch(url -> url.endsWith("/myTestQueue3")))
+            sqs.createQueue("myTestQueue3");
+
+        String url = sqs.getQueueUrl("myTestQueue3").getQueueUrl();
+
+        // Delay Queue
+        // 5秒後に遅延配信されるメッセージ
+        sqs.sendMessage(new SendMessageRequest(url, "test delay message.").withDelaySeconds(5));
+        // すぐ配信されるメッセージ
+        sqs.sendMessage(url, "test message.");
+
+        // Long Polling
+        // メッセージがなかったら10秒待つよ
+        ReceiveMessageResult receiveMessage = sqs.receiveMessage(new ReceiveMessageRequest(url)
+                .withMaxNumberOfMessages(5)
+                .withWaitTimeSeconds(10));
+        // 1件はすぐ取れるので待たずに返ってくる
+        assertThat(receiveMessage, messageCount(1));
+        assertThat(receiveMessage, hasMessage("test message."));
+
+        // もう一度取得しに行く
+        ReceiveMessageResult receiveMessage2 = sqs.receiveMessage(new ReceiveMessageRequest(url)
+                .withMaxNumberOfMessages(5)
+                .withWaitTimeSeconds(10));
+        // 5秒後に遅延配信されるのをとってくる
+        assertThat(receiveMessage2, messageCount(1));
+        assertThat(receiveMessage2, hasMessage("test delay message."));
+
+        // 消しとく
+        receiveMessage.getMessages().stream()
+                .map(Message::getReceiptHandle)
+                .forEach(handle -> sqs.deleteMessage(url, handle));
+        receiveMessage2.getMessages().stream()
+                .map(Message::getReceiptHandle)
+                .forEach(handle -> sqs.deleteMessage(url, handle));
     }
 }
