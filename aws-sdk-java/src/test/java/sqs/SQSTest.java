@@ -7,8 +7,6 @@ import com.amazonaws.services.sqs.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
 import static aws.matchers.ReceiveMessageResultMatchers.hasMessage;
 import static aws.matchers.ReceiveMessageResultMatchers.messageCount;
 import static org.hamcrest.Matchers.*;
@@ -49,51 +47,50 @@ public class SQSTest {
             sqs.createQueue("myTestQueue2");
 
         GetQueueUrlResult queue = sqs.getQueueUrl("myTestQueue2");
+        String url = queue.getQueueUrl();
 
         // メッセージを詰める
-        SendMessageResult sendMessage = sqs.sendMessage(queue.getQueueUrl(), "test message.");
-        assertThat(sendMessage.getMessageId(), is(notNullValue()));
+        sqs.sendMessage(url, "test message.");
 
         // メッセージを取り出す
-        ReceiveMessageResult receiveMessage = sqs.receiveMessage(queue.getQueueUrl());
-        List<Message> messages = receiveMessage.getMessages();
-        assertThat(messages, hasSize(1));
-        Message message = messages.get(0);
-        assertThat(message.getBody(), is("test message."));
+        ReceiveMessageResult receiveMessage = sqs.receiveMessage(url);
+        assertThat(receiveMessage, messageCount(1));
+        assertThat(receiveMessage, hasMessage("test message."));
 
         // メッセージを消す
-        sqs.deleteMessage(queue.getQueueUrl(), message.getReceiptHandle());
+        sqs.deleteMessage(url, receiveMessage.getMessages().get(0).getReceiptHandle());
     }
 
     @Test
-    public void 複数メッセージの送受信といくつかの属性を使用() throws Exception {
+    public void 複数メッセージの送受信() throws Exception {
         ListQueuesResult list = sqs.listQueues("myTestQueue2");
         if (!list.getQueueUrls().stream().anyMatch(url -> url.endsWith("/myTestQueue2")))
             sqs.createQueue("myTestQueue2");
 
         GetQueueUrlResult queue = sqs.getQueueUrl("myTestQueue2");
+        String url = queue.getQueueUrl();
 
         // 2件登録する
         sqs.sendMessage(new SendMessageRequest()
-                .withQueueUrl(queue.getQueueUrl())
+                .withQueueUrl(url)
                 .withMessageBody("hello message 1."));
         sqs.sendMessage(new SendMessageRequest()
-                .withQueueUrl(queue.getQueueUrl())
+                .withQueueUrl(url)
                 .withMessageBody("hello message 2."));
 
         // 複数件入っている状態で受信する
         ReceiveMessageResult receiveMessage1 = sqs.receiveMessage(
-                new ReceiveMessageRequest(queue.getQueueUrl()));
+                new ReceiveMessageRequest(url));
         // 特に何もしなければ1件取得される
-        assertThat(receiveMessage1.getMessages(), hasSize(1));
+        assertThat(receiveMessage1, messageCount(1));
 
         // visibilityTimeoutを0にして受信する（デフォルトは30秒）
         // 指定した秒間は他のリクエストでは取得できなくなる
         ReceiveMessageResult receiveMessage2 = sqs.receiveMessage(
-                new ReceiveMessageRequest(queue.getQueueUrl()).withVisibilityTimeout(0));
+                new ReceiveMessageRequest(url).withVisibilityTimeout(0));
         // 何も指定せずもう一度受信する
         ReceiveMessageResult receiveMessage3 = sqs.receiveMessage(
-                new ReceiveMessageRequest(queue.getQueueUrl()));
+                new ReceiveMessageRequest(url));
         // 2回目のリクエストのvisibilityTimeoutが0なので即タイムアウトして同じメッセージが取得できる
         // messageIdが同じだけどreceiptHandleは異なっている
         Message message2 = receiveMessage2.getMessages().get(0);
@@ -103,12 +100,12 @@ public class SQSTest {
 
         // 2件ともreceiveされた状態で取得を試みる
         ReceiveMessageResult receiveMessage4 = sqs.receiveMessage(
-                new ReceiveMessageRequest(queue.getQueueUrl()));
+                new ReceiveMessageRequest(url));
         // 全部不可視となっているため何も取得できない
-        assertThat(receiveMessage4.getMessages(), is(empty()));
+        assertThat(receiveMessage4, messageCount(0));
 
         // メッセージのおおよその件数を取得する　
-        GetQueueAttributesResult queueAttributes = sqs.getQueueAttributes(new GetQueueAttributesRequest(queue.getQueueUrl())
+        GetQueueAttributesResult queueAttributes = sqs.getQueueAttributes(new GetQueueAttributesRequest(url)
                 .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessages)
                 .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessagesNotVisible));
         // 不可視2件
@@ -122,7 +119,7 @@ public class SQSTest {
         // 削除にはreceiptHandler必要
         // message2のようなタイムアウトしているreceiptHandleでも削除できる
         DeleteMessageBatchResult batchResult = sqs.deleteMessageBatch(new DeleteMessageBatchRequest()
-                .withQueueUrl(queue.getQueueUrl())
+                .withQueueUrl(url)
                 .withEntries(new DeleteMessageBatchRequestEntry()
                         .withId("ID1")
                         .withReceiptHandle(receiveMessage1.getMessages().get(0).getReceiptHandle()))
@@ -132,7 +129,7 @@ public class SQSTest {
         assertThat(batchResult.getFailed(), hasSize(0));
 
         // メッセージのおおよその件数を取得する　
-        GetQueueAttributesResult queueAttributes2 = sqs.getQueueAttributes(new GetQueueAttributesRequest(queue.getQueueUrl())
+        GetQueueAttributesResult queueAttributes2 = sqs.getQueueAttributes(new GetQueueAttributesRequest(url)
                 .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessages)
                 .withAttributeNames(QueueAttributeName.ApproximateNumberOfMessagesNotVisible));
         // メッセージなし
