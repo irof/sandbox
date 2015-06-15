@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'groovy'
- apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 
 def defaultEncoding = 'UTF-8'
 tasks.withType(AbstractCompile)*.options*.encoding = defaultEncoding
@@ -16,8 +16,8 @@ repositories {
 dependencies {
     compile 'org.apache.wicket:wicket-core:6.19.0'
     compile 'org.apache.wicket:wicket-spring:6.19.0'
-    compile 'org.slf4j:slf4j-log4j12:1.6.4'
-    compile 'log4j:log4j:1.2.16'
+    compile 'org.slf4j:jcl-over-slf4j:1.7+'
+    compile 'ch.qos.logback:logback-classic:1.1.+'
     compile 'org.springframework:spring-web:4.1.6.RELEASE'
 
     providedCompile 'javax.servlet:servlet-api:2.5'
@@ -37,3 +37,6 @@ sourceSets {
     }
 }
 
+configurations {
+    all*.exclude module: 'commons-logging'
+}
