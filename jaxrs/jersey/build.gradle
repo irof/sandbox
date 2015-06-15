@@ -1,5 +1,5 @@
 apply plugin: 'java'
-apply plugin: 'jetty'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 
 compileJava {
     options.encoding = 'utf-8'
@@ -12,7 +12,9 @@ repositories {
     mavenCentral()
 }
 
-httpPort = 18080
+gretty {
+    port = 18080
+}
 
 ext {
     jerseyVersion = 2.17
