@@ -2,7 +2,9 @@ package sandbox.i18n;
 
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ErrorCollector;
 import sandbox.WicketApplication;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -45,5 +47,36 @@ public class ResourcePageTest {
     @Test
     public void StringResourceModel2() {
         tester.assertLabel("resource.dynamic2", "動的なメッセージ2[Argument1, ${arg2}, Argument3]");
+    }
+
+    @Rule
+    public ErrorCollector collector = new ErrorCollector();
+
+    @Test
+    public void wicketのmessageタグは通常エスケープされない() throws Exception {
+        collector.checkThat(tester.getTagById("m.p1").getValue(), is("<b>BOLD</b>"));
+        collector.checkThat(tester.getTagById("m.p2").getValue(), is("<b>BOLD</b>"));
+        collector.checkThat(tester.getTagById("m.p3").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
+    }
+
+    @Test
+    public void wicketのmessageタグのエスケープを有効にした() throws Exception {
+        collector.checkThat(tester.getTagById("m.p1.esc").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
+        collector.checkThat(tester.getTagById("m.p2.esc").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
+        collector.checkThat(tester.getTagById("m.p3.esc").getValue(), is("&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;"));
+    }
+
+    @Test
+    public void Labelクラスは通常エスケープされる() throws Exception {
+        collector.checkThat(tester.getTagById("m.l.p1").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
+        collector.checkThat(tester.getTagById("m.l.p2").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
+        collector.checkThat(tester.getTagById("m.l.p3").getValue(), is("&amp;lt;b&amp;gt;BOLD&amp;lt;/b&amp;gt;"));
+    }
+
+    @Test
+    public void Labelクラスのエスケープを無効にした() throws Exception {
+        collector.checkThat(tester.getTagById("m.l.p1.unesc").getValue(), is("<b>BOLD</b>"));
+        collector.checkThat(tester.getTagById("m.l.p2.unesc").getValue(), is("<b>BOLD</b>"));
+        collector.checkThat(tester.getTagById("m.l.p3.unesc").getValue(), is("&lt;b&gt;BOLD&lt;/b&gt;"));
     }
 }
