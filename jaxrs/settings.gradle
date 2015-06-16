@@ -1,4 +1,0 @@
-include 'resteasy'
-include 'jersey'
-include 'client'
-
