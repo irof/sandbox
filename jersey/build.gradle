@@ -23,7 +23,7 @@ ext {
 dependencies {
     compile "org.glassfish.jersey.core:jersey-server:${jerseyVersion}"
     compile "org.glassfish.jersey.core:jersey-client:${jerseyVersion}"
-    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:${jerseyVersion}"
+    compile "org.glassfish.jersey.containers:jersey-container-servlet:${jerseyVersion}"
     testCompile "org.glassfish.jersey.test-framework:jersey-test-framework-core:${jerseyVersion}"
     ["inmemory", "grizzly2", "jdk-http", "simple", "jetty"].each { container ->
         testCompile "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-${container}:${jerseyVersion}"
