@@ -2,26 +2,30 @@ apply plugin: 'java'
 apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
 
 compileJava {
-  options.encoding = 'utf-8'
+    options.encoding = 'utf-8'
 }
 
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-  mavenLocal()
-  mavenCentral()
+    mavenLocal()
+    mavenCentral()
 }
 
 gretty {
-  port = 28080
+    port = 28080
 }
 
 dependencies {
-  compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.9.Final'
-  compile 'org.jboss.resteasy:resteasy-client:3.0.9.Final'
-  compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.9.Final'
-  compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.9.Final'
-  testCompile 'junit:junit:4.12'
-  testCompile 'org.hamcrest:hamcrest-library:1.3'
+    compile 'org.jboss.resteasy:resteasy-jaxrs:3.0.9.Final'
+    compile 'org.jboss.resteasy:resteasy-client:3.0.9.Final'
+    compile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.9.Final'
+    compile 'org.jboss.resteasy:resteasy-jackson-provider:3.0.9.Final'
+
+    // 3.5. Standalone Resteasy in Servlet 3.0 Containers
+    compile 'org.jboss.resteasy:resteasy-servlet-initializer:3.0.9.Final'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 

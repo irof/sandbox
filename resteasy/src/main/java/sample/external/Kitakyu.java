@@ -1,6 +1,5 @@
 package sample.external;
 
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import sample.Station;
 
 import javax.ws.rs.GET;
@@ -41,6 +40,7 @@ public class Kitakyu {
                 .get(Station.class);
     }
 
+    /* インタフェースをコンポーネントに登録しちゃって死ぬので一旦コメントアウト。。。
     @GET
     @Path("proxy")
     public Collection<Station> getWithProxy() {
@@ -56,4 +56,5 @@ public class Kitakyu {
         @Produces(MediaType.APPLICATION_XML)
         Collection<Station> stations();
     }
+    */
 }
