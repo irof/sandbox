@@ -1,6 +1,5 @@
 package sample;
 
-import sample.SakaisujiLine;
 import sample.external.Kitakyu;
 
 import java.util.HashSet;
