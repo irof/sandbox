@@ -15,11 +15,11 @@ public class MyListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        logger.info("contextInitialized: {}" + sce);
+        logger.info("contextInitialized: {}", sce);
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        logger.info("contextDestroyed: {}" + sce);
+        logger.info("contextDestroyed: {}", sce);
     }
 }
