@@ -5,7 +5,6 @@ import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -50,7 +49,8 @@ public class S3Test {
 
     @Test
     public void putWithFile() throws IOException {
-        File file = temp.newFile();
+        // Content-Typeはファイルの拡張子から判別される
+        File file = temp.newFile("hoge.txt");
         try (OutputStream os = Files.newOutputStream(file.toPath())) {
             os.write("test".getBytes(StandardCharsets.UTF_8));
             os.flush();
@@ -59,21 +59,26 @@ public class S3Test {
         // 適当に書き出したファイルをputする
         PutObjectRequest request = new PutObjectRequest("irof-sandbox", file.getName(), file);
         ObjectMetadata requestMetadata = new ObjectMetadata();
+        requestMetadata.getUserMetadata().put("HOGE", "FUGA");
         request.setMetadata(requestMetadata);
 
         PutObjectResult result = s3.putObject(request);
         assertThat(result.getETag(), is("098f6bcd4621d373cade4e832627b4f6"));
-        // ファイルの際に自動で計算される項目
+        // ファイルの際に自動で計算される項目。Requestのmetaも更新される。
         // Content-Length
         // Content-Type
         // Content-MD5
+        assertThat(requestMetadata.getContentLength(), is(4L));
+        assertThat(requestMetadata.getContentType(), is("text/plain"));
+        assertThat(requestMetadata.getContentMD5(), is("CY9rzUYh03PK3k6DJie09g=="));
 
         ObjectMetadata metadata = s3.getObjectMetadata("irof-sandbox", file.getName());
         assertThat(metadata.getContentLength(), is(4L));
-        assertThat(metadata.getContentType(), is("application/octet-stream"));
+        assertThat(metadata.getContentType(), is("text/plain"));
+        // キー名は小文字になる
+        assertThat(metadata.getUserMetaDataOf("hoge"), is("FUGA"));
     }
 
-    @Ignore
     @Test
     public void putWithInputStream() throws Exception {
         try (InputStream input = new ByteArrayInputStream("test".getBytes(StandardCharsets.UTF_8))) {
@@ -85,7 +90,8 @@ public class S3Test {
             // 設定しなくても計算されるぽいのでスルーでよさげ
             // metaData.setContentMD5("CY9rzUYh03PK3k6DJie09g==");
 
-            // 可能なら設定する。違う値を設定すると怒られる。
+            // オプションだけど、できるかぎり設定する。
+            // 設定しないとWARNログ出ちゃうし、違う値を設定すると例外出る。
             //metaData.setContentLength(3);
 
             PutObjectRequest request = new PutObjectRequest("irof-sandbox", "byteFile.txt", input, metaData);
