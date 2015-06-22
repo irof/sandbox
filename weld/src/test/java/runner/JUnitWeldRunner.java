@@ -1,3 +1,5 @@
+package runner;
+
 import org.jboss.weld.environment.deployment.WeldDeployment;
 import org.jboss.weld.environment.deployment.WeldResourceLoader;
 import org.jboss.weld.environment.se.Weld;
@@ -7,7 +9,10 @@ import org.junit.rules.TestRule;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.InitializationError;
 
+import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -21,17 +26,19 @@ import java.util.List;
  */
 public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
 
+    private final Class<?> klass;
     private WeldContainer container;
 
     public JUnitWeldRunner(Class<?> klass) throws InitializationError {
         super(klass);
+        this.klass = klass;
     }
 
     @Override
     protected Object createTest() throws Exception {
         // Weldのコンテナからテストクラスのインスタンスを貰ってくる。
         // これでテストクラス自体に @Inject とかができるようになる。
-        return container.instance().select(getTestClass().getJavaClass()).get();
+        return container.instance().select(klass).get();
     }
 
     @Override
@@ -48,18 +55,28 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
                 URL resource = resourceLoader.getResource(WeldDeployment.BEANS_XML);
 
                 // WeldSEに認識させるために beans.xml をコピーする。
-                // Marker.java は src/main/java のデフォルトパッケージに置いておく必要あり。。。
-                copyBeansXML(resourceLoader, resource, Marker.class);
-                // JUnitWeldRunner は src/test/java のデフォルトパッケージに置いておく必要あり。。。
-                copyBeansXML(resourceLoader, resource, JUnitWeldRunner.class);
+                // テストクラス
+                copyBeansXML(resourceLoader, resource, klass);
+                // テストクラスにインジェクションされるクラス
+                for (Field field : klass.getDeclaredFields()) {
+                    if (!field.isAnnotationPresent(Inject.class)) {
+                        continue;
+                    }
+                    field.setAccessible(true);
+                    copyBeansXML(resourceLoader, resource, field.getType());
+                    break;
+                }
 
                 weld = new Weld();
                 container = weld.initialize();
             }
 
             private void copyBeansXML(WeldResourceLoader resourceLoader, URL resource, Class<?> clz) throws URISyntaxException, IOException {
-                URL mainClassURL = resourceLoader.getResource(clz.getName() + ".class");
-                Path defaultPackage = Paths.get(mainClassURL.toURI()).getParent();
+                String name = clz.getName().replaceAll("\\.", File.separator);
+                Path relativePath = Paths.get(name);
+                Path absolutePath = Paths.get(resourceLoader.getResource(name + ".class").toURI());
+                Path defaultPackage = Paths.get("/").resolve(absolutePath.subpath(0,
+                        absolutePath.getNameCount() - relativePath.getNameCount()));
                 Path toPath = defaultPackage.resolve(WeldDeployment.BEANS_XML);
 
                 Files.createDirectories(toPath.getParent());

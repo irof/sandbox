@@ -1,6 +1,7 @@
 import hoge.HelloBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import runner.JUnitWeldRunner;
 
 import javax.inject.Inject;
 
