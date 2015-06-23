@@ -1,4 +1,4 @@
-package aws.matchers;
+package hogedriven.matchers;
 
 import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import org.hamcrest.Description;

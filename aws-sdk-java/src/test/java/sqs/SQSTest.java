@@ -7,8 +7,8 @@ import com.amazonaws.services.sqs.model.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import static aws.matchers.ReceiveMessageResultMatchers.hasMessage;
-import static aws.matchers.ReceiveMessageResultMatchers.messageCount;
+import static hogedriven.matchers.ReceiveMessageResultMatchers.hasMessage;
+import static hogedriven.matchers.ReceiveMessageResultMatchers.messageCount;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
