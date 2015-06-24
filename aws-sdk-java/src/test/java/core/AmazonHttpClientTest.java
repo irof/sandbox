@@ -5,22 +5,23 @@ import com.amazonaws.http.AmazonHttpClient;
 import com.amazonaws.http.ExecutionContext;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.http.HttpResponseHandler;
-import org.junit.Rule;
+import hogedriven.TemporaryServer;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import hogedriven.TemporaryServer;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author irof
@@ -29,10 +30,8 @@ public class AmazonHttpClientTest {
 
     private final static Logger logger = LoggerFactory.getLogger("test");
 
-    @Rule
-    public TemporaryServer server = new TemporaryServer()
-            .withSleep(2)
-            .withBody(() -> "HOGEFUGAPIYO");
+    @ClassRule
+    public static TemporaryServer server = new TemporaryServer(2);
 
     @Test
     public void 同時接続数はAmazonHttpClientのインスタンス単位だよなぁという確認() throws Exception {
@@ -42,22 +41,42 @@ public class AmazonHttpClientTest {
         // リトライしない
         config.setMaxErrorRetry(0);
         // タイムアウトの時間
-        config.setSocketTimeout(5_000);
+        config.setSocketTimeout(30_000);
 
         Supplier<AmazonHttpClient> client = clientSupplier(config);
 
-        ExecutorService executor = Executors.newFixedThreadPool(10);
-        List<Future<Void>> futures = executor.invokeAll(Arrays.asList(
-                submit(client),
-                submit(client),
-                submit(client),
-                submit(client)
-        ));
+        long startTime = System.currentTimeMillis();
+        List<CompletableFuture<Long>> results = Stream.generate(
+                () -> sendRequestTask(client, startTime))
+                .limit(5)
+                .collect(toList());
 
-        // 全部終わるの待つ
-        for (Future<Void> future : futures) {
-            future.get();
-        }
+        List<Long> times = results.stream().map(wrap(Future::get)).collect(toList());
+
+        // 同時接続が2でsleep時間が2秒なので、こんな感じになってればOK。運任せだけど。
+        assert times.stream().filter(t -> t < 3_000).count() == 2;
+        assert times.stream().filter(t -> 3_000 < t && t < 5_000).count() == 2;
+        assert times.stream().filter(t -> 5_000 < t).count() == 1;
+    }
+
+    private CompletableFuture<Long> sendRequestTask(Supplier<AmazonHttpClient> client, long startTime) {
+        return CompletableFuture.runAsync(() -> sendRequest(client))
+                .thenApply(v -> System.currentTimeMillis() - startTime);
+    }
+
+    private <T> Function<T, Long> wrap(ExFunction<T, Long> function) {
+        return t -> {
+            try {
+                return function.apply(t);
+            } catch (Exception e) {
+                logger.warn("(-_-)", e);
+                return Long.MIN_VALUE;
+            }
+        };
+    }
+
+    interface ExFunction<T, R> {
+        R apply(T t) throws Exception;
     }
 
     /**
@@ -73,32 +92,35 @@ public class AmazonHttpClientTest {
         return () -> httpClient;
     }
 
-    private Callable<Void> submit(Supplier<AmazonHttpClient> client) {
-        return () -> {
-            Request<?> request = new DefaultRequest<>("test-service");
-            request.setEndpoint(server.getUri());
-            InputStream in = new ByteArrayInputStream("hoge".getBytes(StandardCharsets.UTF_8));
-            request.setContent(in);
+    private void sendRequest(Supplier<AmazonHttpClient> client) {
+        Request<?> request = new DefaultRequest<>("test-service");
+        request.setEndpoint(server.getUri());
+        InputStream in = new ByteArrayInputStream("hoge".getBytes(StandardCharsets.UTF_8));
+        request.setContent(in);
 
-            HttpResponseHandler<AmazonServiceException> errorResponse = null;
-            ExecutionContext context = new ExecutionContext();
+        client.get().execute(request,
+                new HttpResponseHandler<AmazonWebServiceResponse<Object>>() {
+                    @Override
+                    public AmazonWebServiceResponse<Object> handle(HttpResponse response) throws Exception {
+                        return new AmazonWebServiceResponse<>();
+                    }
 
-            client.get().execute(request, responseHandler(), errorResponse, context);
-            return null;
-        };
-    }
+                    @Override
+                    public boolean needsConnectionLeftOpen() {
+                        return false;
+                    }
+                },
+                new HttpResponseHandler<AmazonServiceException>() {
+                    @Override
+                    public AmazonServiceException handle(HttpResponse response) throws Exception {
+                        return null;
+                    }
 
-    private HttpResponseHandler<AmazonWebServiceResponse<Object>> responseHandler() {
-        return new HttpResponseHandler<AmazonWebServiceResponse<Object>>() {
-            @Override
-            public AmazonWebServiceResponse<Object> handle(HttpResponse response) throws Exception {
-                return new AmazonWebServiceResponse<>();
-            }
-
-            @Override
-            public boolean needsConnectionLeftOpen() {
-                return false;
-            }
-        };
+                    @Override
+                    public boolean needsConnectionLeftOpen() {
+                        return false;
+                    }
+                },
+                new ExecutionContext());
     }
 }
