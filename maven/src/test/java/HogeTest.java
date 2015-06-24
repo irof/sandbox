@@ -1,15 +1,18 @@
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 /**
  * @author irof
  */
 public class HogeTest {
 
     @Test
-    public void ほげ() throws Exception {
+    public void ほげは成功() throws Exception {
     }
 
     @Test
-    public void ふが() throws Exception {
+    public void ふがは失敗() throws Exception {
+        fail();
     }
 }
