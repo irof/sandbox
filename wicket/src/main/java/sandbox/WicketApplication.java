@@ -4,6 +4,8 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import sandbox.bookmark.StatefulPage;
+import sandbox.bookmark.StatelessPage;
 
 public class WicketApplication extends WebApplication {
     @Override
@@ -14,6 +16,9 @@ public class WicketApplication extends WebApplication {
     @Override
     public void init() {
         super.init();
+
+        mountPage("/bookmark/stateless/${code}", StatelessPage.class);
+        mountPage("/bookmark/stateful/${code}", StatefulPage.class);
 
         // WicketからSpringを使う程度ならこのタイミングで作るのがシンプルっぽい。設定もここだけでいいしね。
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
