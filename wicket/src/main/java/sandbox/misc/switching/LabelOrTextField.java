@@ -5,6 +5,9 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
+/**
+ * なんか条件によってLabelかTextFieldかを切り替えるパネルさん。
+ */
 public class LabelOrTextField extends Panel {
 
     public LabelOrTextField(String id, Model<String> model, Model<Boolean> canEdit) {
