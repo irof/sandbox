@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head lang="ja">
+    <meta charset="UTF-8">
+    <title>my page</title>
+</head>
+<body>
+<div style="border: 1px solid black; margin: 5px; padding: 5px">
+    <wicket:container wicket:id="target1"/>
+    <wicket:fragment wicket:id="myFragment">
+        <span wicket:id="message">フラグメントで突っ込まれるメッセージ</span>
+        <button>フラグメントの中にあるボターン</button>
+    </wicket:fragment>
+</div>
+<div style="border: 1px solid black; margin: 5px; padding: 5px">
+    <wicket:container wicket:id="target2">
+       これはフラグメントに置き換えられる
+    </wicket:container>
+</div>
+</body>
+</html>
