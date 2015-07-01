@@ -17,6 +17,11 @@ public class ListPanel extends Panel {
 
     public ListPanel(String id) {
         super(id);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         RepeatingView repeatingList = new RepeatingView("repeatingList");
         repeatingList.add(new Label(repeatingList.newChildId(), "repeating1"));

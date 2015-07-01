@@ -12,6 +12,11 @@ public class ButtonPanel extends Panel {
 
     public ButtonPanel(String id) {
         super(id);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         Form form = new Form("form");
         add(form);

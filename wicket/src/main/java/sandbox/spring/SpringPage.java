@@ -8,7 +8,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 /**
+ * Spring連携するやつ。
+ * profileも使ってみてる。
+ *
  * @author irof
+ * @see sandbox.WicketApplication
  */
 public class SpringPage extends WebPage {
 

@@ -2,7 +2,6 @@ package sandbox;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import sandbox.i18n.ResourcePage;
 import sandbox.misc.SimplePage;
 import sandbox.spring.SpringPage;
@@ -11,8 +10,9 @@ import sandbox.structure.MyPage;
 public class HomePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    public HomePage(final PageParameters parameters) {
-        super(parameters);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         add(new BookmarkablePageLink<>("i18n.link", ResourcePage.class));
         add(new BookmarkablePageLink<>("misc.link", SimplePage.class));

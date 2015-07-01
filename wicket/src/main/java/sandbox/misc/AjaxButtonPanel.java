@@ -12,6 +12,11 @@ public class AjaxButtonPanel extends Panel {
 
     public AjaxButtonPanel(String id) {
         super(id);
+    }
+
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         Form<Void> form = new Form<>("form");
         add(form);

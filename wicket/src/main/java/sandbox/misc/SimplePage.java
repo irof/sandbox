@@ -2,14 +2,19 @@ package sandbox.misc;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 import sandbox.misc.switching.LabelOrTextField;
 
+/**
+ * いろいろごった煮。
+ *
+ * @author irof
+ */
 public class SimplePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    public SimplePage(final PageParameters parameters) {
-        super(parameters);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         add(new ButtonPanel("panel.button"));
         add(new AjaxButtonPanel("panel.button.ajax"));

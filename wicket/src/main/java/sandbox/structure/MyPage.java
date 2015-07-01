@@ -5,12 +5,16 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Fragment;
 
 /**
+ * Page, Panel, Fragment を使ってるやつ。
+ *
  * @author irof
  */
 public class MyPage extends WebPage {
 
-    public MyPage() {
-        super();
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
+
         add(new MyPanel("myPanel"));
 
         Fragment fragment1 = new Fragment("contentArea1", "myFragment", this);

@@ -5,16 +5,22 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * リソースからメッセージ取ってきて表示するやつ。
+ * wicket:message 使ったり ResourceModel 使ったりバインドしたり。
+ *
+ * @author irof
+ */
 public class ResourcePage extends WebPage {
     private static final long serialVersionUID = 1L;
 
-    public ResourcePage(final PageParameters parameters) {
-        super(parameters);
+    @Override
+    protected void onInitialize() {
+        super.onInitialize();
 
         add(new Label("resource.static", new ResourceModel("simple")));
 
