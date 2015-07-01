@@ -10,22 +10,36 @@
         <h1>Buttons</h1>
 
         <form wicket:id="form">
-            <p wicket:id="label">xxx</p>
-            <button wicket:id="button1">
-                <wicket:label wicket:id="label"/>
-            </button>
-            <input wicket:id="button2" type="submit"/>
+            <span wicket:id="label">xxx</span>
+
+            <p>BUTTON:
+                <button wicket:id="lowerButton">
+                    <wicket:label wicket:id="label"/>
+                </button>
+            </p>
+            <p>INPUT[type=submit]:
+                <input wicket:id="upperButton" type="submit"/>
+            </p>
         </form>
     </section>
     <section>
         <h1>Ajax Buttons</h1>
 
         <form wicket:id="ajaxForm">
-            <button wicket:id="button1">button1!</button>
-            <button wicket:id="button2">button2!</button>
-            <p wicket:id="label1">xxx</p>
+            <p wicket:id="p1">
+                <span wicket:id="leftLabel">xxx</span> / <span wicket:id="rightLabel">xxx</span>
+            </p>
 
-            <p wicket:id="label2">xxx</p>
+            <p wicket:id="p2">
+                <span wicket:id="leftLabel">xxx</span> / <span wicket:id="rightLabel">xxx</span>
+            </p>
+
+            <p>BUTTON:
+                <button wicket:id="leftButton">change left</button>
+            </p>
+            <p>BUTTON:
+                <button wicket:id="rightButton">change right</button>
+            </p>
         </form>
     </section>
 </wicket:panel>

@@ -1,18 +1,19 @@
 package sandbox.misc;
 
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+
+import java.util.Locale;
 
 public class ButtonPanel extends Panel {
 
-    String fieldProps = "FIELD";
+    Model<String> fieldProps = Model.of("FIELD");
 
     public ButtonPanel(String id) {
         super(id);
@@ -30,26 +31,32 @@ public class ButtonPanel extends Panel {
         Form<Void> form = new Form<>("ajaxForm");
         add(form);
 
-        Model<String> model1 = new Model<>("hoge");
-        Component label1 = new Label("label1", model1).setOutputMarkupId(true);
-        Model<String> model2 = new Model<>("hoge");
-        Component label2 = new Label("label2", model2).setOutputMarkupId(true);
-        form.add(label1);
-        form.add(label2);
+        Model<String> left = Model.of("hoge");
+        Model<String> right = Model.of("fuga");
 
-        form.add(new AjaxButton("button1") {
+        WebMarkupContainer p1 = new WebMarkupContainer("p1");
+        p1.add(new Label("leftLabel", left));
+        p1.add(new Label("rightLabel", right));
+        form.add(p1.setOutputMarkupId(true));
+
+        WebMarkupContainer p2 = new WebMarkupContainer("p2");
+        p2.add(new Label("leftLabel", left));
+        p2.add(new Label("rightLabel", right));
+        form.add(p2.setOutputMarkupId(true));
+
+        form.add(new AjaxButton("leftButton") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                model1.setObject("fuga");
-                target.add(label1);
+                left.setObject(left.getObject() + "e");
+                target.add(p1);
             }
         });
 
-        form.add(new AjaxButton("button2") {
+        form.add(new AjaxButton("rightButton") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                model2.setObject("fuga");
-                target.add(label2);
+                right.setObject(right.getObject() + "a");
+                target.add(p2);
             }
         });
     }
@@ -58,19 +65,21 @@ public class ButtonPanel extends Panel {
         Form form = new Form("form");
         add(form);
 
-        form.add(new Label("label", new PropertyModel<String>(this, "fieldProps")));
+        form.add(new Label("label", fieldProps));
 
-        form.add(new Button("button1") {
+        Button button = new Button("lowerButton") {
             @Override
             public void onSubmit() {
-                fieldProps = fieldProps.toLowerCase();
+                fieldProps.setObject(fieldProps.getObject().toLowerCase(Locale.US));
             }
-        }.add(new Label("label", new PropertyModel<String>(this, "fieldProps"))));
+        };
+        button.add(new Label("label", fieldProps));
+        form.add(button);
 
-        form.add(new Button("button2", new PropertyModel<String>(this, "fieldProps")) {
+        form.add(new Button("upperButton", fieldProps) {
             @Override
             public void onSubmit() {
-                fieldProps = fieldProps.toLowerCase();
+                fieldProps.setObject(fieldProps.getObject().toUpperCase(Locale.US));
             }
         });
     }
