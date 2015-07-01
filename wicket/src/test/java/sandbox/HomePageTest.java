@@ -4,6 +4,7 @@ import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.Test;
 import sandbox.i18n.ResourcePage;
+import sandbox.misc.MiscPage;
 
 public class HomePageTest {
     private WicketTester tester;
@@ -28,6 +29,6 @@ public class HomePageTest {
     @Test
     public void リンク確認_misc() throws Exception {
         tester.clickLink("misc.link");
-        tester.assertRenderedPage(sandbox.misc.SimplePage.class);
+        tester.assertRenderedPage(MiscPage.class);
     }
 }

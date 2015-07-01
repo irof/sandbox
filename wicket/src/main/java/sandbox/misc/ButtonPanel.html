@@ -6,15 +6,28 @@
 </head>
 <body>
 <wicket:panel>
-    <h1>Buttons</h1>
+    <section>
+        <h1>Buttons</h1>
 
-    <form wicket:id="form">
-        <p wicket:id="label">xxx</p>
-        <button wicket:id="button1">
-            <wicket:label wicket:id="label"/>
-        </button>
-        <input wicket:id="button2" type="submit"/>
-    </form>
+        <form wicket:id="form">
+            <p wicket:id="label">xxx</p>
+            <button wicket:id="button1">
+                <wicket:label wicket:id="label"/>
+            </button>
+            <input wicket:id="button2" type="submit"/>
+        </form>
+    </section>
+    <section>
+        <h1>Ajax Buttons</h1>
+
+        <form wicket:id="ajaxForm">
+            <button wicket:id="button1">button1!</button>
+            <button wicket:id="button2">button2!</button>
+            <p wicket:id="label1">xxx</p>
+
+            <p wicket:id="label2">xxx</p>
+        </form>
+    </section>
 </wicket:panel>
 </body>
 </html>

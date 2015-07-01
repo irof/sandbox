@@ -46,4 +46,18 @@ public class ButtonPanelTest {
 
         tester.assertModelValue("form:button2", "field");
     }
+    @Test
+    public void ajaxInputButtonSubmit() {
+        tester.executeAjaxEvent("ajaxForm:button1", "click");
+
+        tester.assertComponentOnAjaxResponse("ajaxForm:label1");
+        tester.assertLabel("ajaxForm:label1", "fuga");
+    }
+
+    @Test
+    public void ajaxInputButtonSubmit2() {
+        tester.executeAjaxEvent("ajaxForm:button2", "click");
+
+        tester.assertComponentOnAjaxResponse("ajaxForm:label2");
+    }
 }

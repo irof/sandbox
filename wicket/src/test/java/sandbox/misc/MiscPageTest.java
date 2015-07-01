@@ -5,24 +5,19 @@ import org.junit.Before;
 import org.junit.Test;
 import sandbox.WicketApplication;
 
-public class SimplePageTest {
+public class MiscPageTest {
 
     private WicketTester tester;
 
     @Before
     public void setup() {
         tester = new WicketTester(new WicketApplication());
-        tester.startPage(SimplePage.class);
+        tester.startPage(MiscPage.class);
     }
 
     @Test
     public void ButtonPanelが表示できてる() {
         tester.assertComponent("panel.button", ButtonPanel.class);
-    }
-
-    @Test
-    public void AjaxButtonPanelが表示できてる() {
-        tester.assertComponent("panel.button.ajax", AjaxButtonPanel.class);
     }
 
     @Test

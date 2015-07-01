@@ -9,7 +9,7 @@ import sandbox.misc.switching.LabelOrTextField;
  *
  * @author irof
  */
-public class SimplePage extends WebPage {
+public class MiscPage extends WebPage {
     private static final long serialVersionUID = 1L;
 
     @Override
@@ -17,7 +17,6 @@ public class SimplePage extends WebPage {
         super.onInitialize();
 
         add(new ButtonPanel("panel.button"));
-        add(new AjaxButtonPanel("panel.button.ajax"));
         add(new ListPanel("panel.list"));
 
         Model<String> hoge1 = Model.of("hogehoge");
