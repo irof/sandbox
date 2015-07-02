@@ -28,7 +28,7 @@ public class HomePageTest {
 
     @Test
     public void リンク確認_misc() throws Exception {
-        tester.clickLink("misc.link");
+        tester.clickLink("misc");
         tester.assertRenderedPage(MiscPage.class);
     }
 }
