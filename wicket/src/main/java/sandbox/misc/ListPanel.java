@@ -31,16 +31,15 @@ public class ListPanel extends Panel {
         add(new ListView<String>("list", list) {
             @Override
             protected void populateItem(ListItem<String> item) {
-                item.add(new Label("item", item.getModelObject()));
+                item.add(new Label("item", item.getModel()));
             }
         });
 
-        Form<Void> form = new Form<Void>("form");
-        form.add(new Button("singleton") {
+        Form<Void> form = new Form<>("form");
+        form.add(new Button("add") {
             @Override
             public void onSubmit() {
-                list.clear();
-                list.add("hoge");
+                list.add("hoge" + list.size());
             }
         });
         add(form);

@@ -6,19 +6,23 @@
 </head>
 <body>
 <wicket:panel>
-    <h1>repeating view</h1>
-    <ul>
-        <li wicket:id="repeatingList"></li>
-    </ul>
+    <section>
+        <h1>RepeatingViewを使った何か</h1>
+        <ul>
+            <li wicket:id="repeatingList">繰り返されるよ</li>
+        </ul>
+    </section>
 
-    <h1>simple list</h1>
+    <section>
+        <h1>simple list</h1>
 
-    <form wicket:id="form">
-        <button wicket:id="singleton">singleton</button>
-    </form>
-    <div wicket:id="list">
-        <p wicket:id="item"></p>
-    </div>
+        <form wicket:id="form">
+            <button wicket:id="add">増やすよ</button>
+        </form>
+        <ol>
+            <li wicket:id="list"><span wicket:id="item">繰り返されるよ</span></li>
+        </ol>
+    </section>
 </wicket:panel>
 </body>
 </html>
