@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head lang="ja">
+    <meta charset="UTF-8">
+    <title>my page</title>
+</head>
+<body>
+<ul>
+    <li><a href="#" wicket:id="abstract">AbstractLink</a></li>
+    <li><a href="#" wicket:id="abstract.disable">AbstractLink</a></li>
+
+    <li><a href="#" wicket:id="link">Link</a></li>
+    <li><a href="#" wicket:id="stateless">StatelessLink</a></li>
+    <li><a href="#" wicket:id="bookmarkable">BookmarkablePageLink</a></li>
+    <li><a href="#" wicket:id="bookmarkable.withParams">BookmarkablePageLink(with PageParameters)</a></li>
+    <li><a href="#" wicket:id="external">ExternalLink</a></li>
+
+    <li><a href="#" wicket:id="popup">PopupCloseLink</a></li>
+
+    <li><a href="#" wicket:id="download">DownloadLink</a></li>
+    <li><a href="#" wicket:id="resource">ResourceLink</a></li>
+</ul>
+<section>
+    <h1>ページ情報</h1>
+    <ul>
+        <li wicket:id="info.request"></li>
+        <li wicket:id="info.path"></li>
+        <li wicket:id="info.id"></li>
+        <li wicket:id="info.parameters"></li>
+    </ul>
+</section>
+</body>
+</html>
