@@ -27,7 +27,7 @@ public class StatefulPage extends WebPage {
         super.onInitialize();
 
         add(new Label("code", code));
-        add(new Label("instance", this));
+        add(new Label("instance", this.toString()));
 
         Form<Void> form = new Form<>("form");
         form.add(new Label("count", count));

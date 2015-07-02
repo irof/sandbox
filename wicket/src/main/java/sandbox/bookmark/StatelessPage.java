@@ -21,6 +21,6 @@ public class StatelessPage extends WebPage {
         super.onInitialize();
 
         add(new Label("code", code));
-        add(new Label("instance", this));
+        add(new Label("instance", this.toString()));
     }
 }
