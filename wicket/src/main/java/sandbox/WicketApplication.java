@@ -20,6 +20,13 @@ public class WicketApplication extends WebApplication {
         mountPage("/bookmark/stateless/${code}", StatelessPage.class);
         mountPage("/bookmark/stateful/${code}", StatefulPage.class);
 
+        introduceSpring();
+    }
+
+    /**
+     * Springを使う時のあれこれ
+     */
+    private void introduceSpring() {
         // WicketからSpringを使う程度ならこのタイミングで作るのがシンプルっぽい。設定もここだけでいいしね。
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
         // とりあえず2つアクティブにしとく
