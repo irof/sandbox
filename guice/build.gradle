@@ -1,0 +1,18 @@
+apply plugin: 'java'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'com.google.inject:guice:4.0'
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.hamcrest:hamcrest-library:1.3'
+}
+
