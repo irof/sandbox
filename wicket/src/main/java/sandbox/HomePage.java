@@ -2,6 +2,8 @@ package sandbox;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
+import org.apache.wicket.markup.html.link.StatelessLink;
+import sandbox.authorization.HelloAuthPage;
 import sandbox.bookmark.StatefulPage;
 import sandbox.bookmark.StatelessPage;
 import sandbox.i18n.ResourcePage;
@@ -27,5 +29,14 @@ public class HomePage extends WebPage {
         add(new BookmarkablePageLink<>("state.stateless", StatelessPage.class));
 
         add(new BookmarkablePageLink<>("spring.link", SpringPage.class));
+
+        add(new BookmarkablePageLink<>("auth.hello", HelloAuthPage.class));
+        add(new StatelessLink<Void>("auth.signOut") {
+            @Override
+            public void onClick() {
+                MySession session = (MySession) getSession();
+                session.invalidate();
+            }
+        });
     }
 }
