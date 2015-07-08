@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        mavenCentral()
+        jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
@@ -10,17 +10,15 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 
-jar {
-    baseName = 'pracswing-spring-boot'
-    version =  '0.0.1'
-}
-
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     testCompile "junit:junit"
     testCompile "org.springframework.boot:spring-boot-starter-test"
+
+    // 足すだけでBasic認証がかかるやつ
+    //compile "org.springframework.boot:spring-boot-starter-security"
 }
