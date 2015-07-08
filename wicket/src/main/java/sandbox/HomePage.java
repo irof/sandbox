@@ -7,6 +7,7 @@ import sandbox.authorization.HelloAuthPage;
 import sandbox.bookmark.StatefulPage;
 import sandbox.bookmark.StatelessPage;
 import sandbox.i18n.ResourcePage;
+import sandbox.misc.ImagePage;
 import sandbox.misc.LinkPage;
 import sandbox.misc.MiscPage;
 import sandbox.spring.SpringPage;
@@ -24,6 +25,7 @@ public class HomePage extends WebPage {
 
         add(new BookmarkablePageLink<>("misc", MiscPage.class));
         add(new BookmarkablePageLink<>("misc.links", LinkPage.class));
+        add(new BookmarkablePageLink<>("misc.images", ImagePage.class));
 
         add(new BookmarkablePageLink<>("state.stateful", StatefulPage.class));
         add(new BookmarkablePageLink<>("state.stateless", StatelessPage.class));
