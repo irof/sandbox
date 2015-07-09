@@ -26,5 +26,7 @@ public class HomePage extends WebPage {
 
         form.add(new Label("message", model));
         add(form);
+
+        add(new Label("version", getApplication().getFrameworkSettings().getVersion()));
     }
 }

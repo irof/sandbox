@@ -11,8 +11,15 @@ repositories {
 }
 
 dependencies {
-    //compile 'org.apache.wicket:wicket:1.4.+'
-    compile 'org.apache.wicket:wicket-core:1.5.+'
+  if (project.hasProperty('wicketVersion')) {
+    if (wicketVersion == "1.4") {
+      compile 'org.apache.wicket:wicket:1.4.+'
+    } else {
+      compile "org.apache.wicket:wicket-core:${wicketVersion}.+"
+    }
+  } else {
+    compile "org.apache.wicket:wicket-core:6.+"
+  }
 
     compile 'org.slf4j:jcl-over-slf4j:1.7.12'
     compile 'ch.qos.logback:logback-classic:1.1.3'
