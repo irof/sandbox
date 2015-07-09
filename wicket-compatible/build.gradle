@@ -1,0 +1,33 @@
+apply plugin: 'java'
+apply from: 'https://raw.github.com/akhikhl/gretty/master/pluginScripts/gretty.plugin'
+
+def defaultEncoding = 'UTF-8'
+tasks.withType(AbstractCompile)*.options*.encoding = defaultEncoding
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    //compile 'org.apache.wicket:wicket:1.4.+'
+    compile 'org.apache.wicket:wicket-core:1.5.+'
+
+    compile 'org.slf4j:jcl-over-slf4j:1.7.12'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
+}
+
+sourceSets {
+    main {
+        java { srcDir 'src/main/java' }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/main/java'
+        }
+    }
+}
+
+configurations {
+    all*.exclude module: 'commons-logging'
+}
