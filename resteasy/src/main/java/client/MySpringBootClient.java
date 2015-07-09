@@ -1,12 +1,9 @@
 package client;
 
+import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+
 import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Response;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.KeyStore;
 
 /**
  * @author irof
@@ -15,15 +12,10 @@ public class MySpringBootClient {
 
     public static void main(String[] args) throws Exception {
 
-        // 動くけどなんか違う気がする
-        KeyStore trustStore = KeyStore.getInstance("JKS", "SUN");
-        try (InputStream inputStream = Files.newInputStream(Paths.get("hoge.keystore"))) {
-            trustStore.load(inputStream, "hogehoge".toCharArray());
-        }
-        Client client = ClientBuilder.newBuilder()
-                .trustStore(trustStore)
-                // hostnameの検証を無効にするー
-                .hostnameVerifier((hostname, session) -> true)
+        // RESTEasyのBuilderでやっちゃえば #disableTrustManager で手っ取り早い感ある。
+        // javadoc に "this is a security hole" って書いてるけど。
+        Client client = new ResteasyClientBuilder()
+                .disableTrustManager()
                 .build();
 
         Response response = client
