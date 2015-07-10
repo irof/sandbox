@@ -29,6 +29,7 @@ public class SpringPage extends WebPage {
         add(new Label("profile", "profile"));
         add(new Label("text1", a));
         add(new Label("text2", b));
+        add(new InjectedLabel("text3"));
     }
 
     @Configuration
