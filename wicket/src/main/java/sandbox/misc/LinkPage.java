@@ -1,9 +1,13 @@
 package sandbox.misc;
 
+import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.*;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.ByteArrayResource;
 import org.apache.wicket.request.resource.IResource;
@@ -14,17 +18,18 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author irof
  */
 public class LinkPage extends WebPage {
 
-    public LinkPage() {
-    }
+    private final Component ajaxTarget;
+    private final Model<Integer> labelModel = Model.of(123);
 
-    public LinkPage(PageParameters params) {
-        super(params);
+    public LinkPage() {
+        add(ajaxTarget = new Label("ajaxTarget", labelModel).setOutputMarkupId(true));
     }
 
     @Override
@@ -73,6 +78,16 @@ public class LinkPage extends WebPage {
 
         // 外部リンクは特筆することはありません。
         add(new ExternalLink("external", "http://irof.hateblo.jp/"));
+
+        // ajax なリンク
+        // AjaxRequestTarget で一部を書き換えるのが普通の使い方
+        add(new AjaxLink<Void>("ajax") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                labelModel.setObject(labelModel.getObject() + 1);
+                target.add(ajaxTarget);
+            }
+        });
 
         // onload で javascript:self.close() やるHTMLに行く便利機能。
         add(new PopupCloseLink<Void>("popup"));
