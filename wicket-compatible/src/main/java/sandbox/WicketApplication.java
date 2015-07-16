@@ -6,7 +6,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 public class WicketApplication extends WebApplication {
     @Override
     public Class<? extends WebPage> getHomePage() {
-        return HomePage.class;
+        return StatelessPage.class;
     }
 
     @Override

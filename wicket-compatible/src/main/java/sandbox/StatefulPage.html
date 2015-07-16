@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>Apache Wicket Quickstart</title>
+</head>
+<body>
+
+<div>
+    <section>
+        <h1>Form</h1>
+
+        <form wicket:id="form">
+            <input type="submit">
+            <span wicket:id="message">hogera</span>
+        </form>
+    </section>
+
+    <section>
+        <h1>Link</h1>
+
+        <ul>
+            <li><a href="#" wicket:id="link.instance">link to "new Page()"</a></li>
+            <li><a href="#" wicket:id="link.class">link to Page.class</a></li>
+            <li><a href="#" wicket:id="link.this">link to this</a></li>
+            <li><a href="#" wicket:id="link.stateless">StatelessPage</a></li>
+            <li><a href="#" wicket:id="link.stateful">StatefulPage</a></li>
+        </ul>
+    </section>
+    <table>
+        <tr>
+            <th>wicket version:</th>
+            <td wicket:id="version">X.X</td>
+        </tr>
+        <tr>
+            <th>page instance:</th>
+            <td wicket:id="page.instance">HomePage@12345</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
