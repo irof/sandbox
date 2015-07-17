@@ -10,20 +10,10 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.request.component.IRequestableComponent;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.apache.wicket.request.resource.DynamicImageResource;
-import org.apache.wicket.request.resource.IResource;
-import org.apache.wicket.request.resource.ResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.string.StringValue;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import sandbox.bookmark.StatefulPage;
 import sandbox.bookmark.StatelessPage;
-
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class WicketApplication extends WebApplication {
     @Override
@@ -94,30 +84,5 @@ public class WicketApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         return new MySession(request);
-    }
-
-    static class ImageResourceReference extends ResourceReference {
-
-        public ImageResourceReference() {
-            super(ImageResourceReference.class, "hoge");
-        }
-
-        @Override
-        public IResource getResource() {
-            return new DynamicImageResource() {
-                @Override
-                protected byte[] getImageData(Attributes attributes) {
-                    try {
-                        PageParameters parameters = attributes.getParameters();
-                        StringValue key = parameters.get("key");
-                        URL resource = this.getClass().getClassLoader().getResource(key.toString());
-                        Path path = Paths.get(resource.toURI());
-                        return Files.readAllBytes(path);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            };
-        }
     }
 }
