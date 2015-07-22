@@ -73,7 +73,8 @@ public class WicketApplication extends WebApplication {
         ctx.refresh();
 
         // Wicketのコンポーネント生成時に @SpringBean にプロキシをインジェクションするリスナー。
-        // ApplicationContext の生成を WebApplication#init で行わないならなら、第二引数は基本的に不要。
+        // ApplicationContext の生成を WebApplication#init で行わないなら、
+        // 第二引数は設定せず1引数のコンストラクタを使用する。
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, ctx));
 
         // SpringWebApplicationFactory を WicketFilter に設定するのは WebApplication をSpring管理下にしたいとき。
