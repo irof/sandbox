@@ -7,18 +7,12 @@ compileJava {
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-  mavenLocal()
-  mavenCentral()
+  jcenter()
 }
 
 dependencies {
-  compile 'com.amazonaws:aws-java-sdk:1.+'
-  compile 'org.slf4j:jcl-over-slf4j:1.7.+'
-  compile 'ch.qos.logback:logback-classic:1.1.+'
+  compile 'com.sparkjava:spark-core:2.2'
   testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-library:1.3'
 }
 
-configurations {
-  all*.exclude module:'commons-logging'
-}
