@@ -1,6 +1,6 @@
 server:
     port: 9000
-    ssl:
-        key-store: "classpath:hoge.keystore"
-        key-store-password: hogehoge
-        key-password: hogehoge
+#    ssl:
+#        key-store: "classpath:hoge.keystore"
+#        key-store-password: hogehoge
+#        key-password: hogehoge
