@@ -1,10 +1,11 @@
+import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static spark.Spark.get;
 
@@ -27,18 +28,40 @@ public class HelloWorld {
         get("/loggingRequest", (req, res) -> {
             LOG.info("request : {}", req);
 
-            Arrays.stream(req.getClass().getDeclaredMethods())
-                    .filter(method -> method.getParameterCount() == 0)
-                    .forEach(method -> {
-                        try {
-                            method.setAccessible(true);
-                            LOG.info("request.{}() : {}", method.getName(), method.invoke(req));
-                        } catch (IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+            class Entry {
+                private final String key;
+                private final Object value;
 
-            return req.toString();
+                Entry(String key, Object value) {
+                    this.key = key;
+                    this.value = value == null ? "null" : value;
+                }
+
+                String getKey() {
+                    return key;
+                }
+
+                Object getValue() {
+                    return value.toString();
+                }
+            }
+
+            Map<String, Object> collect = Arrays.stream(req.getClass().getDeclaredMethods())
+                    .filter(method -> method.getParameterCount() == 0)
+                    .map(method -> {
+                                try {
+                                    method.setAccessible(true);
+                                    LOG.info("request.{}() : {}", method.getName(), method.invoke(req));
+                                    return new Entry(method.getName(), method.invoke(req));
+                                } catch (IllegalAccessException | InvocationTargetException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                    )
+                    .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+
+            Gson gson = new Gson();
+            return gson.toJson(collect);
         });
     }
 }
