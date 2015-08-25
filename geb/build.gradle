@@ -8,18 +8,17 @@ tasks.withType(GroovyCompile)*.groovyOptions*.encoding = defaultEncoding
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-  mavenLocal()
-  mavenCentral()
+  jcenter()
 }
 
 dependencies {
   compile 'org.codehaus.groovy:groovy-all:2.4.3'
-  compile "org.gebish:geb-core:0.10.0"
-  compile "org.gebish:geb-spock:0.10.0"
-  compile "org.gebish:geb-junit4:0.10.0"
-  compile "org.seleniumhq.selenium:selenium-firefox-driver:2.45.0"
-  compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.45.0"
-  compile "org.seleniumhq.selenium:selenium-support:2.45.0"
+  compile "org.gebish:geb-core:0.12.2"
+  compile "org.gebish:geb-spock:0.12.2"
+  compile "org.gebish:geb-junit4:0.12.2"
+  compile "org.seleniumhq.selenium:selenium-firefox-driver:2.47.1"
+  compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+  compile "org.seleniumhq.selenium:selenium-support:2.47.1"
 
   testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
   testCompile 'junit:junit:4.12'
