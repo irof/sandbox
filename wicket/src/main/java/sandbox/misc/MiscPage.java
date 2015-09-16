@@ -23,6 +23,7 @@ public class MiscPage extends WebPage {
 
         add(new ButtonPanel("panel.button"));
         add(new ListPanel("panel.list"));
+        add(new ChoicePanel("panel.choice"));
 
         Model<String> hoge1 = Model.of("hogehoge");
         add(new LabelOrTextField("panel.switching.input", hoge1, Model.of(true)));
