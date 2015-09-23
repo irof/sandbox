@@ -15,6 +15,9 @@ public interface EmployeeDao {
     @Select
     Employee selectById(Integer id);
 
+    @Select
+    List<Employee> selectByAge(Integer age);
+
     @Insert
     int insert(Employee employee);
 
