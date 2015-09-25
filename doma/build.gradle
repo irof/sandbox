@@ -28,4 +28,14 @@ idea {
     sourceDirs += file 'generated'
     outputDir = compileJava.destinationDir
   }
+  project.ipr.withXml { provider ->
+    def compilerConfig = provider.node.find {
+      it.'@name' == 'CompilerConfiguration'
+    }
+    def annotationProcessing = compilerConfig.annotationProcessing[0]
+    annotationProcessing.attributes().clear()
+    def profile = annotationProcessing.appendNode 'profile', [default:true, name:'Default', enabled:true]
+    profile.appendNode 'outputRelativeToContentRoot', [value:true]
+    profile.appendNode 'processorPath', [useClasspath:true]
+  }
 }

@@ -1,2 +1,6 @@
 classes/
 generated/
+
+*.ipr
+*.iml
+*.iws
