@@ -51,6 +51,12 @@ public class AppConfig implements Config {
 
     @Override
     public JdbcLogger getJdbcLogger() {
+        // logbackを使う「ログ出力ライブラリへのアダプタ」を無理矢理実装してみたもの。
+        // 通常はJdbcLoggerを実装する。
+        // AbstractJdbcLoggerはミニマムだと1メソッド実装するだけなので楽だけど、無名クラス実装するもんではない。
+        // デフォルトのログレベルを指定しつつ、protectedの各メソッドから幾つかはログレベルを変えるものっぽい。
+        // （ここではローカルトランザクションの開始終了をDEBUGにしてみた。）
+        // 無名クラスじゃダメな理由として、このメソッド呼ばれるたびにインスタンスつくるのもどうなのというのもある。
         return new AbstractJdbcLogger<Level>(Level.INFO) {
             @Override
             protected void log(Level level, String callerClassName, String callerMethodName,
@@ -59,6 +65,16 @@ public class AppConfig implements Config {
                 Logger logger = loggerContext.getLogger(callerClassName);
                 int levelInt = Level.toLocationAwareLoggerInteger(level);
                 logger.log(null, callerClassName, levelInt, messageSupplier.get(), null, null);
+            }
+
+            @Override
+            protected void logTransactionBegun(String callerClassName, String callerMethodName, String transactionId, Level level, Supplier<String> messageSupplier) {
+                super.logTransactionBegun(callerClassName, callerMethodName, transactionId, Level.DEBUG, messageSupplier);
+            }
+
+            @Override
+            protected void logTransactionEnded(String callerClassName, String callerMethodName, String transactionId, Level level, Supplier<String> messageSupplier) {
+                super.logTransactionEnded(callerClassName, callerMethodName, transactionId, Level.DEBUG, messageSupplier);
             }
         };
     }
