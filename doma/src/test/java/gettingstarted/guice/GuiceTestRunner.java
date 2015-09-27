@@ -10,9 +10,10 @@ import org.junit.runners.model.InitializationError;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 /**
  * @author irof
@@ -30,10 +31,11 @@ public class GuiceTestRunner extends BlockJUnit4ClassRunner {
     public void run(RunNotifier notifier) {
         injector = Guice.createInjector();
         try {
+            List<com.google.inject.Module> modules = Collections.synchronizedList(new ArrayList<>());
+
             List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(Module.class);
-            List<com.google.inject.Module> modules = methods.stream()
-                    .map(this::invokeStatic)
-                    .collect(Collectors.toList());
+            methods.stream().map(this::invokeStatic)
+                    .collect(() -> modules, List::add, List::addAll);
             if (modules.isEmpty()) {
                 logger.warning("Moduleなしで実行します。");
             }
