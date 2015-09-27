@@ -1,6 +1,5 @@
 package gettingstarted.guice;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import org.junit.runner.notification.RunNotifier;
@@ -10,9 +9,10 @@ import org.junit.runners.model.InitializationError;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * @author irof
@@ -28,21 +28,29 @@ public class GuiceTestRunner extends BlockJUnit4ClassRunner {
 
     @Override
     public void run(RunNotifier notifier) {
+        injector = Guice.createInjector();
         try {
             List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(Module.class);
-            if (methods.isEmpty()) {
-                logger.warning("@Moduleメソッドがないです");
-                injector = Guice.createInjector();
-            } else {
-                Method method = methods.get(0).getMethod();
-                AbstractModule module = (AbstractModule) method.invoke(null);
-                injector = Guice.createInjector(module);
+            List<com.google.inject.Module> modules = methods.stream()
+                    .map(this::invokeStatic)
+                    .collect(Collectors.toList());
+            if (modules.isEmpty()) {
+                logger.warning("Moduleなしで実行します。");
             }
+            injector = Guice.createInjector(modules);
         } catch (Exception e) {
             throw new AssertionError("guice configuration error.", e);
         }
 
         super.run(notifier);
+    }
+
+    com.google.inject.Module invokeStatic(FrameworkMethod method) {
+        try {
+            return (com.google.inject.Module) method.getMethod().invoke(null);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new AssertionError("@Module は引数なしのstaticメソッドに指定してくださいませ。");
+        }
     }
 
     @Override

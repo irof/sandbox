@@ -1,6 +1,7 @@
 package gettingstarted.guice;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Module;
 import com.google.inject.name.Names;
 import gettingstarted.dao.AppDao;
 import gettingstarted.dao.AppDaoImpl;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertThat;
 public class GuiceTest {
 
     @GuiceTestRunner.Module
-    public static AbstractModule guideModule() {
+    public static Module envModule() {
         return new AbstractModule() {
             @Override
             protected void configure() {
@@ -36,7 +37,15 @@ public class GuiceTest {
                         new LocalTransactionDataSource("jdbc:h2:mem:tutorial;DB_CLOSE_DELAY=-1", "sa", null)
                 );
                 bind(Config.class).annotatedWith(Names.named("config")).to(GuiceAppConfig.class);
+            }
+        };
+    }
 
+    @GuiceTestRunner.Module
+    public static Module daoModule() {
+        return new AbstractModule() {
+            @Override
+            protected void configure() {
                 bind(AppDao.class).to(AppDaoImpl.class);
                 bind(EmployeeDao.class).to(EmployeeDaoImpl.class);
             }
