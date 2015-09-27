@@ -7,8 +7,10 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,6 +38,11 @@ public class GuiceTestRunner extends BlockJUnit4ClassRunner {
             List<FrameworkMethod> methods = getTestClass().getAnnotatedMethods(Module.class);
             methods.stream().map(this::invokeStatic)
                     .collect(() -> modules, List::add, List::addAll);
+
+            Class<?> testClass = getTestClass().getJavaClass();
+            if (testClass.isAnnotationPresent(Module.class)) {
+                modules.add(testClass.getAnnotation(Module.class).value().newInstance());
+            }
             if (modules.isEmpty()) {
                 logger.warning("Moduleなしで実行します。");
             }
@@ -62,6 +69,11 @@ public class GuiceTestRunner extends BlockJUnit4ClassRunner {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD, ElementType.TYPE})
     public @interface Module {
+        Class<? extends com.google.inject.Module> value() default None.class;
+
+        interface None extends com.google.inject.Module {
+        }
     }
 }
