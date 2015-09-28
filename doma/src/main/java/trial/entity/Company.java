@@ -10,5 +10,5 @@ public class Company {
     @SequenceGenerator(sequence = "COMPANY_SEQ")
     public  Integer id;
 
-    public String name;
+    public CompanyName name;
 }
