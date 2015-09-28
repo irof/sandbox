@@ -2,6 +2,7 @@ package gettingstarted.dao;
 
 import gettingstarted.AppConfig;
 import gettingstarted.entity.Employee;
+import misc.TestDbResource;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;

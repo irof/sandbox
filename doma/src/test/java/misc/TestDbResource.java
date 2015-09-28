@@ -1,10 +1,12 @@
-package gettingstarted.dao;
+package misc;
 
 import gettingstarted.AppConfig;
+import gettingstarted.dao.AppDao;
+import gettingstarted.dao.AppDaoImpl;
 import org.junit.rules.ExternalResource;
 import org.seasar.doma.jdbc.tx.TransactionManager;
 
-class TestDbResource extends ExternalResource {
+public class TestDbResource extends ExternalResource {
 
     AppDao dao = new AppDaoImpl();
 
