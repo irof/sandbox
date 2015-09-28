@@ -15,8 +15,10 @@ import static org.junit.Assert.assertThat;
 
 public class EmployeeDaoTest {
 
+    AppDao appDao = new AppDaoImpl();
+
     @Rule
-    public ExternalResource dbResource = new TestDbResource();
+    public ExternalResource dbResource = new TestDbResource(appDao::create, appDao::drop, AppConfig.singleton());
 
     private EmployeeDao dao = new EmployeeDaoImpl();
 

@@ -1,23 +1,29 @@
 package misc;
 
-import gettingstarted.AppConfig;
-import gettingstarted.dao.AppDao;
-import gettingstarted.dao.AppDaoImpl;
 import org.junit.rules.ExternalResource;
+import org.seasar.doma.jdbc.Config;
 import org.seasar.doma.jdbc.tx.TransactionManager;
 
 public class TestDbResource extends ExternalResource {
 
-    AppDao dao = new AppDaoImpl();
+    private final Runnable create;
+    private final Runnable drop;
+    private Config appConfig;
+
+    public TestDbResource(Runnable create, Runnable drop, Config appConfig) {
+        this.create = create;
+        this.drop = drop;
+        this.appConfig = appConfig;
+    }
 
     @Override
     protected void before() throws Throwable {
-        TransactionManager tm = AppConfig.singleton().getTransactionManager();
-        tm.required(dao::create);
+        TransactionManager tm = appConfig.getTransactionManager();
+        tm.required(create);
     }
 
     @Override
     protected void after() {
-        AppConfig.singleton().getTransactionManager().required(dao::drop);
+        appConfig.getTransactionManager().required(drop);
     }
 }
