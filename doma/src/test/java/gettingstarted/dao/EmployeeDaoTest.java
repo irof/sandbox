@@ -6,7 +6,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExternalResource;
 import org.seasar.doma.jdbc.tx.LocalTransactionManager;
-import org.seasar.doma.jdbc.tx.TransactionManager;
 
 import java.util.List;
 
@@ -16,21 +15,7 @@ import static org.junit.Assert.assertThat;
 public class EmployeeDaoTest {
 
     @Rule
-    public ExternalResource dbResource = new ExternalResource() {
-
-        AppDao dao = new AppDaoImpl();
-
-        @Override
-        protected void before() throws Throwable {
-            TransactionManager tm = AppConfig.singleton().getTransactionManager();
-            tm.required(dao::create);
-        }
-
-        @Override
-        protected void after() {
-            AppConfig.singleton().getTransactionManager().required(dao::drop);
-        }
-    };
+    public ExternalResource dbResource = new TestDbResource();
 
     private EmployeeDao dao = new EmployeeDaoImpl();
 
@@ -95,4 +80,5 @@ public class EmployeeDaoTest {
             assertThat(employee, is(nullValue()));
         });
     }
+
 }
