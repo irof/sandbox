@@ -1,5 +1,4 @@
-import org.flywaydb.core.Flyway;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.sql.Connection;
@@ -11,12 +10,8 @@ import static org.junit.Assert.assertTrue;
 
 public class HogeTest {
 
-    @Before
-    public void setup() throws Exception {
-        Flyway flyway = new Flyway();
-        flyway.setDataSource("jdbc:h2:mem:hoge;DB_CLOSE_DELAY=-1", "sa", null);
-        flyway.migrate();
-    }
+    @Rule
+    public Migrator migrator = new Migrator();
 
     @Test
     public void コミュニティテーブルに一件以上入っている() throws Exception {
