@@ -1,26 +1,24 @@
 package trial;
 
-import org.seasar.doma.SingletonConfig;
 import org.seasar.doma.jdbc.Config;
 import org.seasar.doma.jdbc.dialect.Dialect;
 import org.seasar.doma.jdbc.dialect.H2Dialect;
-import org.seasar.doma.jdbc.tx.LocalTransactionDataSource;
-import org.seasar.doma.jdbc.tx.LocalTransactionManager;
+import org.seasar.doma.jdbc.tx.TransactionManager;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 
-@SingletonConfig
 public class AppConfig implements Config {
 
-    private static final AppConfig CONFIG = new AppConfig();
     private final H2Dialect dialect;
-    private final LocalTransactionDataSource dataSource;
-    private final LocalTransactionManager transactionManager;
+    private final DataSource dataSource;
+    private final TransactionManager transactionManager;
 
-    private AppConfig() {
+    @Inject
+    private AppConfig(DataSource dataSource, TransactionManager transactionManager) {
+        this.dataSource = dataSource;
+        this.transactionManager = transactionManager;
         dialect = new H2Dialect();
-        dataSource = new LocalTransactionDataSource("jdbc:h2:mem:tutorial;DB_CLOSE_DELAY=-1", "sa", null);
-        transactionManager = new LocalTransactionManager(dataSource.getLocalTransaction(getJdbcLogger()));
     }
 
     @Override
@@ -34,12 +32,7 @@ public class AppConfig implements Config {
     }
 
     @Override
-    public LocalTransactionManager getTransactionManager() {
+    public TransactionManager getTransactionManager() {
         return transactionManager;
     }
-
-    public static AppConfig singleton() {
-        return CONFIG;
-    }
-
 }
