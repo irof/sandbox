@@ -1,9 +1,8 @@
 package trial.dao;
 
-import misc.TestDbResource;
+import misc.Migrator;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExternalResource;
 import trial.AppConfig;
 import trial.entity.Company;
 
@@ -14,10 +13,8 @@ import static org.junit.Assert.assertThat;
 
 public class CompanyDaoTest {
 
-    private AppDao appDao = new AppDaoImpl();
-
     @Rule
-    public ExternalResource dbResource = new TestDbResource(appDao::create, appDao::drop, AppConfig.singleton());
+    public Migrator migrator = new Migrator();
 
     private CompanyDao dao = new CompanyDaoImpl();
 

@@ -1,2 +1,0 @@
-drop table company;
-drop sequence company_seq;
