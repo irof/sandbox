@@ -18,7 +18,8 @@ public class EmployeeDaoTest {
     AppDao appDao = new AppDaoImpl();
 
     @Rule
-    public ExternalResource dbResource = new TestDbResource(appDao::create, appDao::drop, AppConfig.singleton());
+    public ExternalResource dbResource = new TestDbResource(appDao::create, appDao::drop,
+            AppConfig.singleton()::getTransactionManager);
 
     private EmployeeDao dao = new EmployeeDaoImpl();
 
