@@ -1,4 +1,4 @@
-package gettingstarted.guice;
+package misc;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -12,6 +12,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,11 +56,15 @@ public class GuiceTestRunner extends BlockJUnit4ClassRunner {
         super.run(notifier);
     }
 
-    com.google.inject.Module invokeStatic(FrameworkMethod method) {
+    com.google.inject.Module invokeStatic(FrameworkMethod junitMethod) {
         try {
-            return (com.google.inject.Module) method.getMethod().invoke(null);
+            Method method = junitMethod.getMethod();
+            if (!Modifier.isStatic(method.getModifiers())) {
+                throw new IllegalStateException("@Module は引数なしのstaticメソッドに指定してくださいませ。");
+            }
+            return (com.google.inject.Module) method.invoke(null);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new AssertionError("@Module は引数なしのstaticメソッドに指定してくださいませ。");
+            throw new RuntimeException(e);
         }
     }
 
