@@ -4,29 +4,26 @@ import org.jboss.resteasy.core.Dispatcher;
 import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.jboss.resteasy.plugins.server.resourcefactory.POJOResourceFactory;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-/**
- * @author irof
- */
-public class SakaisujiLineTest {
+public class ExceptionMappingTest {
 
     @Test
-    public void test() throws Exception {
+    public void とにかく例外マッピングしてみる() throws Exception {
         Dispatcher dispatcher = MockDispatcherFactory.createDispatcher();
         dispatcher.getRegistry()
-                .addResourceFactory(new POJOResourceFactory(SakaisujiLine.class));
+                .addSingletonResource(new Misc());
+        dispatcher.getProviderFactory()
+                .registerProvider(MyExceptionMapper.class);
 
         MockHttpResponse response = new MockHttpResponse();
         dispatcher.invoke(
-                MockHttpRequest.get("sakaisuji/stations/K16"),
+                MockHttpRequest.get("misc/exception"),
                 response);
 
-        assertThat(response.getContentAsString(), containsString("長堀橋駅"));
+        assertThat(response.getStatus(), is(200));
     }
 }
