@@ -6,7 +6,9 @@
         </encoder>
     </appender>
 
+    <logger name="com.mchange.v2.c3p0.SQLWarnings" level="WARN"/>
+
     <root level="info">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
