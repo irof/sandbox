@@ -4,6 +4,9 @@ import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
+ * トリガーだけ登録してさっさと終了しちゃう子。
+ * 実行は {@link JobStarter} ががんばる。
+ *
  * @author irof
  */
 public class JobRegistrant {

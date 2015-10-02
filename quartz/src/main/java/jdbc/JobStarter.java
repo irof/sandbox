@@ -5,6 +5,12 @@ import org.quartz.SchedulerException;
 import org.quartz.impl.StdSchedulerFactory;
 
 /**
+ * jdbcjobstoreを使うSchedulerを実行する。
+ * このクラス単体で実行しても何も起こらないけれど、{@link JobRegistrant} を実行すると、
+ * JobがDBに登録されて、それをこいつが実行する事になる。
+ *
+ * こいつを複数起動すると、複数同時起動の確認もできる。
+ *
  * @author irof
  */
 public class JobStarter {

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
- * {@link Job} をextends
+ * 「そこそこ時間のかかる処理」をイメージした指定秒数sleepするJobの実装。
  *
  * @author irof
  */
