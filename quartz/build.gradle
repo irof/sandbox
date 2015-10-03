@@ -19,6 +19,7 @@ dependencies {
   compile 'org.springframework:spring-context-support:4.1.+'
   compile 'org.springframework:spring-tx:4.1.+'
   compile 'org.hsqldb:hsqldb:2.3.2'
+  compile 'org.flywaydb:flyway-core:3.2.1'
   testCompile 'org.springframework:spring-test:4.1.+'
   testCompile 'junit:junit:4.12'
   testCompile 'org.hamcrest:hamcrest-library:1.3'
