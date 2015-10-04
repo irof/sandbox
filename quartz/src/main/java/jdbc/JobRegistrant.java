@@ -18,10 +18,11 @@ public class JobRegistrant {
         try (AutoCloseable ac = scheduler::shutdown) {
             scheduler.clear();
             Trigger trigger1 = TriggerBuilder.newTrigger()
-                    .withIdentity("myCronTrigger1", "myJdbcJobGroup")
+                    .withIdentity("myCronTrigger1")
                     .withSchedule(CronScheduleBuilder.cronSchedule("*/3 * * * * ?"))
                     .build();
             scheduler.scheduleJob(JobBuilder.newJob(JdbcSlowJob.class)
+                    .withIdentity("myJob1")
                     .usingJobData("sleeps", 10L)
                     .storeDurably(true)
                     .build(), trigger1);
