@@ -27,12 +27,20 @@ public class JdbcSlowJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        logger.info("executing {}... sleep: {} seconds", this, sleeps);
+        logger.info("executing job:{{}}, context:{{}}", this, context);
 
         try {
             TimeUnit.SECONDS.sleep(sleeps);
         } catch (InterruptedException e) {
             throw new JobExecutionException(e);
+        } finally {
+            logger.info("finish job:{{}}, context:{{}}", this, context);
         }
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getName() + ": sleeps:" + sleeps;
+
     }
 }
