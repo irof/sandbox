@@ -18,6 +18,12 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Guice+Domaをやってみたもの。
+ *
+ * Guiceの初期化とかは冗長になるのでGuiceTestRunnerにやらせて、
+ * テーブル定義などはFlyWayでmigrationする。
+ */
 @RunWith(GuiceTestRunner.class)
 @GuiceTestRunner.Module(GuiceTestModule.class)
 public class CompanyDaoTest {

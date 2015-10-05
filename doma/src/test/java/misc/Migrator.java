@@ -3,11 +3,12 @@ package misc;
 import org.flywaydb.core.Flyway;
 import org.junit.rules.ExternalResource;
 import org.seasar.doma.jdbc.Config;
-import trial.AppConfig;
 
 import java.util.function.Supplier;
 
 /**
+ * JUnitを使用する場合にFlywayを使用してマイグレーションするRule
+ *
  * @author irof
  */
 public class Migrator extends ExternalResource {
