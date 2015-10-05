@@ -1,4 +1,4 @@
-package misc;
+package gettingstarted.dao;
 
 import org.junit.rules.ExternalResource;
 import org.seasar.doma.jdbc.tx.TransactionManager;
