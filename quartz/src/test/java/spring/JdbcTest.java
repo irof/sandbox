@@ -15,6 +15,10 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * SpringとQuartzの連携でbean登録されているDataSourceを使ってみるものです。
+ * DBはベット起動する必要があります。
+ * また、DBにjobが入っていないと何も起こりません。
+ *
  * @author irof
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -37,15 +41,25 @@ public class JdbcTest {
         @Bean
         public SchedulerFactoryBean scheduler() {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
+            // Springが持っているDataSourceを持ってきて放り込む感じです。
+            // JavaConfigなので直接メソッド呼び出ししてますが、引数でも良いし、
+            // XMLでやるならrefとかで書く感じになるかと。
             factory.setDataSource(dataSource());
+
+            // 動かすために必要な最低限の設定
+            // quartz.propertiesとか読んでもいいけど、設定箇所増えると煩雑になるので。
             factory.setSchedulerName("MyJdbcScheduler");
-            factory.setJobFactory(new PropertySettingJobFactory());
             Properties properties = new Properties();
             properties.setProperty("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
             properties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.HSQLDBDelegate");
             properties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
             properties.setProperty("org.quartz.jobStore.isClustered", "true");
             factory.setQuartzProperties(properties);
+
+            // UsingJobDataで設定したJobのプロパティだけど、SchedulerFactoryBeanのデフォルトである
+            // AdaptableJobFactoryだと設定されない。
+            // 正道はよくわかってないけれど、とりあえずこれで動いてはいる。
+            factory.setJobFactory(new PropertySettingJobFactory());
             return factory;
         }
     }
