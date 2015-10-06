@@ -18,6 +18,7 @@ dependencies {
   compile 'com.mchange:c3p0:0.9.5'
   compile 'org.springframework:spring-context-support:4.1.+'
   compile 'org.springframework:spring-tx:4.1.+'
+  compile 'org.springframework:spring-jdbc:4.1.+'
   compile 'org.hsqldb:hsqldb:2.3.2'
   compile 'org.flywaydb:flyway-core:3.2.1'
   testCompile 'org.springframework:spring-test:4.1.+'
