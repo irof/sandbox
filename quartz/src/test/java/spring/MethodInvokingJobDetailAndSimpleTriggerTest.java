@@ -2,6 +2,8 @@ package spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.JobDetail;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +30,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
     @Test
     public void test() throws Exception {
+        // 5回実行するまで待機する
         latch.await();
     }
 
@@ -46,6 +49,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
         @Bean
         public MethodInvokingJobDetailFactoryBean detailFactory() {
+            // 指定したメソッドをリフレクションで実行するJobインスタンスを作成するファクトリ
             MethodInvokingJobDetailFactoryBean factory = new MethodInvokingJobDetailFactoryBean();
             factory.setTargetObject(myPojo());
             factory.setTargetMethod("hello");
@@ -53,19 +57,26 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
-        public SimpleTriggerFactoryBean triggerFactory() {
+        public SimpleTriggerFactoryBean triggerFactory(JobDetail jobDetail) {
+            // どこにでもある当たり前のトリガー
             SimpleTriggerFactoryBean factory = new SimpleTriggerFactoryBean();
-            factory.setJobDetail(detailFactory().getObject());
+            factory.setJobDetail(jobDetail);
             factory.setStartDelay(1000);
             factory.setRepeatInterval(500);
             return factory;
         }
 
+        /**
+         * 引数にはJobDetailとtriggerのFactoryBeanから生成されたオブジェクトが入ってくるです。
+         * afterPropertiesSetでそれぞれのインスタンス生成をしているので、
+         * FactoryBeanを使う場合は各々Bean定義しないダメです。
+         * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
+         */
         @Bean
-        public SchedulerFactoryBean schedulerFactory() {
+        public SchedulerFactoryBean schedulerFactory(JobDetail jobDetail, Trigger trigger) {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(detailFactory().getObject());
-            factory.setTriggers(triggerFactory().getObject());
+            factory.setJobDetails(jobDetail);
+            factory.setTriggers(trigger);
             return factory;
         }
     }

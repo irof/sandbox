@@ -2,6 +2,9 @@ package spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.Trigger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,6 +46,9 @@ public class JobDetailAndCronTriggerTest {
 
         @Bean
         public JobDetailFactoryBean detailFactory() {
+            // JobDetailに設定するJobClassは Class<? extends Job> でないといけない。
+            // JobDetailFactoryBean#setJobが何も指定されていないのは、XMLで使うものだからだろうかね。
+            // QuartzJobBeanの継承クラスで作ってるのはJobDataAsMapで設定した値を設定させたいから。
             JobDetailFactoryBean factory = new JobDetailFactoryBean();
             factory.setJobClass(ScheduledJobBean.class);
             factory.setJobDataAsMap(Collections.singletonMap("latch", latch()));
@@ -51,19 +57,19 @@ public class JobDetailAndCronTriggerTest {
         }
 
         @Bean
-        public CronTriggerFactoryBean triggerFactory() {
+        public CronTriggerFactoryBean triggerFactory(JobDetail jobDetail) {
             CronTriggerFactoryBean factory = new CronTriggerFactoryBean();
-            factory.setJobDetail(detailFactory().getObject());
+            factory.setJobDetail(jobDetail);
             factory.setStartDelay(1000);
             factory.setCronExpression("*/2 * * * * ?");
             return factory;
         }
 
         @Bean
-        public SchedulerFactoryBean schedulerFactory() {
+        public SchedulerFactoryBean schedulerFactory(JobDetail jobDetail, Trigger trigger) {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(detailFactory().getObject());
-            factory.setTriggers(triggerFactory().getObject());
+            factory.setJobDetails(jobDetail);
+            factory.setTriggers(trigger);
             return factory;
         }
     }

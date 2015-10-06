@@ -15,6 +15,9 @@ import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 /**
+ * DisallowConcurrentExecution や setConcurrent を使用した同時実行制御。
+ * 同じスケジューラーインスタンス内の同じトリガーでのみ有効。
+ *
  * @author irof
  */
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -34,29 +37,16 @@ public class ExclusiveControlTest {
 
         @Bean
         public CountDownLatch latch() {
-            return new CountDownLatch(5);
+            return new CountDownLatch(10);
         }
 
         @Bean
-        public SchedulerFactoryBean scheduler() {
+        public SchedulerFactoryBean scheduler(JobDetail normalJobDetail, JobDetail methodInvokingJobDetail) {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(detail1(), detail2Factory().getObject());
+            factory.setJobDetails(normalJobDetail, methodInvokingJobDetail);
+            // 異なるトリガーに紐づける
             factory.setTriggers(simpleTrigger("job1"), simpleTrigger("job2"));
             return factory;
-        }
-
-        private JobDetail detail1() {
-            // この形式で作る場合はSlowJobはQuartzJobBeanじゃなくただのJobでも良いのだけれど、
-            // latchとかをメソッドインジェクションさせたいのでこの形になる。
-            // QuartzのデフォルトではPropertySettingJobFactoryが使われるのでJobでもsetterが呼ばれる。
-            // しかしScheduleFactoryBeanで使われるAdaptableJobFactoryはプロパティのセットは行わない。
-            // 対応はQuartzJobBeanの継承にするか、SchedulerFactoryBeanのjobFactoryを上書きするのだけど、
-            // 後者の対応をしてしまうと @Scheduled などのアノテーションが使えなくなる。
-            return JobBuilder.newJob(SlowJob.class)
-                    .withIdentity("job1", "myJobGroup")
-                    .usingJobData(new JobDataMap(Collections.singletonMap("latch", latch())))
-                    .storeDurably(true)
-                    .build();
         }
 
         private SimpleTrigger simpleTrigger(String jobName) {
@@ -69,7 +59,24 @@ public class ExclusiveControlTest {
         }
 
         @Bean
-        public MethodInvokingJobDetailFactoryBean detail2Factory() {
+        public JobDetail normalJobDetail() {
+            // この形式で作る場合はSlowJobはQuartzJobBeanじゃなくただのJobでも良いのだけれど、
+            // setter経由でQuartzに何かしら設定させたいならこういう形。
+
+            // QuartzのデフォルトではPropertySettingJobFactoryが使われるのでJobでもsetterが呼ばれるのだけれど、
+            // しかしScheduleFactoryBeanで使われるAdaptableJobFactoryはプロパティのセットが行われない。
+
+            // 対応はQuartzJobBeanの継承にするか、SchedulerFactoryBeanのjobFactoryを上書きするのだけど、
+            // 後者の対応をしてしまうと @Scheduled などのアノテーションが使えなくなる。
+            return JobBuilder.newJob(SlowJob.class)
+                    .withIdentity("job1", "myJobGroup")
+                    .usingJobData(new JobDataMap(Collections.singletonMap("latch", latch())))
+                    .storeDurably(true)
+                    .build();
+        }
+
+        @Bean
+        public MethodInvokingJobDetailFactoryBean methodInvokingJobDetail() {
             SlowJob job = new SlowJob();
             job.setLatch(latch());
 
@@ -80,11 +87,10 @@ public class ExclusiveControlTest {
             factory.setName("job2");
             factory.setGroup("myJobGroup");
 
-            // MethodInvokingJobDetailFactoryBeanを使用する場合はJobインスタンスを作れないので
-            // @DisallowConcurrentExecutionを付与するタイミングがない。
-            // (当然ではあるがtargetObjectに付けてても意味ない。）
-            // なのでFactoryBeanの concurrent プロパティに設定する。
-            // concurrent=false で同時実行しなくなる
+            // MethodInvokingJobDetailFactoryBeanを使用する場合、
+            // たとえtargetObjectがJobのインスタンスで@DisallowConcurrentExecutionが付与されていても、
+            // Quartzが認識するのはFactoryが生成するJobDetailImplのため、排他制御は行われない。
+            // なのでFactoryBeanの concurrent プロパティに false を設定する。
             factory.setConcurrent(false);
 
             return factory;
