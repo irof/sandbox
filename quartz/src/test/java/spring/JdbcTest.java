@@ -2,6 +2,7 @@ package spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.quartz.simpl.PropertySettingJobFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -38,6 +39,7 @@ public class JdbcTest {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
             factory.setDataSource(dataSource());
             factory.setSchedulerName("MyJdbcScheduler");
+            factory.setJobFactory(new PropertySettingJobFactory());
             Properties properties = new Properties();
             properties.setProperty("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
             properties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.HSQLDBDelegate");
