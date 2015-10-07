@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -56,10 +57,8 @@ public class JdbcTest {
             properties.setProperty("org.quartz.jobStore.isClustered", "true");
             factory.setQuartzProperties(properties);
 
-            // UsingJobDataで設定したJobのプロパティだけど、SchedulerFactoryBeanのデフォルトである
-            // AdaptableJobFactoryだと設定されない。
-            // 正道はよくわかってないけれど、とりあえずこれで動いてはいる。
-            factory.setJobFactory(new PropertySettingJobFactory());
+            // UsingJobDataで設定したJobのプロパティがデフォルトのJobFactoryのままだと設定されないので明示的に指定する
+            factory.setJobFactory(new SpringBeanJobFactory());
             return factory;
         }
     }
