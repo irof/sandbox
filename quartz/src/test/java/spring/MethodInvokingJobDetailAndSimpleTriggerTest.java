@@ -32,12 +32,14 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
     @Test
     public void test() throws Exception {
-        // 5回実行するまで待機する
         latch.await();
+
+        assert latch.getCount() == 0;
     }
 
     @Configuration
     static class Config {
+
         @Bean
         public CountDownLatch latch() {
             // 5回やる
@@ -45,8 +47,8 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
-        public PojoJobBean myPojo() {
-            return new PojoJobBean();
+        public SamplePojo myPojo() {
+            return new SamplePojo();
         }
 
         @Bean
@@ -60,7 +62,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
         @Bean
         public SimpleTriggerFactoryBean triggerFactory(JobDetail jobDetail) {
-            // どこにでもある当たり前のトリガー
+            // どこにでもある当たり前のトリガー 0.5秒間隔 で実行する。
             SimpleTriggerFactoryBean factory = new SimpleTriggerFactoryBean();
             factory.setJobDetail(jobDetail);
             factory.setStartDelay(1000);
@@ -71,7 +73,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         /**
          * 引数にはJobDetailとtriggerのFactoryBeanから生成されたオブジェクトが入ってくるです。
          * afterPropertiesSetでそれぞれのインスタンス生成をしているので、
-         * FactoryBeanを使う場合は各々Bean定義しないダメです。
+         * FactoryBeanを使う場合は各々Bean定義する必要があります。
          * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
          */
         @Bean
@@ -84,9 +86,9 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
     }
 
     /**
-     * @author irof
+     * Jobインタフェースを実装しない、よくあるSingletonで定義されるサービスクラスみたいなやつ
      */
-    public static class PojoJobBean {
+    public static class SamplePojo {
 
         @Autowired
         CountDownLatch latch;
