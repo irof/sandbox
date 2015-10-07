@@ -2,10 +2,7 @@ package spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.JobDetail;
-import org.quartz.SimpleScheduleBuilder;
-import org.quartz.Trigger;
-import org.quartz.TriggerBuilder;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -53,7 +51,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
-        public MethodInvokingJobDetailFactoryBean detailFactory() {
+        public MethodInvokingJobDetailFactoryBean hogeDetail() {
             // 指定したメソッドをリフレクションで実行するJobインスタンスを作成するファクトリ
             MethodInvokingJobDetailFactoryBean factory = new MethodInvokingJobDetailFactoryBean();
             factory.setTargetObject(myPojo());
@@ -62,13 +60,29 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
-        public Trigger trigger(JobDetail jobDetail) {
-            // どこにでもある当たり前のトリガー 1秒間隔 で実行する。
+        public JobDetail fugaDetail() {
+            return JobBuilder.newJob(SamplePojoJob.class)
+                    .storeDurably()
+                    .build();
+        }
+
+        @Bean
+        public Trigger hogeTrigger(JobDetail hogeDetail) {
             return TriggerBuilder.newTrigger()
+                    .forJob(hogeDetail)
                     .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1))
-                    .startNow()
                     .usingJobData("triggerParam", "HOGE") // MethodInvokingJobDetailFactoryBeanを使用するとこの値は設定されない
-                    .forJob(jobDetail)
+                    .startNow()
+                    .build();
+        }
+
+        @Bean
+        public Trigger fugaTrigger(JobDetail fugaDetail) {
+            return TriggerBuilder.newTrigger()
+                    .forJob(fugaDetail)
+                    .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1))
+                    .usingJobData("triggerParam", "FUGA")
+                    .startNow()
                     .build();
         }
 
@@ -79,11 +93,20 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
          * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
          */
         @Bean
-        public SchedulerFactoryBean schedulerFactory(JobDetail jobDetail, Trigger trigger) {
+        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail) {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(jobDetail);
-            factory.setTriggers(trigger);
+            factory.setJobDetails(hogeDetail, fugaDetail);
+            factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail));
+            factory.setJobFactory(new SpringBeanJobFactory());
             return factory;
+        }
+    }
+
+    public static class SamplePojoJob extends SamplePojo implements Job {
+
+        @Override
+        public void execute(JobExecutionContext context) throws JobExecutionException {
+            hello();
         }
     }
 
@@ -106,8 +129,10 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         public void hello() {
             logger.info("Hello, {}!", triggerParam);
             logger.info("  This is POJO Job: {}.", this);
-            logger.info("  latch count is {}.", latch.getCount());
-            latch.countDown();
+            if (latch != null) {
+                logger.info("  latch count is {}.", latch.getCount());
+                latch.countDown();
+            }
         }
     }
 }
