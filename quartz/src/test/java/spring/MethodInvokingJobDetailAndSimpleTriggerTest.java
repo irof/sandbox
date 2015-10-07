@@ -6,16 +6,19 @@ import org.quartz.*;
 import org.quartz.spi.TriggerFiredBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -43,8 +46,7 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
         @Bean
         public CountDownLatch latch() {
-            // 5回やる
-            return new CountDownLatch(5);
+            return new CountDownLatch(10);
         }
 
         @Bean
@@ -69,23 +71,44 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
+        public MethodInvokingJobDetailFactoryBean piyoDetail() {
+            MethodInvokingJobDetailFactoryBean factory = new MethodInvokingJobDetailFactoryBean();
+            // bean名指定でも参照できるけど、これよりもインスタンス見に行く方が良い
+            factory.setTargetBeanName("myPojo");
+            factory.setTargetMethod("hello");
+            return factory;
+        }
+
+        @Bean
         public Trigger hogeTrigger(JobDetail hogeDetail) {
+            // MethodInvokingJobDetailFactoryBeanを使用しているため、JobDataは使用されません
             return TriggerBuilder.newTrigger()
                     .forJob(hogeDetail)
                     .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1))
-                    .usingJobData("triggerParam", "HOGE") // MethodInvokingJobDetailFactoryBeanを使用するとこの値は設定されない
+                    .usingJobData("triggerParam", "HOGE")
                     .startNow()
                     .build();
         }
 
         @Bean
         public Trigger fugaTrigger(JobDetail fugaDetail) {
+            // Jobインタフェースを使用しているため、JobDataが使用されます
             return TriggerBuilder.newTrigger()
                     .forJob(fugaDetail)
                     .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1))
                     .usingJobData("triggerParam", "FUGA")
                     .startNow()
                     .build();
+        }
+
+        @Bean
+        public FactoryBean<SimpleTrigger> piyoTrigger(JobDetail piyoDetail) {
+            // MethodInvokingJobDetailFactoryBeanを使用しているため、JobDataは使用されません
+            SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+            factoryBean.setRepeatInterval(1000);
+            factoryBean.setJobDetail(piyoDetail);
+            factoryBean.setJobDataAsMap(Collections.singletonMap("triggerParam", "PIYO"));
+            return factoryBean;
         }
 
         /**
@@ -95,10 +118,11 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
          * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
          */
         @Bean
-        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail, ApplicationContext context) {
+        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail, JobDetail piyoDetail,
+                                                     ApplicationContext context) throws Exception {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(hogeDetail, fugaDetail);
-            factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail));
+            factory.setJobDetails(hogeDetail, fugaDetail, piyoDetail);
+            factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail), piyoTrigger(piyoDetail).getObject());
             factory.setJobFactory(new SpringBeanJobFactory() {
                 @Override
                 protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
