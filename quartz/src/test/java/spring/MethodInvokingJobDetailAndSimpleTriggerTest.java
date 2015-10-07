@@ -3,7 +3,9 @@ package spring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.JobDetail;
+import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
+import org.quartz.TriggerBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,12 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
-import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -63,15 +62,14 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         }
 
         @Bean
-        public SimpleTriggerFactoryBean triggerFactory(JobDetail jobDetail) {
-            // どこにでもある当たり前のトリガー 0.5秒間隔 で実行する。
-            SimpleTriggerFactoryBean factory = new SimpleTriggerFactoryBean();
-            factory.setJobDetail(jobDetail);
-            factory.setStartDelay(1000);
-            factory.setRepeatInterval(500);
-            // MethodInvokingJobDetailFactoryBeanを使用するとこの値は設定されない
-            factory.setJobDataAsMap(Collections.singletonMap("triggerParam", "HOGE"));
-            return factory;
+        public Trigger trigger(JobDetail jobDetail) {
+            // どこにでもある当たり前のトリガー 1秒間隔 で実行する。
+            return TriggerBuilder.newTrigger()
+                    .withSchedule(SimpleScheduleBuilder.repeatSecondlyForever(1))
+                    .startNow()
+                    .usingJobData("triggerParam", "HOGE") // MethodInvokingJobDetailFactoryBeanを使用するとこの値は設定されない
+                    .forJob(jobDetail)
+                    .build();
         }
 
         /**
