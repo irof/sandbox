@@ -3,16 +3,20 @@ package spring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * DisallowConcurrentExecution や setConcurrent を使用した同時実行制御。
@@ -96,5 +100,34 @@ public class ExclusiveControlTest {
             return factory;
         }
 
+    }
+
+    @DisallowConcurrentExecution
+    public static class SlowJob extends QuartzJobBean {
+
+        private static Logger logger = LoggerFactory.getLogger("spring");
+
+        private CountDownLatch latch;
+        private long sleeps = 5;
+
+        public void setLatch(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        @Override
+        protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+            run();
+        }
+
+        private void run() throws JobExecutionException {
+            latch.countDown();
+            logger.info("executing {}... sleep: {} seconds, latch: {}", this, sleeps, latch.getCount());
+
+            try {
+                TimeUnit.SECONDS.sleep(sleeps);
+            } catch (InterruptedException e) {
+                throw new JobExecutionException(e);
+            }
+        }
     }
 }

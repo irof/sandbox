@@ -4,6 +4,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.JobDetail;
 import org.quartz.Trigger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -78,6 +80,22 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
             factory.setJobDetails(jobDetail);
             factory.setTriggers(trigger);
             return factory;
+        }
+    }
+
+    /**
+     * @author irof
+     */
+    public static class PojoJobBean {
+
+        @Autowired
+        CountDownLatch latch;
+
+        private static Logger logger = LoggerFactory.getLogger("spring");
+
+        public void hello() {
+            latch.countDown();
+            logger.info("Hello, POJO Job: {}", this);
         }
     }
 }

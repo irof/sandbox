@@ -2,14 +2,15 @@ package spring;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.quartz.JobDetail;
-import org.quartz.Scheduler;
-import org.quartz.Trigger;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
+import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -71,6 +72,25 @@ public class JobDetailAndCronTriggerTest {
             factory.setJobDetails(jobDetail);
             factory.setTriggers(trigger);
             return factory;
+        }
+    }
+
+    /**
+     * @author irof
+     */
+    public static class ScheduledJobBean extends QuartzJobBean {
+
+        private static Logger logger = LoggerFactory.getLogger("spring");
+        private CountDownLatch latch;
+
+        public void setLatch(CountDownLatch latch) {
+            this.latch = latch;
+        }
+
+        @Override
+        protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+            latch.countDown();
+            logger.info("Hello, Scheduled Job: {}, context: {}", this, context);
         }
     }
 }
