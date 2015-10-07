@@ -12,9 +12,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -67,6 +69,8 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
             factory.setJobDetail(jobDetail);
             factory.setStartDelay(1000);
             factory.setRepeatInterval(500);
+            // MethodInvokingJobDetailFactoryBeanを使用するとこの値は設定されない
+            factory.setJobDataAsMap(Collections.singletonMap("triggerParam", "HOGE"));
             return factory;
         }
 
@@ -95,9 +99,17 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
 
         private static Logger logger = LoggerFactory.getLogger("spring");
 
+        private String triggerParam = "WORLD";
+
+        public void setTriggerParam(String triggerParam) {
+            this.triggerParam = triggerParam;
+        }
+
         public void hello() {
+            logger.info("Hello, {}!", triggerParam);
+            logger.info("  This is POJO Job: {}.", this);
+            logger.info("  latch count is {}.", latch.getCount());
             latch.countDown();
-            logger.info("Hello, POJO Job: {}", this);
         }
     }
 }
