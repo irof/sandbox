@@ -6,30 +6,26 @@ import org.quartz.*;
 import org.quartz.spi.TriggerFiredBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Collections;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * POJOをSimpleTriggerで実行するサンプルですよ。
+ * SimpleTriggerでPOJOとかJob実装クラスを実行するサンプルですよ。
+ * <p>
  * 参考: http://websystique.com/spring/spring-4-quartz-scheduler-integration-example/
- *
- * @author irof
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class MethodInvokingJobDetailAndSimpleTriggerTest {
+public class SimpleTriggerSpringJobTest {
 
     @Autowired
     CountDownLatch latch;
@@ -58,8 +54,15 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
         public MethodInvokingJobDetailFactoryBean hogeDetail() {
             // 指定したメソッドをリフレクションで実行するJobインスタンスを作成するファクトリ
             MethodInvokingJobDetailFactoryBean factory = new MethodInvokingJobDetailFactoryBean();
+
+            // 対象は任意のインスタンス
             factory.setTargetObject(myPojo());
+            // こんな感じでbean名指定もできるけど、インスタンスを直で見に行く方が良いだろう
+            //factory.setTargetBeanName("myPojo");
+
+            // 実行するメソッドは文字列指定になる
             factory.setTargetMethod("hello");
+
             return factory;
         }
 
@@ -68,15 +71,6 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
             return JobBuilder.newJob(SamplePojoJob.class)
                     .storeDurably()
                     .build();
-        }
-
-        @Bean
-        public MethodInvokingJobDetailFactoryBean piyoDetail() {
-            MethodInvokingJobDetailFactoryBean factory = new MethodInvokingJobDetailFactoryBean();
-            // bean名指定でも参照できるけど、これよりもインスタンス見に行く方が良い
-            factory.setTargetBeanName("myPojo");
-            factory.setTargetMethod("hello");
-            return factory;
         }
 
         @Bean
@@ -101,16 +95,6 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
                     .build();
         }
 
-        @Bean
-        public FactoryBean<SimpleTrigger> piyoTrigger(JobDetail piyoDetail) {
-            // MethodInvokingJobDetailFactoryBeanを使用しているため、JobDataは使用されません
-            SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-            factoryBean.setRepeatInterval(1000);
-            factoryBean.setJobDetail(piyoDetail);
-            factoryBean.setJobDataAsMap(Collections.singletonMap("triggerParam", "PIYO"));
-            return factoryBean;
-        }
-
         /**
          * 引数にはJobDetailとtriggerのFactoryBeanから生成されたオブジェクトが入ってくるです。
          * afterPropertiesSetでそれぞれのインスタンス生成をしているので、
@@ -118,11 +102,10 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
          * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
          */
         @Bean
-        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail, JobDetail piyoDetail,
-                                                     ApplicationContext context) throws Exception {
+        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail, ApplicationContext context) throws Exception {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
-            factory.setJobDetails(hogeDetail, fugaDetail, piyoDetail);
-            factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail), piyoTrigger(piyoDetail).getObject());
+            factory.setJobDetails(hogeDetail, fugaDetail);
+            factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail));
             factory.setJobFactory(new SpringBeanJobFactory() {
                 @Override
                 protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
