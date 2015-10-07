@@ -3,9 +3,11 @@ package spring;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.*;
+import org.quartz.spi.TriggerFiredBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
@@ -93,11 +95,18 @@ public class MethodInvokingJobDetailAndSimpleTriggerTest {
          * ……とはいえ、FactoryBeanはXMLで書くためのものなんで、無理に使う必要ないです。
          */
         @Bean
-        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail) {
+        public SchedulerFactoryBean schedulerFactory(JobDetail hogeDetail, JobDetail fugaDetail, ApplicationContext context) {
             SchedulerFactoryBean factory = new SchedulerFactoryBean();
             factory.setJobDetails(hogeDetail, fugaDetail);
             factory.setTriggers(hogeTrigger(hogeDetail), fugaTrigger(fugaDetail));
-            factory.setJobFactory(new SpringBeanJobFactory());
+            factory.setJobFactory(new SpringBeanJobFactory() {
+                @Override
+                protected Object createJobInstance(TriggerFiredBundle bundle) throws Exception {
+                    Object jobInstance = super.createJobInstance(bundle);
+                    context.getAutowireCapableBeanFactory().autowireBean(jobInstance);
+                    return jobInstance;
+                }
+            });
             return factory;
         }
     }
