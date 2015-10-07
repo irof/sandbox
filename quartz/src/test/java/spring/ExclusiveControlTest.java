@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
-import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -50,6 +50,8 @@ public class ExclusiveControlTest {
             factory.setJobDetails(normalJobDetail, methodInvokingJobDetail);
             // 異なるトリガーに紐づける
             factory.setTriggers(simpleTrigger("job1"), simpleTrigger("job2"));
+            // spring-bean を使用してJobのプロパティに値を突っ込む子
+            factory.setJobFactory(new SpringBeanJobFactory());
             return factory;
         }
 
@@ -64,14 +66,6 @@ public class ExclusiveControlTest {
 
         @Bean
         public JobDetail normalJobDetail() {
-            // この形式で作る場合はSlowJobはQuartzJobBeanじゃなくただのJobでも良いのだけれど、
-            // setter経由でQuartzに何かしら設定させたいならこういう形。
-
-            // QuartzのデフォルトではPropertySettingJobFactoryが使われるのでJobでもsetterが呼ばれるのだけれど、
-            // しかしScheduleFactoryBeanで使われるAdaptableJobFactoryはプロパティのセットが行われない。
-
-            // 対応はQuartzJobBeanの継承にするか、SchedulerFactoryBeanのjobFactoryを上書きするのだけど、
-            // 後者の対応をしてしまうと @Scheduled などのアノテーションが使えなくなる。
             return JobBuilder.newJob(SlowJob.class)
                     .withIdentity("job1", "myJobGroup")
                     .usingJobData(new JobDataMap(Collections.singletonMap("latch", latch())))
@@ -103,7 +97,7 @@ public class ExclusiveControlTest {
     }
 
     @DisallowConcurrentExecution
-    public static class SlowJob extends QuartzJobBean {
+    public static class SlowJob implements Job {
 
         private static Logger logger = LoggerFactory.getLogger("spring");
 
@@ -115,7 +109,7 @@ public class ExclusiveControlTest {
         }
 
         @Override
-        protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        public void execute(JobExecutionContext context) throws JobExecutionException {
             run();
         }
 
