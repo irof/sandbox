@@ -17,6 +17,7 @@ import javax.inject.Named;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -66,6 +67,7 @@ public class CompanyDaoTest {
         config.getTransactionManager().required(() -> {
             Optional<Company> company = dao.findByName(new CompanyName("HOGE"));
             assertTrue(company.isPresent());
+            assertThat(company.get().phoneNumber.getValue(), is("012012345678"));
         });
         config.getTransactionManager().required(() -> {
             Optional<Company> company = dao.findByName(new CompanyName("ABCD"));

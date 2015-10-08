@@ -1,8 +1,9 @@
 package trial.entity;
 
 import org.seasar.doma.*;
+import org.seasar.doma.jdbc.entity.NamingType;
 
-@Entity
+@Entity(naming = NamingType.SNAKE_UPPER_CASE)
 public class Company {
 
     @Id
@@ -11,4 +12,6 @@ public class Company {
     public  Integer id;
 
     public CompanyName name;
+
+    public PhoneNumber phoneNumber;
 }

@@ -25,6 +25,8 @@ dependencies {
   testCompile 'org.flywaydb:flyway-core:3.2.1'
 }
 
+compileJava.options.compilerArgs = ['-Adoma.domain.converters=trial.Converters']
+
 idea {
   module {
     sourceDirs += file 'generated'
