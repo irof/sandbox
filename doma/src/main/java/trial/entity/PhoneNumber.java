@@ -1,9 +1,11 @@
 package trial.entity;
 
-import org.seasar.doma.Domain;
-
 import java.util.Objects;
 
+/**
+ * 電話番号。
+ * 外部ドメインのサンプルですよ。
+ */
 public class PhoneNumber {
 
     private final String value;

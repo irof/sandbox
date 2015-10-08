@@ -4,6 +4,10 @@ import org.seasar.doma.Domain;
 
 import java.util.Objects;
 
+/**
+ * 会社名。
+ * 内部ドメインのサンプルです。
+ */
 @Domain(valueType = String.class)
 public class CompanyName {
 
