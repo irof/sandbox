@@ -3,8 +3,10 @@ package trial.dao;
 import org.seasar.doma.*;
 import trial.AppConfig;
 import trial.entity.Company;
+import trial.entity.CompanyName;
 
 import java.util.List;
+import java.util.Optional;
 
 @Dao
 @AnnotateWith(annotations = {
@@ -15,4 +17,7 @@ public interface CompanyDao {
 
     @Select
     List<Company> selectAll();
+
+    @Select
+    Optional<Company> findByName(CompanyName name);
 }
