@@ -2,7 +2,6 @@ package trial.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import misc.GuiceTestModule;
 import misc.GuiceTestRunner;
 import misc.Migrator;
 import org.junit.Rule;
@@ -30,7 +29,7 @@ import static org.junit.Assert.assertTrue;
  * テーブル定義などはFlyWayでmigrationする。
  */
 @RunWith(GuiceTestRunner.class)
-@GuiceTestRunner.Module(GuiceTestModule.class)
+@GuiceTestRunner.Module(TestConfigModule.class)
 public class CompanyDaoTest {
 
     @GuiceTestRunner.Module

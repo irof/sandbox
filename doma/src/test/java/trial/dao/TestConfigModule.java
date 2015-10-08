@@ -1,4 +1,4 @@
-package misc;
+package trial.dao;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
@@ -12,7 +12,7 @@ import org.seasar.doma.jdbc.tx.TransactionManager;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-public class GuiceTestModule extends AbstractModule {
+public class TestConfigModule extends AbstractModule {
 
     @Override
     protected void configure() {
