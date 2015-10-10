@@ -1,6 +1,7 @@
 package hoge.rest;
 
 import hoge.Application;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +27,16 @@ public class GreeterTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    private MockMvc mockMvc;
+
+    @Before
+    public void setup() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .build();
+    }
+
     @Test
     public void パラメタなしでハロワ() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .build();
-
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, World."));
@@ -38,12 +44,8 @@ public class GreeterTest {
 
     @Test
     public void パラメタありでハロワ() throws Exception {
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-                .build();
-
         mockMvc.perform(get("/hello").param("name", "irof"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, irof."));
-
     }
 }
