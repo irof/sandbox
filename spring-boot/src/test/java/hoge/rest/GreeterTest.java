@@ -27,11 +27,23 @@ public class GreeterTest {
     private WebApplicationContext webApplicationContext;
 
     @Test
-    public void test() throws Exception {
+    public void パラメタなしでハロワ() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .build();
+
         mockMvc.perform(get("/hello"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, World."));
+    }
+
+    @Test
+    public void パラメタありでハロワ() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .build();
+
+        mockMvc.perform(get("/hello").param("name", "irof"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Hello, irof."));
+
     }
 }
