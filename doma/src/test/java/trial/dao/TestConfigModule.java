@@ -6,7 +6,6 @@ import org.seasar.doma.jdbc.Config;
 import org.seasar.doma.jdbc.SimpleDataSource;
 import org.seasar.doma.jdbc.dialect.Dialect;
 import org.seasar.doma.jdbc.dialect.H2Dialect;
-import org.seasar.doma.jdbc.tx.LocalTransactionDataSource;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;

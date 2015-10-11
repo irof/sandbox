@@ -48,7 +48,7 @@ public class CompanyDaoTest {
     Config config;
 
     @Rule
-    public Migrator migrator = new Migrator(() -> config);
+    public Migrator migrator = new Migrator(() -> config.getDataSource());
 
     @Test
     public void testSelectAll() throws Exception {
