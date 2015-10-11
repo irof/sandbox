@@ -18,13 +18,11 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Guice+Domaをやってみたもの。
- *
+ * <p>
  * Guiceの初期化とかは冗長になるのでGuiceTestRunnerにやらせて、
  * テーブル定義などはFlyWayでmigrationする。
  */
@@ -54,23 +52,17 @@ public class CompanyDaoTest {
 
     @Test
     public void testSelectAll() throws Exception {
-
-        config.getTransactionManager().required(() -> {
-            List<Company> companies = dao.selectAll();
-            assertThat(companies, hasSize(2));
-        });
+        List<Company> companies = dao.selectAll();
+        assertThat(companies, hasSize(2));
     }
 
     @Test
     public void 名前で検索する() throws Exception {
-        config.getTransactionManager().required(() -> {
-            Optional<Company> company = dao.findByName(new CompanyName("HOGE"));
-            assertTrue(company.isPresent());
-            assertThat(company.get().phoneNumber.getValue(), is("012012345678"));
-        });
-        config.getTransactionManager().required(() -> {
-            Optional<Company> company = dao.findByName(new CompanyName("ABCD"));
-            assertFalse(company.isPresent());
-        });
+        Optional<Company> company = dao.findByName(new CompanyName("HOGE"));
+        assertTrue(company.isPresent());
+        assertThat(company.get().phoneNumber.getValue(), is("012012345678"));
+
+        Optional<Company> notFound = dao.findByName(new CompanyName("ABCD"));
+        assertFalse(notFound.isPresent());
     }
 }

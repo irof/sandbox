@@ -21,11 +21,9 @@ public class Migrator extends ExternalResource {
 
     @Override
     protected void before() throws Throwable {
-        config.get().getTransactionManager().requiresNew(() -> {
-            Flyway flyway = new Flyway();
-            flyway.setDataSource(config.get().getDataSource());
-            flyway.setLocations("META-INF/trial/migration");
-            flyway.migrate();
-        });
+        Flyway flyway = new Flyway();
+        flyway.setDataSource(config.get().getDataSource());
+        flyway.setLocations("META-INF/trial/migration");
+        flyway.migrate();
     }
 }
