@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.seasar.doma.jdbc.Config;
 import trial.entity.Company;
 import trial.entity.CompanyName;
+import trial.entity.PhoneNumber;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -51,9 +52,11 @@ public class CompanyDaoTest {
     public Migrator migrator = new Migrator(() -> config.getDataSource());
 
     @Test
-    public void testSelectAll() throws Exception {
+    public void 全件検索をリストで受ける() throws Exception {
+        dao.insert(new Company(new CompanyName("aaa"), new PhoneNumber("012000000000")));
+
         List<Company> companies = dao.selectAll();
-        assertThat(companies, hasSize(2));
+        assertThat(companies, hasSize(3));
     }
 
     @Test

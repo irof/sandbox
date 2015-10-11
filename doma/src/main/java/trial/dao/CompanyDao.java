@@ -1,7 +1,6 @@
 package trial.dao;
 
 import org.seasar.doma.*;
-import trial.AppConfig;
 import trial.entity.Company;
 import trial.entity.CompanyName;
 
@@ -24,4 +23,7 @@ public interface CompanyDao {
 
     @Select
     Optional<Company> findByName(CompanyName name);
+
+    @Insert
+    int insert(Company company);
 }

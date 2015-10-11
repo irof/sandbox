@@ -18,4 +18,12 @@ public class Company {
     public CompanyName name;
 
     public PhoneNumber phoneNumber;
+
+    public Company() {
+    }
+
+    public Company(CompanyName name, PhoneNumber phoneNumber) {
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+    }
 }
