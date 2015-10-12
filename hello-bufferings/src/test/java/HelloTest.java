@@ -26,7 +26,7 @@ public class HelloTest {
         @Test
         public void ぴったりもの買い物をした() throws Exception {
             Collection<Integer> coins = Collections.singletonList(100);
-            Output output = hello.execute(new Input(new ProductNumber(1), coins));
+            Output output = hello.execute(new Input(new ProductNumber(1), new Coins(coins)));
 
             assertThat(output.getProduct(), is(Dao.百円のアレ));
             assertThat(output.getCoins(), is(empty()));
@@ -35,7 +35,7 @@ public class HelloTest {
         @Test
         public void お釣りが出る買い物をした() throws Exception {
             Collection<Integer> coins = Arrays.asList(500, 50, 100);
-            Output output = hello.execute(new Input(new ProductNumber(10), coins));
+            Output output = hello.execute(new Input(new ProductNumber(10), new Coins(coins)));
 
             assertThat(output.getProduct(), is(Dao.二百十円のアレ));
             assertThat(output.getCoins(), is(containsInAnyOrder(100, 100, 100, 100, 10, 10, 10, 10)));
