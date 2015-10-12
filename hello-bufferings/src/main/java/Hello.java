@@ -17,7 +17,6 @@ public class Hello {
 
     public Output execute(Input in) {
         try {
-            validate(in);
             List<Integer> payBack = new ArrayList<>();
             int amount = calculateAvailableAmount(in, payBack);
 
@@ -62,11 +61,5 @@ public class Hello {
                 .filter(availableCoins::contains)
                 .mapToInt(coins -> coins)
                 .sum();
-    }
-
-    private void validate(Input in) {
-        if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
-            throw new IllegalArgumentException();
-        }
     }
 }

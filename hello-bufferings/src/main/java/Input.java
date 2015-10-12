@@ -5,11 +5,11 @@ import java.util.Collection;
  */
 public class Input {
     private final ProductNumber selected;
-    private final Collection<Integer> coins;
+    private final Coins coins;
 
     public Input(ProductNumber selected, Collection<Integer> coins) {
         this.selected = selected;
-        this.coins = coins;
+        this.coins = new Coins(coins);
     }
 
     public ProductNumber getSelected() {
@@ -17,6 +17,6 @@ public class Input {
     }
 
     public Collection<Integer> getCoins() {
-        return coins;
+        return coins.getCoins();
     }
 }
