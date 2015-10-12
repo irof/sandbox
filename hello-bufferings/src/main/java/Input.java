@@ -7,9 +7,6 @@ public class Input {
     private final ProductNumber selected;
     private final Collection<Integer> coins;
 
-    public Input(int selected, Collection<Integer> coins) {
-        this(new ProductNumber(selected), coins);
-    }
     public Input(ProductNumber selected, Collection<Integer> coins) {
         this.selected = selected;
         this.coins = coins;
