@@ -24,6 +24,15 @@ public class HelloTest {
         }
 
         @Test
+        public void 投入金額が足りなかった() throws Exception {
+            Collection<Integer> coins = Collections.singletonList(50);
+            Output output = hello.execute(new Input(new ProductNumber(1), new Coins(coins)));
+
+            assertThat(output.getProduct(), is(nullValue()));
+            assertThat(output.getCoins(), is(Collections.singletonList(50)));
+        }
+
+        @Test
         public void ぴったりもの買い物をした() throws Exception {
             Collection<Integer> coins = Collections.singletonList(100);
             Output output = hello.execute(new Input(new ProductNumber(1), new Coins(coins)));
