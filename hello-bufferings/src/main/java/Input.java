@@ -1,5 +1,3 @@
-import java.util.Collection;
-
 /**
  * @author irof
  */
@@ -16,7 +14,7 @@ public class Input {
         return selected;
     }
 
-    public Collection<Integer> getCoins() {
-        return coins.getCoins();
+    public Coins getCoins() {
+        return coins;
     }
 }

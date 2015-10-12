@@ -2,7 +2,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,12 +12,9 @@ public class Hello {
     private static final Log LOG = LogFactory.getLog(Hello.class);
     private Dao dao = new Dao();
 
-    private final List<Integer> availableCoins = Arrays.asList(500, 100, 50, 10);
-
     public Output execute(Input in) {
         try {
-            List<Integer> payBack = new ArrayList<>();
-            int amount = calculateAvailableAmount(in, payBack);
+            int amount = in.getCoins().amount();
 
             Product product = dao.findById(in.getSelected());
             if (product == null || product.getPrice() > amount) {
@@ -28,7 +24,9 @@ public class Hello {
             output.setProduct(product);
             amount -= product.getPrice();
 
-            calculatePayBack(payBack, amount);
+            List<Integer> payBack = new ArrayList<>();
+            payBack.addAll(in.getCoins().unavailables());
+            payBack.addAll(new Coins(amount).getCoins());
             output.setCoins(payBack);
             return output;
         } catch (Exception e) {
@@ -37,29 +35,10 @@ public class Hello {
         }
     }
 
-    private void calculatePayBack(List<Integer> payBack, int amount) {
-        for (Integer coin : availableCoins) {
-            while (amount >= coin) {
-                payBack.add(coin);
-                amount -= coin;
-            }
-        }
-    }
-
     private Output cancel(Input in) {
         Output output = new Output();
-        output.setCoins(in.getCoins());
+        output.setCoins(in.getCoins().getCoins());
         output.setProduct(null);
         return output;
-    }
-
-    private int calculateAvailableAmount(Input in, List<Integer> coins2) {
-        in.getCoins().stream()
-                .filter(coin -> coin == 1 || coin == 5)
-                .forEach(coins2::add);
-        return in.getCoins().stream()
-                .filter(availableCoins::contains)
-                .mapToInt(coins -> coins)
-                .sum();
     }
 }
