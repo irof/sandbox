@@ -4,15 +4,18 @@ import java.util.Collection;
  * @author irof
  */
 public class Input {
-    private final Integer selected;
+    private final ProductNumber selected;
     private final Collection<Integer> coins;
 
-    public Input(Integer selected, Collection<Integer> coins) {
+    public Input(int selected, Collection<Integer> coins) {
+        this(new ProductNumber(selected), coins);
+    }
+    public Input(ProductNumber selected, Collection<Integer> coins) {
         this.selected = selected;
         this.coins = coins;
     }
 
-    public Integer getSelected() {
+    public ProductNumber getSelected() {
         return selected;
     }
 

@@ -65,9 +65,7 @@ public class Hello {
     }
 
     private void validate(Input in) {
-        if (in.getSelected() == null || in.getSelected() <= 0 || in.getSelected() >= 11) {
-            throw new IllegalArgumentException();
-        } else if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
+        if (in.getCoins() == null || in.getCoins().size() <= 0 || in.getCoins().size() >= 101) {
             throw new IllegalArgumentException();
         }
     }

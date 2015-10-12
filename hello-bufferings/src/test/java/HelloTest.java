@@ -1,7 +1,6 @@
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,30 +42,26 @@ public class HelloTest {
         }
     }
 
-    @RunWith(Parameterized.class)
-    public static class 商品選択NGパターン {
-        private Hello hello = new Hello();
-        private static final Collection<Integer> COINS = Collections.singletonList(500);
+    public static class 商品番号の境界値 {
 
-        @Parameterized.Parameters
-        public static Iterable<Input> param() {
-            return Arrays.asList(
-                    new Input(null, COINS),
-                    // 範囲外の選択 1-10 らしい
-                    new Input(0, COINS),
-                    new Input(11, COINS)
-            );
+        @Test(expected = IllegalArgumentException.class)
+        public void 番号0はNG() throws Exception {
+            new ProductNumber(0);
         }
 
-        @Parameterized.Parameter
-        public Input in;
+        @Test
+        public void 番号1はOK() throws Exception {
+            new ProductNumber(1);
+        }
 
         @Test
-        public void test() throws Exception {
-            Output output = hello.execute(in);
+        public void 番号10はOK() throws Exception {
+            new ProductNumber(10);
+        }
 
-            assertThat(output.getProduct(), is(nullValue()));
-            assertThat(output.getCoins(), is(COINS));
+        @Test(expected = IllegalArgumentException.class)
+        public void 番号11はNG() throws Exception {
+            new ProductNumber(11);
         }
     }
 }

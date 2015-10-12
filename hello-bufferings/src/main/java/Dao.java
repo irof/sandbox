@@ -29,7 +29,7 @@ public class Dao {
             二百十円のアレ
     );
 
-    public Product findById(Integer selected) {
-        return list.get(selected - 1);
+    public Product findById(ProductNumber selected) {
+        return list.get(selected.getNumber() - 1);
     }
 }
