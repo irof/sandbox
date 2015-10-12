@@ -3,7 +3,7 @@ import java.util.Collection;
 /**
  * @author irof
  */
-public class Result {
+public class Output {
     private Collection<Integer> coins;
     private Product product;
 

@@ -15,7 +15,7 @@ public class Hello {
 
     private final List<Integer> availableCoins = Arrays.asList(500, 100, 50, 10);
 
-    public Result execute(Input in) {
+    public Output execute(Input in) {
         try {
             validate(in);
             List<Integer> payBack = new ArrayList<>();
@@ -25,13 +25,13 @@ public class Hello {
             if (product == null || product.getPrice() > amount) {
                 return cancel(in);
             }
-            Result result = new Result();
-            result.setProduct(product);
+            Output output = new Output();
+            output.setProduct(product);
             amount -= product.getPrice();
 
             calculatePayBack(payBack, amount);
-            result.setCoins(payBack);
-            return result;
+            output.setCoins(payBack);
+            return output;
         } catch (Exception e) {
             LOG.error(e);
             return cancel(in);
@@ -47,11 +47,11 @@ public class Hello {
         }
     }
 
-    private Result cancel(Input in) {
-        Result result = new Result();
-        result.setCoins(in.getCoins());
-        result.setProduct(null);
-        return result;
+    private Output cancel(Input in) {
+        Output output = new Output();
+        output.setCoins(in.getCoins());
+        output.setProduct(null);
+        return output;
     }
 
     private int calculateAvailableAmount(Input in, List<Integer> coins2) {

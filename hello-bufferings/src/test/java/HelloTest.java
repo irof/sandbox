@@ -27,19 +27,19 @@ public class HelloTest {
         @Test
         public void ぴったりもの買い物をした() throws Exception {
             Collection<Integer> coins = Collections.singletonList(100);
-            Result result = hello.execute(new Input(1, coins));
+            Output output = hello.execute(new Input(1, coins));
 
-            assertThat(result.getProduct(), is(Dao.百円のアレ));
-            assertThat(result.getCoins(), is(empty()));
+            assertThat(output.getProduct(), is(Dao.百円のアレ));
+            assertThat(output.getCoins(), is(empty()));
         }
 
         @Test
         public void お釣りが出る買い物をした() throws Exception {
             Collection<Integer> coins = Arrays.asList(500, 50, 100);
-            Result result = hello.execute(new Input(10, coins));
+            Output output = hello.execute(new Input(10, coins));
 
-            assertThat(result.getProduct(), is(Dao.二百十円のアレ));
-            assertThat(result.getCoins(), is(containsInAnyOrder(100, 100, 100, 100, 10, 10, 10, 10)));
+            assertThat(output.getProduct(), is(Dao.二百十円のアレ));
+            assertThat(output.getCoins(), is(containsInAnyOrder(100, 100, 100, 100, 10, 10, 10, 10)));
         }
     }
 
@@ -63,10 +63,10 @@ public class HelloTest {
 
         @Test
         public void test() throws Exception {
-            Result result = hello.execute(in);
+            Output output = hello.execute(in);
 
-            assertThat(result.getProduct(), is(nullValue()));
-            assertThat(result.getCoins(), is(COINS));
+            assertThat(output.getProduct(), is(nullValue()));
+            assertThat(output.getCoins(), is(COINS));
         }
     }
 }
