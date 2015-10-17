@@ -19,6 +19,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     testCompile "junit:junit"
     testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "com.jayway.jsonpath:json-path"
 
     // 足すだけでBasic認証がかかるやつ
     //compile "org.springframework.boot:spring-boot-starter-security"

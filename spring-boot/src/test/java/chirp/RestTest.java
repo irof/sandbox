@@ -11,7 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -36,6 +38,6 @@ public class RestTest {
     public void パブリックタイムラインが取得できる() throws Exception {
         mockMvc.perform(get("/timeline"))
                 .andExpect(status().isOk())
-                .andDo(result -> System.out.println(result.getResponse().getContentAsString()));
+                .andExpect(jsonPath("$", hasSize(2)));
     }
 }
