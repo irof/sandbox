@@ -15,10 +15,10 @@ import static java.util.stream.Collectors.toList;
  */
 @RestController
 @RequestMapping("timeline")
-public class Timeline {
+public class TimelineController {
 
     @Autowired
-    TimelineRepository repository;
+    StatusRepository repository;
 
     @RequestMapping
     @ResponseBody

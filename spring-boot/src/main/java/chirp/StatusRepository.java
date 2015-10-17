@@ -12,7 +12,7 @@ import java.util.List;
  * @author irof
  */
 @Repository
-public class TimelineRepository {
+public class StatusRepository {
 
     private List<Status> list = new ArrayList<>();
 
