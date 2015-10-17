@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chirp: public time line</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<ul>
+    <li th:each="status : ${statuses}"><b th:text="${status.user.name}">おなまえ</b>: <span
+            th:text="${status.message.text}">めっせーじ</span></li>
+</ul>
+</body>
+</html>

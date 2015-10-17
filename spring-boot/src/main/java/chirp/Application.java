@@ -7,9 +7,13 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.IOException;
 import java.time.ZoneOffset;
@@ -18,10 +22,20 @@ import java.time.ZoneOffset;
  * @author irof
  */
 @SpringBootApplication
+@Controller
 public class Application {
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
+    }
+
+    @Autowired
+    StatusRepository repository;
+
+    @RequestMapping("/")
+    public String publicTimeline(Model model) {
+        model.addAttribute("statuses", repository.getPublic());
+        return "chirp/timeline";
     }
 
     @Bean
