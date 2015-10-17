@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 /**
  * @author irof
  */
@@ -23,7 +25,7 @@ public class StatusController {
 
     @RequestMapping(method = RequestMethod.PUT)
     public ResponseEntity<?> status(@RequestBody Message message) {
-        repository.add(new Status(User.ANONYMOUS, message));
+        repository.add(new Status(User.ANONYMOUS, message, LocalDateTime.now()));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
