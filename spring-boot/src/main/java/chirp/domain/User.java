@@ -13,4 +13,6 @@ public class User {
     public String getName() {
         return name;
     }
+
+    public static final User ANONYMOUS = new User("あのにます");
 }

@@ -24,4 +24,8 @@ public class TimelineRepository {
     public List<Status> getPublic() {
         return list;
     }
+
+    public void add(Status status) {
+        list.add(status);
+    }
 }
