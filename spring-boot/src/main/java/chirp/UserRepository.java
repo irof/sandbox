@@ -30,4 +30,13 @@ public class UserRepository {
     public User get(String id) {
         return find(id).get();
     }
+
+    public void register(User user) {
+        users.add(user);
+    }
+
+    public void update(User user, User newUser) {
+        users.remove(user);
+        users.add(newUser);
+    }
 }
