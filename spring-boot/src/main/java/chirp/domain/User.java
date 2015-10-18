@@ -4,8 +4,11 @@ package chirp.domain;
  * @author irof
  */
 public class User {
+
+    public static final User ANONYMOUS = new User(UserId.generate(), "あのにます");
+
     private final UserId id;
-    private final String name;
+    private String name;
 
     public User(UserId id, String name) {
         this.id = id;
@@ -16,7 +19,9 @@ public class User {
         return name;
     }
 
-    public static final User ANONYMOUS = new User(UserId.generate(), "あのにます");
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public UserId getId() {
         return id;

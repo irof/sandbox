@@ -39,8 +39,8 @@ public class UserController {
     @RequestMapping(value = "edit", method = RequestMethod.POST)
     public String update(UserForm form, Model model) {
         User user = users.get(form.getId());
-        User newUser = new User(user.getId(), form.getName());
-        users.update(user, newUser);
+        user.setName(form.getName());
+        users.update(user);
         return "chirp/user";
     }
 

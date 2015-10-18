@@ -35,8 +35,8 @@ public class UserRepository {
         users.add(user);
     }
 
-    public void update(User user, User newUser) {
-        users.remove(user);
-        users.add(newUser);
+    public void update(User newUser) {
+        // なくても今のところは動く
+        get(newUser.getId().getId()).setName(newUser.getName());
     }
 }
