@@ -39,7 +39,7 @@ public class RestTest {
 
     @Test
     public void パブリックタイムラインが取得できる() throws Exception {
-        mockMvc.perform(get("/timeline"))
+        mockMvc.perform(get("/api/timeline"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)));
     }
@@ -47,12 +47,12 @@ public class RestTest {
     @Test
     public void 投稿してみるよ() throws Exception {
         mockMvc.perform(
-                put("/status")
+                put("/api/status")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"message\":\"ほげふが\"}"))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/timeline"))
+        mockMvc.perform(get("/api/timeline"))
                 .andExpect(jsonPath("$..message", hasItem("ほげふが")));
     }
 }

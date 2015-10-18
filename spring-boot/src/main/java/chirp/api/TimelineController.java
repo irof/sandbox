@@ -1,5 +1,6 @@
-package chirp;
+package chirp.api;
 
+import chirp.StatusRepository;
 import chirp.domain.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import java.util.List;
  * @author irof
  */
 @RestController
-@RequestMapping("timeline")
+@RequestMapping("api/timeline")
 public class TimelineController {
 
     @Autowired

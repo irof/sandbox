@@ -1,5 +1,7 @@
-package chirp;
+package chirp.api;
 
+import chirp.StatusRepository;
+import chirp.UserRepository;
 import chirp.domain.Message;
 import chirp.domain.Status;
 import chirp.domain.User;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
  * @author irof
  */
 @RestController
-@RequestMapping("status")
+@RequestMapping("api/status")
 public class StatusController {
 
     @Autowired

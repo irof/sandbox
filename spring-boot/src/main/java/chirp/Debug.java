@@ -19,6 +19,6 @@ public class Debug {
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
-        restTemplate.put("http://localhost:9000/status", entity);
+        restTemplate.put("http://localhost:9000/api/status", entity);
     }
 }
