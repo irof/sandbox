@@ -15,6 +15,7 @@ public class Debug {
         HttpHeaders headers = new HttpHeaders();
         //headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Content-Type", "application/json; charset=UTF-8");
+        headers.set("X-Chirp-User-Id", "id-hoge");
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
