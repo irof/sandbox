@@ -10,6 +10,10 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'spring-boot'
 
+springBoot {
+  mainClass = 'chirp.Application'
+}
+
 repositories {
     jcenter()
 }
@@ -17,6 +21,7 @@ repositories {
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
+    compile "org.webjars:bootstrap:3.2.0"
     testCompile "junit:junit"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "com.jayway.jsonpath:json-path"
