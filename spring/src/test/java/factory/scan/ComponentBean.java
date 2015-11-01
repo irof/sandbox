@@ -1,4 +1,4 @@
-package factory;
+package factory.scan;
 
 import org.springframework.stereotype.Component;
 
@@ -10,7 +10,7 @@ import java.util.Locale;
 @Component
 public class ComponentBean {
 
-    String method() {
+    public String method() {
         return this.getClass().getSimpleName().toUpperCase(Locale.ROOT);
     }
 }

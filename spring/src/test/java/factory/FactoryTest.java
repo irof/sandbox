@@ -1,5 +1,6 @@
 package factory;
 
+import factory.scan.ComponentBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -59,7 +60,7 @@ public class FactoryTest {
                 @Override
                 public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
                     ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
-                    scanner.scan("factory");
+                    scanner.scan("factory.scan");
                 }
             };
         }
