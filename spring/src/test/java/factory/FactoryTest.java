@@ -1,6 +1,7 @@
 package factory;
 
 import factory.scan.ComponentBean;
+import factory.scan.Fuga;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.BeansException;
@@ -40,6 +41,12 @@ public class FactoryTest {
         ComponentBean componentBean = context.getBean(ComponentBean.class);
         assertThat(componentBean.method(), is("COMPONENTBEAN"));
     }
+    
+    @Test
+    public void インタフェースのProxyを登録したやつ() throws Exception {
+        Fuga fuga = context.getBean(Fuga.class);
+        assertThat(fuga.fuga(), is("FUgeRA"));
+    }
 
     @Configuration
     static class Config {
@@ -60,6 +67,21 @@ public class FactoryTest {
                 @Override
                 public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
                     ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
+                    scanner.scan("factory.scan");
+                }
+            };
+        }
+
+        @Bean
+        public BeanDefinitionRegistryPostProcessor ahogeScan() {
+            return new BeanDefinitionRegistryPostProcessor() {
+                @Override
+                public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+                }
+
+                @Override
+                public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+                    AhogeScanner scanner = new AhogeScanner(registry);
                     scanner.scan("factory.scan");
                 }
             };
