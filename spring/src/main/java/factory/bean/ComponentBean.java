@@ -1,4 +1,4 @@
-package factory.scan;
+package factory.bean;
 
 import org.springframework.stereotype.Component;
 

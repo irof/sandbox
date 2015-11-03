@@ -1,4 +1,6 @@
-package factory;
+package factory.bean;
+
+import factory.Ahoge;
 
 /**
  * @author irof
