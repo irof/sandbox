@@ -6,7 +6,7 @@
            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
-    <context:property-placeholder location="classpath*:PropertyPlaceholderTest.properties"/>
+    <context:property-placeholder location="classpath*:env/PropertyPlaceholderTest.properties"/>
 
     <bean class="java.lang.String">
         <constructor-arg value="${hoge}"/>
