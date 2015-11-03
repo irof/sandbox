@@ -10,6 +10,9 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import java.util.Set;
 
 /**
+ * 指定パッケージをスキャンして {@link Ahoge} アノテーションの付与されたインタフェースをBean登録し、
+ * {@link AhogeFactory} を使用してインスタンス化するようにSpringにお願いする子。
+ *
  * @author irof
  */
 public class AhogeScanner extends ClassPathBeanDefinitionScanner {
