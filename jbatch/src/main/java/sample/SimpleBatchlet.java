@@ -1,23 +1,20 @@
 package sample;
 
-import org.slf4j.bridge.SLF4JBridgeHandler;
-
-import javax.batch.operations.JobOperator;
-import javax.batch.runtime.BatchRuntime;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import org.jberet.se.Main;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author irof
  */
 public class SimpleBatchlet implements javax.batch.api.Batchlet {
 
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SimpleBatchlet.class);
+
     @Override
     public String process() throws Exception {
         // やりたい処理を書く
         // ...
-        Logger.getLogger("sample").severe("処理が実行された");
+        logger.info("処理が実行された");
 
         return "exitStatus";
     }
@@ -27,25 +24,13 @@ public class SimpleBatchlet implements javax.batch.api.Batchlet {
     }
 
     public static void main(String[] args) throws Exception {
-        // julの出力ログレベルを変えた上で
-        System.setProperty("java.util.logging.config.file",
-                ClassLoader.getSystemResource("logging.properties").getPath());
-        // julからslf4jに流し込む
-        SLF4JBridgeHandler.removeHandlersForRootLogger();
-        SLF4JBridgeHandler.install();
+        // 普通に実行する場合はこんな感じにする。
+        // JobOperator jobOperator = BatchRuntime.getJobOperator();
+        // jobOperator.start("XMLFILENAME", new Properties());
 
-        JobOperator operator = BatchRuntime.getJobOperator();
-
-        // XMLを指定してスタートする
-        long jobId = operator.start("job-" + SimpleBatchlet.class.getSimpleName(), new Properties());
-
-        // jobId使って何かできる
-        // 一旦止めて3秒後に再開するとか
-        operator.stop(jobId);
-        TimeUnit.SECONDS.sleep(3);
-        operator.restart(jobId, new Properties());
-
-        // job再開しても動く前に終了しちゃうのでしばらくmainを止めておく
-        TimeUnit.SECONDS.sleep(5);
+        // けれど、SE環境で前述のように実行するとmainメソッドが即終了するので、
+        // 実行完了まで待ち合わせてくれるのを使う。
+        /// つまり、mainクラスなんて作ってないで、いきなりこれ呼べばいいね？
+        Main.main(new String[]{"job-" + SimpleBatchlet.class.getSimpleName()});
     }
 }
