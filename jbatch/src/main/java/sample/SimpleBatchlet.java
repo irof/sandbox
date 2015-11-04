@@ -45,6 +45,7 @@ public class SimpleBatchlet implements javax.batch.api.Batchlet {
         TimeUnit.SECONDS.sleep(3);
         operator.restart(jobId, new Properties());
 
-        // バッチが完了してもプロセス終了までしばらく待たされる
+        // job再開しても動く前に終了しちゃうのでしばらくmainを止めておく
+        TimeUnit.SECONDS.sleep(5);
     }
 }
