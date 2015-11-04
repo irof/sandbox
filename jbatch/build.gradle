@@ -1,17 +1,21 @@
 apply plugin: 'java'
 
 compileJava {
-  options.encoding = 'utf-8'
+    options.encoding = 'utf-8'
 }
 
 sourceCompatibility = targetCompatibility = 1.8
 
 repositories {
-  jcenter()
+    jcenter()
 }
 
 dependencies {
-  compile 'com.ibm.jbatch:com.ibm.jbatch-runtime:1.0'
-  compile 'org.apache.derby:derby:10.11.1.1'
+    compile 'com.ibm.jbatch:com.ibm.jbatch-runtime:1.0'
+    compile 'org.apache.derby:derby:10.11.1.1'
+
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'org.slf4j:jul-to-slf4j:1.7.12'
+    compile 'ch.qos.logback:logback-classic:1.1.3'
 }
 

@@ -1,5 +1,7 @@
 package sample;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import javax.batch.operations.JobOperator;
 import javax.batch.runtime.BatchRuntime;
 import java.util.Properties;
@@ -25,9 +27,12 @@ public class SimpleBatchlet implements javax.batch.api.Batchlet {
     }
 
     public static void main(String[] args) throws Exception {
-        // julのログを出したいが依存は追加したくないし-Dで書くのも嫌なの
+        // julの出力ログレベルを変えた上で
         System.setProperty("java.util.logging.config.file",
                 ClassLoader.getSystemResource("logging.properties").getPath());
+        // julからslf4jに流し込む
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
 
         JobOperator operator = BatchRuntime.getJobOperator();
 
