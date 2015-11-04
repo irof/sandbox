@@ -22,7 +22,7 @@ dependencies {
     // for se
     compile 'org.jberet:jberet-se:1.2.0.Final'
     compile 'org.jboss.weld.se:weld-se:2.3.1.Final'
-    compile 'com.h2database:h2:1.4.190'
+    //compile 'com.h2database:h2:1.4.190'
 
     compile 'org.slf4j:slf4j-api:1.7.12'
     compile 'ch.qos.logback:logback-classic:1.1.3'
