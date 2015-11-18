@@ -50,20 +50,16 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
 
             @Override
             protected void before() throws Throwable {
-                // WeldSEと同じ読み方でbeans.xmlをとってくる
-                WeldResourceLoader resourceLoader = new WeldResourceLoader();
-                URL resource = resourceLoader.getResource(WeldDeployment.BEANS_XML);
-
                 // WeldSEに認識させるために beans.xml をコピーする。
-                // テストクラス
-                copyBeansXML(resourceLoader, resource, klass);
-                // テストクラスにインジェクションされるクラス
+                // テストクラス(おそらく classes/test/java)
+                copyBeansXML(klass);
+                // テストクラスにインジェクションされるクラス(おそらく classes/main/java)
                 for (Field field : klass.getDeclaredFields()) {
                     if (!field.isAnnotationPresent(Inject.class)) {
                         continue;
                     }
                     field.setAccessible(true);
-                    copyBeansXML(resourceLoader, resource, field.getType());
+                    copyBeansXML(field.getType());
                     break;
                 }
 
@@ -71,7 +67,10 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
                 container = weld.initialize();
             }
 
-            private void copyBeansXML(WeldResourceLoader resourceLoader, URL resource, Class<?> clz) throws URISyntaxException, IOException {
+            private void copyBeansXML(Class<?> clz) throws URISyntaxException, IOException {
+                WeldResourceLoader resourceLoader = new WeldResourceLoader();
+                // "/META-INF/beans.xml" を指定するためにリソースのURIからパッケージを消す。
+                // こんなコトしなくていい気がする。
                 String name = clz.getName().replaceAll("\\.", File.separator);
                 Path relativePath = Paths.get(name);
                 Path absolutePath = Paths.get(resourceLoader.getResource(name + ".class").toURI());
@@ -79,6 +78,10 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
                         absolutePath.getNameCount() - relativePath.getNameCount()));
                 Path toPath = defaultPackage.resolve(WeldDeployment.BEANS_XML);
 
+                // WeldSEと同じ読み方でbeans.xmlをとってきてコピーする。
+                // resources/main/META-INF/beans.xml がとれてくるはず。
+                // 空ファイルでいいんだから、コピーしなくていい気がする。というかなんか書いてたらコピーしちゃダメな気がする。
+                URL resource = resourceLoader.getResource(WeldDeployment.BEANS_XML);
                 Files.createDirectories(toPath.getParent());
                 Files.copy(Paths.get(resource.toURI()), toPath, StandardCopyOption.REPLACE_EXISTING);
             }
