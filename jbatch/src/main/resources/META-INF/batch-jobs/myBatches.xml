@@ -6,11 +6,11 @@
      version="1.0">
 
     <step id="my-batchlet-1" next="my-batchlet-2">
-        <batchlet ref="simpleBatchlet"/>
+        <batchlet ref="myBatchlet"/>
     </step>
 
     <step id="my-batchlet-2" next="my-chunk-1">
-        <batchlet ref="simpleBatchlet"/>
+        <batchlet ref="myBatchlet"/>
     </step>
 
     <step id="my-chunk-1">
