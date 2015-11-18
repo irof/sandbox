@@ -6,10 +6,10 @@
      version="1.0">
 
     <step id="my-batchlet-1" next="my-batchlet-2">
-        <batchlet ref="sample.SimpleBatchlet"/>
+        <batchlet ref="simpleBatchlet"/>
     </step>
 
     <step id="my-batchlet-2">
-        <batchlet ref="sample.SimpleBatchlet"/>
+        <batchlet ref="simpleBatchlet"/>
     </step>
 </job>

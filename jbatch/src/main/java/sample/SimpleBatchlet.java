@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 /**
  * @author irof
  */
+@Named
 public class SimpleBatchlet implements javax.batch.api.Batchlet {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(SimpleBatchlet.class);
