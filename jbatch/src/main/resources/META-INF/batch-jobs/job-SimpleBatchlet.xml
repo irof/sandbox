@@ -9,7 +9,15 @@
         <batchlet ref="simpleBatchlet"/>
     </step>
 
-    <step id="my-batchlet-2">
+    <step id="my-batchlet-2" next="my-chunk-1">
         <batchlet ref="simpleBatchlet"/>
+    </step>
+
+    <step id="my-chunk-1">
+        <chunk>
+            <reader ref="myReader"/>
+            <processor ref="myProcessor"/>
+            <writer ref="myWriter"/>
+        </chunk>
     </step>
 </job>
