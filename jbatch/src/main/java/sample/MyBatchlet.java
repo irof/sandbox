@@ -3,6 +3,7 @@ package sample;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.batch.api.AbstractBatchlet;
 import javax.batch.api.BatchProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -11,7 +12,7 @@ import javax.inject.Named;
  * @author irof
  */
 @Named
-public class MyBatchlet implements javax.batch.api.Batchlet {
+public class MyBatchlet extends AbstractBatchlet {
 
     private static final Logger logger = LoggerFactory.getLogger(MyBatchlet.class);
 
@@ -26,9 +27,5 @@ public class MyBatchlet implements javax.batch.api.Batchlet {
         logger.info("ばっちれっとです！ メッセージ:{}", message);
 
         return "exitStatus";
-    }
-
-    @Override
-    public void stop() throws Exception {
     }
 }
