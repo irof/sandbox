@@ -14,11 +14,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
@@ -50,16 +48,15 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
 
             @Override
             protected void before() throws Throwable {
-                // WeldSEに認識させるために beans.xml をコピーする。
                 // テストクラス(おそらく classes/test/java)
-                copyBeansXML(klass);
+                deployBeansXML(klass);
                 // テストクラスにインジェクションされるクラス(おそらく classes/main/java)
                 for (Field field : klass.getDeclaredFields()) {
                     if (!field.isAnnotationPresent(Inject.class)) {
                         continue;
                     }
                     field.setAccessible(true);
-                    copyBeansXML(field.getType());
+                    deployBeansXML(field.getType());
                     break;
                 }
 
@@ -67,8 +64,20 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
                 container = weld.initialize();
             }
 
-            private void copyBeansXML(Class<?> clz) throws URISyntaxException, IOException {
+            /**
+             * クラスのある場所にbeans.xmlがなかったら作成します。
+             *
+             * IDEAなどを使用している場合、beans.xmlとclassが別ディレクトリに配置されるため、
+             * Weldは src/main/java や src/test/java のクラスを認識してくれないのです。
+             *
+             * @param clz Weldに認識させたいクラス
+             * @throws URISyntaxException
+             * @throws IOException
+             */
+            private void deployBeansXML(Class<?> clz) throws URISyntaxException, IOException {
+                // WeldSEと同じ方法でリソースを読み込みます。
                 WeldResourceLoader resourceLoader = new WeldResourceLoader();
+
                 // "/META-INF/beans.xml" を指定するためにリソースのURIからパッケージを消す。
                 // こんなコトしなくていい気がする。
                 String name = clz.getName().replaceAll("\\.", File.separator);
@@ -78,12 +87,12 @@ public class JUnitWeldRunner extends BlockJUnit4ClassRunner {
                         absolutePath.getNameCount() - relativePath.getNameCount()));
                 Path toPath = defaultPackage.resolve(WeldDeployment.BEANS_XML);
 
-                // WeldSEと同じ読み方でbeans.xmlをとってきてコピーする。
-                // resources/main/META-INF/beans.xml がとれてくるはず。
-                // 空ファイルでいいんだから、コピーしなくていい気がする。というかなんか書いてたらコピーしちゃダメな気がする。
-                URL resource = resourceLoader.getResource(WeldDeployment.BEANS_XML);
+                // 既にあったらスルー
+                if (toPath.toFile().exists()) return;
+
+                // 空ファイルを作る
                 Files.createDirectories(toPath.getParent());
-                Files.copy(Paths.get(resource.toURI()), toPath, StandardCopyOption.REPLACE_EXISTING);
+                Files.createFile(toPath);
             }
 
             @Override
