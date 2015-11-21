@@ -5,7 +5,7 @@
      version="1.0">
 
     <step id="myStep">
-        <batchlet ref="jsr352.MyBatchlet">
+        <batchlet ref="myBatchlet">
             <properties>
                 <property name="message" value="はろー！はろー！！はろー！！！"/>
             </properties>

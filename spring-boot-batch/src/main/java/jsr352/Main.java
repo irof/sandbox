@@ -11,6 +11,6 @@ import java.util.Properties;
  */
 public class Main {
     public static void main(String[] args) {
-        BatchRuntime.getJobOperator().start("jBatchJobs", new Properties());
+        BatchRuntime.getJobOperator().start("init-spring", new Properties());
     }
 }
