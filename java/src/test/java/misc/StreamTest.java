@@ -19,12 +19,12 @@ import static org.junit.Assert.assertThat;
  */
 public class StreamTest {
 
+    List<TargetObject> objects = Arrays.asList(
+            new TargetObject("a1", "a2"),
+            new TargetObject("b1", "b2"));
+
     @Test
     public void flatMapしてentryをcollectしてみる() throws Exception {
-        List<TargetObject> objects = Arrays.asList(
-                new TargetObject("a1", "a2"),
-                new TargetObject("b1", "b2"));
-
         Map<String, String> result = objects.stream()
                 .flatMap(t -> {
                     HashMap<String, String> map = new HashMap<>();
@@ -34,6 +34,21 @@ public class StreamTest {
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
+        assertion(result);
+    }
+
+    @Test
+    public void いきなりcollectでいい気がした() throws Exception {
+        HashMap<String, String> result = objects.stream()
+                .collect(HashMap::new, (map, t) -> {
+                    map.put("key." + objects.indexOf(t) + ".hoge", t.hoge);
+                    map.put("key." + objects.indexOf(t) + ".fuga", t.fuga);
+                }, HashMap::putAll);
+
+        assertion(result);
+    }
+
+    private void assertion(Map<String, String> result) {
         assertThat(result, is(hasEntry("key.0.hoge", "a1")));
         assertThat(result, is(hasEntry("key.0.hoge", "a1")));
         assertThat(result, is(hasEntry("key.0.fuga", "a2")));
