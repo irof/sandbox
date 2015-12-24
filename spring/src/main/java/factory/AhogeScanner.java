@@ -39,7 +39,7 @@ public class AhogeScanner extends ClassPathBeanDefinitionScanner {
             // インタフェースのままだとBean生成できないので定義を上書きする
             // コンストラクタ引数にインタフェース(ex.Fuga)を与えるようにして、
             // BeanClassを FactoryBean の AhogeFactory にすげ替える。
-            // これで Spring が AhogeFactor を使ってインスタンスを作ってくれるようになる。
+            // これで Spring が AhogeFactory を使ってインスタンスを作ってくれるようになる。
             GenericBeanDefinition definition = (GenericBeanDefinition) holder.getBeanDefinition();
             definition.getConstructorArgumentValues().addGenericArgumentValue(definition.getBeanClassName());
             definition.setBeanClass(AhogeFactory.class);
