@@ -1,0 +1,13 @@
+apply plugin: 'java'
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  compile 'com.fasterxml.jackson.core:jackson-databind:2.7.0'
+  compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.7.0'
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.assertj:assertj-core:3.3.0'
+}
+
