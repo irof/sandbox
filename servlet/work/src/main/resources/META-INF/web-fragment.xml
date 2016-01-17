@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment>
+
+    <servlet>
+        <servlet-name>HogeServlet</servlet-name>
+        <servlet-class>hoge.HogeServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+</web-fragment>
