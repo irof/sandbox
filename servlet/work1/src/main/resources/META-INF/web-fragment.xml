@@ -1,9 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<web-fragment>
+<?xml version="1.0" encoding="utf-8"?>
+<web-fragment xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-fragment_3_1.xsd"
+              version="3.1">
 
     <servlet>
-        <servlet-name>HogeServlet</servlet-name>
-        <servlet-class>hoge.HogeServlet</servlet-class>
+        <servlet-name>FragmentServlet</servlet-name>
+        <servlet-class>fragment.FragmentServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
+
+    <filter>
+        <filter-name>FragmentFilter</filter-name>
+        <filter-class>fragment.FragmentFilter</filter-class>
+    </filter>
+
+    <listener>
+        <listener-class>fragment.FragmentRequestListener</listener-class>
+    </listener>
 </web-fragment>
