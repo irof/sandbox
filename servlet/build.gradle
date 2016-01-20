@@ -16,5 +16,8 @@ dependencies {
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'org.slf4j:slf4j-api:1.7.+'
     compile 'ch.qos.logback:logback-classic:1.1.+'
-    compile files('work/build/libs/work.jar')
+    compile files('work1/build/libs/work1.jar')
+    compile files('work2/build/libs/work2.jar')
 }
+
+war.dependsOn(":work1:jar", ":work2:jar")
