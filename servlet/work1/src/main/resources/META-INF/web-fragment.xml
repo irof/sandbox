@@ -6,16 +6,16 @@
 
     <servlet>
         <servlet-name>FragmentServlet</servlet-name>
-        <servlet-class>fragment.FragmentServlet</servlet-class>
+        <servlet-class>work1.fragment.FragmentServlet</servlet-class>
         <load-on-startup>0</load-on-startup>
     </servlet>
 
     <filter>
         <filter-name>FragmentFilter</filter-name>
-        <filter-class>fragment.FragmentFilter</filter-class>
+        <filter-class>work1.fragment.FragmentFilter</filter-class>
     </filter>
 
     <listener>
-        <listener-class>fragment.FragmentRequestListener</listener-class>
+        <listener-class>work1.fragment.FragmentRequestListener</listener-class>
     </listener>
 </web-fragment>
