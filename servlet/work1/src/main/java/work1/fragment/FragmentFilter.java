@@ -12,15 +12,17 @@ import java.io.IOException;
 public class FragmentFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(FragmentFilter.class);
+    private String filterName;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         logger.info("init: {}", filterConfig);
+        filterName = filterConfig.getFilterName();
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        logger.info("doFilter");
+        logger.info("doFilter : {}", filterName);
         chain.doFilter(request, response);
     }
 
