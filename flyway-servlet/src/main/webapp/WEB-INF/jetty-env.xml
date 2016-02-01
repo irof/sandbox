@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<Configure class="org.eclipse.jetty.webapp.WebAppContext">
+    <New id="companyDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
+        <Arg>
+        </Arg>
+        <Arg>java:app/jdbc/sample</Arg>
+        <Arg>
+            <New class="org.h2.jdbcx.JdbcDataSource">
+                <Set name="URL">jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</Set>
+                <Set name="user">sa</Set>
+                <Set name="password">secret</Set>
+            </New>
+        </Arg>
+    </New>
+</Configure>
