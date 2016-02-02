@@ -18,16 +18,32 @@ Servlet上でFlywayを動かすサンプル。
 
 ## 動かし方
 
-今の所JettyさんとPayaraさんだけ。
+### Jetty
+
+grettyで動かします。
 
 ```
 gradle jettyRun
 ```
 
-もしくは
+### Payara micro
+
+適当にデプロイしたってください。
 
 ```
 gradle war
 java -jar payara-micro.jar --deploy build/lib/flyway-servlet.war
+```
+
+### WildFly
+
+適当にデプロイしたってください。
+
+```
+# 起動はしとく
+$WILDFLY_HOME/bin/standalone.sh
+
+gradle war
+$WILDFLY_HOME/bin/jboss-cli.sh -c --command="deploy build/libs/flyway-servlet.war"
 ```
 
