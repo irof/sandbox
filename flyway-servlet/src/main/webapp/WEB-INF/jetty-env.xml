@@ -5,7 +5,7 @@
     <New id="companyDataSource" class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg>
         </Arg>
-        <Arg>java:app/jdbc/sample</Arg>
+        <Arg>jdbc/sample</Arg>
         <Arg>
             <New class="org.h2.jdbcx.JdbcDataSource">
                 <Set name="URL">jdbc:h2:mem:test;DB_CLOSE_DELAY=-1</Set>

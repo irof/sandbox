@@ -21,7 +21,7 @@ import java.sql.Statement;
 @WebServlet("/*")
 public class MyServlet extends HttpServlet {
 
-    @Resource(name = "java:app/jdbc/sample")
+    @Resource(name = "jdbc/sample")
     DataSource dataSource;
 
     @Override

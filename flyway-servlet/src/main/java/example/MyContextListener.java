@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 @WebListener
 public class MyContextListener implements ServletContextListener {
 
-    @Resource(name = "java:app/jdbc/sample")
+    @Resource(name = "jdbc/sample")
     DataSource dataSource;
 
     @Override
