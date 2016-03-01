@@ -8,7 +8,7 @@ import java.sql.Statement;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class HogeTest {
+public class MigrationTest {
 
     @Rule
     public Migrator migrator = new Migrator("db/migration", "db/migration-test");
