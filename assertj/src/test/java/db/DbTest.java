@@ -4,6 +4,7 @@ import org.assertj.db.api.Assertions;
 import org.assertj.db.type.Table;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.sql.DataSource;
@@ -13,14 +14,19 @@ import javax.sql.DataSource;
  */
 public class DbTest {
 
-    @Test
-    public void TABLEを使用した検証() throws Exception {
-        DataSource ds = JdbcConnectionPool.create("jdbc:h2:mem:hoge", "sa", "sa");
+    private DataSource ds;
+
+    @Before
+    public void setup() {
+        ds = JdbcConnectionPool.create("jdbc:h2:mem:hoge", "sa", "sa");
 
         Flyway flyway = new Flyway();
         flyway.setDataSource(ds);
         flyway.migrate();
+    }
 
+    @Test
+    public void TABLEを使用した検証() throws Exception {
         // Tableは全データに対してかかる
         // ソート順は org.assertj.db.util.RowComparator に依存し、変更できない模様。
         // まずはPKの昇順、次に全ての値の配列の昇順となる。
