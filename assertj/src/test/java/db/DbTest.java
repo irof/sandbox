@@ -1,6 +1,7 @@
 package db;
 
 import org.assertj.db.api.Assertions;
+import org.assertj.db.type.Request;
 import org.assertj.db.type.Table;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
@@ -56,5 +57,28 @@ public class DbTest {
                 // 3行目（0オリジン）
                 .row(3).hasValues("DDD", "ddd", 4)
         ;
+    }
+
+    @Test
+    public void REQUESTを使用した検証() throws Exception {
+        // Requestを渡すとRequestAssertのインスタンスができる
+        // が、特に拡張はないのでできることはTableAssertと同じ
+        Assertions.assertThat(new Request(ds, "select * from example limit 2"))
+                .column("COL1").hasValues("AAA", "BBB");
+
+        // Tableのところで書いた通り勝手にソートされるのでORDER BYはあまり役に立たない
+        Assertions.assertThat(new Request(ds, "select * from example order by COL1 DESC"))
+                .column("COL1").value().isEqualTo("AAA");
+        Assertions.assertThat(new Request(ds, "select * from example order by COL1 ASC"))
+                .column("COL1").value().isEqualTo("AAA");
+
+        // limit併用すればORDER BY自体が効いているのはわかる
+        Assertions.assertThat(new Request(ds, "select * from example order by COL1 DESC limit 2"))
+                // DDD,CCCの2件が取れた後にassertj-dbのsortで順序が逆転する
+                .column("COL1").hasValues("CCC", "DDD");
+
+        // 普通にpreparedStatementも使える
+        Assertions.assertThat(new Request(ds, "select col1,col2 from example where col1 = ?", "BBB"))
+                .row().hasValues("BBB", "bbb");
     }
 }
