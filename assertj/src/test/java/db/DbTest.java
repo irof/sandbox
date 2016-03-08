@@ -5,26 +5,33 @@ import org.assertj.db.type.Request;
 import org.assertj.db.type.Table;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcConnectionPool;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
-import javax.sql.DataSource;
+import org.junit.rules.ExternalResource;
 
 /**
  * @author irof
  */
 public class DbTest {
 
-    private DataSource ds;
+    private JdbcConnectionPool ds;
 
-    @Before
-    public void setup() {
-        ds = JdbcConnectionPool.create("jdbc:h2:mem:hoge", "sa", "sa");
+    @Rule
+    public ExternalResource rule = new ExternalResource() {
+        @Override
+        protected void before() throws Throwable {
+            ds = JdbcConnectionPool.create("jdbc:h2:mem:hoge", "sa", "sa");
 
-        Flyway flyway = new Flyway();
-        flyway.setDataSource(ds);
-        flyway.migrate();
-    }
+            Flyway flyway = new Flyway();
+            flyway.setDataSource(ds);
+            flyway.migrate();
+        }
+
+        @Override
+        protected void after() {
+            ds.dispose();
+        }
+    };
 
     @Test
     public void TABLEを使用した検証() throws Exception {
