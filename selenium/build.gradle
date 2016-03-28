@@ -3,16 +3,25 @@ apply plugin: 'application'
 
 sourceCompatibility = targetCompatibility = 1.8
 compileJava {
-  options.encoding = 'utf-8'
+    options.encoding = 'utf-8'
 }
 
 repositories {
-  jcenter()
+    jcenter()
 }
 
 dependencies {
-  compile "org.seleniumhq.selenium:selenium-firefox-driver:2.45.0"
-  compile "org.seleniumhq.selenium:selenium-support:2.45.0"
+    compile 'org.seleniumhq.selenium:selenium-java:2.53.0'
+    compile "org.seleniumhq.selenium:selenium-firefox-driver:2.53.0"
+    compile "org.seleniumhq.selenium:selenium-support:2.53.0"
+    compile 'org.fluentlenium:fluentlenium-core:0.10.9'
+}
+
+configurations {
+    // 使わないのをどけておく
+    ['safari', 'ie', 'htmlunit', 'chrome', 'edge'].each {
+        all*.exclude group: 'org.seleniumhq.selenium', module: "selenium-${it}-driver"
+    }
 }
 
 mainClassName = "Main"
