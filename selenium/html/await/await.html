@@ -1,0 +1,31 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>待機が発生するページ</title>
+    <script language="javascript">
+        function delayDisplay(name) {
+            setTimeout( function() { display(name) }, 1000)
+        }
+        function display(name) {
+            document.getElementById(name).style.display='inline-block';
+        }
+        function delayAdd(name) {
+            setTimeout( function() {
+               document.getElementById(name).innerHTML = '<span id="foo">ふー</span>'
+            }, 1000)
+        }
+        function delayRemove(name) {
+            setTimeout( function() { document.getElementById(name).innerHTML = '' }, 1000)
+        }
+    </script>
+</head>
+<button id="showHoge" onclick="display('hoge')">ほげを表示</button>
+<button id="showFuga" onclick="delayDisplay('fuga')">1秒後にふがを表示</button>
+<button id="addPiyo" onclick="delayAdd('piyo')">1秒後にぴよの中に要素を作成</button>
+<button id="removePiyo" onclick="delayRemove('piyo')">1秒後にぴよの要素を削除</button>
+
+<hr/>
+<div style="display: none;" id="hoge">隠れたほげ</div>
+<div style="display: none;" id="fuga">隠れたふが</div>
+<div id="piyo"></div>
+</html>
