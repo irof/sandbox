@@ -2,9 +2,9 @@ package thread;
 
 import org.junit.Test;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * JSR 176: J2SE 5.0 (Tiger) Release Contents でリリースされた、
@@ -55,5 +55,39 @@ public class ExecutorSample {
         // 実行中のタスクなどが完了してから終了するため、シャットダウンには長い時間がかかる可能性があります。
         // そのため次のような待ち受けるメソッドが別途存在します。
         executor.awaitTermination(3, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void 別スレッドの結果を取得する() throws Exception {
+        // Callable/Futureを使用すると、別スレッドの戻り値は素直に受け取れます。
+
+        // Callableでは通常のメソッドの戻り値として返します。
+        // Callableは戻り値がvoidでないRunnableです。
+        Callable<String> callable = new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return Thread.currentThread().getName();
+            }
+        };
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        try {
+            // submitにCallableを渡すとFutureが返ってきます。
+            // Callableの処理を開始しますが、完了は待ちません。
+            Future<String> future = executor.submit(callable);
+
+            // 結果が欲しいタイミングで、Futureのgetメソッドで取得します。
+            // 処理が終わっていればすぐ返してくれますが、まだ処理中であれば待機します。
+            String result = future.get(3, TimeUnit.SECONDS);
+
+            // Callableの返すスレッド名と現在のスレッド名は異なります。
+            String name = Thread.currentThread().getName();
+            assertThat(result).isNotEqualTo(name);
+
+            System.out.println("this thread : " + name);
+            System.out.println("other thread: " + result);
+        } finally {
+            executor.shutdown();
+        }
     }
 }
