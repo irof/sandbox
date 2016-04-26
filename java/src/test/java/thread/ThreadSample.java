@@ -68,7 +68,7 @@ public class ThreadSample {
         // 別スレッドで実行した結果を取得するには、対象スレッドからも呼び出し元からも参照できる領域を使用します。
         // ここでは元スレッドで生成したインスタンスを別スレッドから参照する形で実装します。
         // 他にはデータベースやファイルなどJVMの外に格納する方法などがあります。
-        // （staticフィールドも可能ですが、非推奨です。）
+        // （staticフィールドでも実現できますが、安全に使用するのは難しいのでお勧めできません。）
 
         // 値を格納するオブジェクト
         class Storage {
@@ -91,9 +91,9 @@ public class ThreadSample {
 
         // Runnableで設定したスレッド名と現在のスレッド名は異なります。
         String name = Thread.currentThread().getName();
+        assertThat(storage.value).isNotEqualTo(name);
+
         System.out.println("this thread : " + name);
         System.out.println("other thread: " + storage.value);
-
-        assertThat(storage.value).isNotEqualTo(name);
     }
 }
