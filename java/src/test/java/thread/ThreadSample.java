@@ -2,6 +2,8 @@ package thread;
 
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * Java SE 1.4までの {@link Thread} を使用したマルチスレッドプログラミングサンプルです。
  * 別スレッドで "Hello, {スレッド名}." を出力します。
@@ -59,5 +61,39 @@ public class ThreadSample {
         thread.join();
 
         // 蛇足: Thread クラスも Runnable インタフェースを実装していたりする。
+    }
+
+    @Test
+    public void 別スレッドの結果を取得する() throws Exception {
+        // 別スレッドで実行した結果を取得するには、対象スレッドからも呼び出し元からも参照できる領域を使用します。
+        // ここでは元スレッドで生成したインスタンスを別スレッドから参照する形で実装します。
+        // 他にはデータベースやファイルなどJVMの外に格納する方法などがあります。
+        // （staticフィールドも可能ですが、非推奨です。）
+
+        // 値を格納するオブジェクト
+        class Storage {
+            String value;
+        }
+        // 別スレッドに参照させるローカル変数
+        final Storage storage = new Storage();
+
+        Runnable runnable = new Runnable() {
+
+            @Override
+            public void run() {
+                // 実行したスレッド名を設定させます。
+                storage.value = Thread.currentThread().getName();
+            }
+        };
+        Thread thread = new Thread(runnable);
+        thread.start();
+        thread.join();
+
+        // Runnableで設定したスレッド名と現在のスレッド名は異なります。
+        String name = Thread.currentThread().getName();
+        System.out.println("this thread : " + name);
+        System.out.println("other thread: " + storage.value);
+
+        assertThat(storage.value).isNotEqualTo(name);
     }
 }
