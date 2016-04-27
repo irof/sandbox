@@ -7,8 +7,8 @@ import java.util.concurrent.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * JSR 176: J2SE 5.0 (Tiger) Release Contents でリリースされた、
- * JSR 166: Concurrency Utilities のサンプルです。
+ * JSR 176: J2SE™ 5.0 (Tiger) Release Contents でリリースされた、
+ * JSR 166: Concurrency Utilities のうち、Executorのサンプルです。
  *
  * JSR 166には {@link java.util.concurrent.atomic.AtomicInteger} などのアトミック変数、
  * {@link java.util.concurrent.Semaphore} などの制御クラス、
@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 「Executorフレームワーク」は公式の記述が見つけられないので、おそらく通称です。
  *
  * @author irof
+ * @see <a href="https://jcp.org/en/jsr/detail?id=176">JSR 176: J2SE™ 5.0 (Tiger) Release Contents</a>
  * @see <a href="https://jcp.org/en/jsr/detail?id=166">JSR 166: Concurrency Utilities</a>
  */
 public class ExecutorSample {
