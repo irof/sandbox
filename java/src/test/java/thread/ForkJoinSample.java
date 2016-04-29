@@ -31,6 +31,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Fork/Join Frameworkの基本的な使い方は「ForkJoinPoolにForkJoinTaskを渡す」です。
  * forkやjoin、そして処理の本体はForkJoinTaskを拡張して実装します。
  *
+ * このサンプルはJava SE 7の文法で記述しているつもりです。
+ *
  * @author irof
  * @see <a href="https://jcp.org/en/jsr/detail?id=336">JSR 336: Java™ SE 7 Release Contents</a>
  * @see <a href="https://jcp.org/en/jsr/detail?id=166">JSR 166: Concurrency Utilities</a>
@@ -39,8 +41,9 @@ public class ForkJoinSample {
 
     @Test
     public void サンプル() throws Exception {
-        // まずはForkJoinTaskを用意します。
-        // 通常ForkJoinTaskを直接拡張せず、RecursiveActionかRecursiveTaskを拡張します。
+        // ForkJoinTaskを用意します。
+        // 通常、ForkJoinTaskを直接拡張せず、RecursiveActionかRecursiveTaskを拡張します。
+        // 今回は値を返すのでRecursiveTaskを使用します。
         class MyTask extends RecursiveTask<List<String>> {
 
             private final List<?> list;
@@ -51,11 +54,10 @@ public class ForkJoinSample {
 
             @Override
             protected List<String> compute() {
-                // タスクをFork/Joinするか、そのまま実行するか条件によって分けます。
+                // タスクをFork/Joinするか、そのまま実行するかを判断します。
                 if (list.size() < 2) {
-                    // 実行されたスレッド名を返します。
-                    String name = Thread.currentThread().getName();
-                    return Collections.singletonList(name);
+                    // 十分に小さければそのまま実行します。
+                    return computeDirectly();
                 }
 
                 int halfSize = list.size() / 2;
@@ -77,13 +79,20 @@ public class ForkJoinSample {
                 result.addAll(resultB);
                 return result;
             }
+
+            private List<String> computeDirectly() {
+                // 実行されたスレッド名を返します。
+                String name = Thread.currentThread().getName();
+                return Collections.singletonList(name);
+            }
         }
 
         // 5件の任意のリスト
         List<Integer> list = Arrays.asList(1, 2, 3, 4, 5);
         MyTask task = new MyTask(list);
 
-        // ForkJoinPoolのinvokeにForkJoinTaskを渡すと実行されます。
+        // ForkJoinPoolのinvokeにForkJoinTaskを渡すと、
+        // ForkJoinPoolの持つスレッドで実行されます。
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         List<String> result = forkJoinPool.invoke(task);
 
