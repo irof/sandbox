@@ -20,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  * このサンプルでは最後のExecutorフレームワークを紹介します。
  * 「Executorフレームワーク」は公式の記述が見つけられないので、おそらく通称です。
  *
+ * このサンプルはJ2SE 5.0の文法で記述しているつもりです。
+ *
  * @author irof
  * @see <a href="https://jcp.org/en/jsr/detail?id=176">JSR 176: J2SE™ 5.0 (Tiger) Release Contents</a>
  * @see <a href="https://jcp.org/en/jsr/detail?id=166">JSR 166: Concurrency Utilities</a>
