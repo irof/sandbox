@@ -1,43 +1,39 @@
 package thread;
 
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import junit.framework.TestCase;
 
 /**
  * Java SE 1.4までの {@link Thread} を使用したマルチスレッドプログラミングサンプルです。
- * 別スレッドで "Hello, {スレッド名}." を出力します。
  *
- * 注意: 最近のJavaで {@link Thread} は使いません。
+ * 注意: 最近のJavaで {@link Thread} は直接使用するものではなく、
+ * Java標準ライブラリやフレームワークの内部で使用するものになっています。
+ *
+ * このサンプルはJava SE 1.4の文法で記述しているつもりです。
  *
  * @author irof
  */
-public class ThreadSample {
+public class ThreadSample extends TestCase {
 
-    @Test
-    public void Threadを継承する() throws Exception {
+    public void test_Threadを継承する() throws Exception {
         // Thread は別スレッドで処理を実行するための、シンプルかつ基本的な手段です。
         // スレッドと処理が一対一となり、処理ごとに新しいスレッドが生成されます。
 
         // `Thread#run()` メソッドをオーバーライドして実行したい処理を記述します。
         Thread thread = new Thread() {
 
-            @Override
             public void run() {
-                System.out.printf("Hello, %s.%n", Thread.currentThread().getName());
+                System.out.println("Hello, " + Thread.currentThread().getName() + ".");
             }
         };
 
-        // start() メソッドで実行します。
-        // 新しいスレッドはこのタイミングで生成されます。
+        // startメソッドを呼び出すと、runメソッドが新規スレッドで実行されます。
         thread.start();
 
         // スレッドが終了するのを待ちます。
         thread.join();
     }
 
-    @Test
-    public void Runnableを実装する() throws Exception {
+    public void test_Runnableを実装する() throws Exception {
         // Thread を継承することで、別スレッドで処理が実行できましたが
         // しかしながら、前述の方法は推奨されていません。
         // 単に `Thread#run()` メソッドのみをオーバーライドするならば、
@@ -47,9 +43,8 @@ public class ThreadSample {
         // `Runnable#run()` メソッドを実装し、実行したい処理を記述します。
         Runnable runnable = new Runnable() {
 
-            @Override
             public void run() {
-                System.out.printf("Hello, %s.%n", Thread.currentThread().getName());
+                System.out.println("Hello, " + Thread.currentThread().getName() + ".");
             }
         };
 
@@ -63,8 +58,7 @@ public class ThreadSample {
         // 蛇足: Thread クラスも Runnable インタフェースを実装していたりする。
     }
 
-    @Test
-    public void 別スレッドの結果を取得する() throws Exception {
+    public void test_別スレッドの結果を取得する() throws Exception {
         // 別スレッドで実行した結果を取得するには、対象スレッドからも呼び出し元からも参照できる領域を使用します。
         // ここでは元スレッドで生成したインスタンスを別スレッドから参照する形で実装します。
         // 他にはデータベースやファイルなどJVMの外に格納する方法などがあります。
@@ -79,7 +73,6 @@ public class ThreadSample {
 
         Runnable runnable = new Runnable() {
 
-            @Override
             public void run() {
                 // 実行したスレッド名を設定させます。
                 storage.value = Thread.currentThread().getName();
@@ -91,7 +84,7 @@ public class ThreadSample {
 
         // Runnableで設定したスレッド名と現在のスレッド名は異なります。
         String name = Thread.currentThread().getName();
-        assertThat(storage.value).isNotEqualTo(name);
+        assertFalse(name.equals(storage.value));
 
         System.out.println("this thread : " + name);
         System.out.println("other thread: " + storage.value);
