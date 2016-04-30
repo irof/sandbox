@@ -35,7 +35,6 @@ public class ExecutorSample {
         // 同時に追加されたCallableも使用できます。
         Runnable runnable = new Runnable() {
 
-            @Override
             public void run() {
                 System.out.printf("Hello, %s.%n", Thread.currentThread().getName());
             }
@@ -67,7 +66,7 @@ public class ExecutorSample {
         // Callableでは通常のメソッドの戻り値として返します。
         // Callableは戻り値がvoidでないRunnableです。
         Callable<String> callable = new Callable<String>() {
-            @Override
+
             public String call() throws Exception {
                 return Thread.currentThread().getName();
             }
