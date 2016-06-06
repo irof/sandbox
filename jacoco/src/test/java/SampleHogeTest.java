@@ -14,4 +14,9 @@ public class SampleHogeTest {
 
         assertThat(actual).isEqualTo("A");
     }
+
+    @Test
+    public void lambdaを実行するよ() throws Exception {
+        new SampleHoge().lambda();
+    }
 }
