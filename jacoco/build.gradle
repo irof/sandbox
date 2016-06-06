@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+
+compileJava {
+  options.encoding = 'utf-8'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+  jcenter()
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+  testCompile 'org.assertj:assertj-core:3.4.1'
+}
+
+jacoco.toolVersion = "0.7.6.201602180812"
+
