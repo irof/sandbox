@@ -1,4 +1,4 @@
-package misc;
+package collection;
 
 import org.junit.Before;
 import org.junit.Test;
