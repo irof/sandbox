@@ -73,16 +73,15 @@ public class DbTest {
         Assertions.assertThat(new Request(ds, "select * from example limit 2"))
                 .column("COL1").hasValues("AAA", "BBB");
 
-        // Tableのところで書いた通り勝手にソートされるのでORDER BYはあまり役に立たない
         Assertions.assertThat(new Request(ds, "select * from example order by COL1 DESC"))
-                .column("COL1").value().isEqualTo("AAA");
+                .column("COL1")
+                .value().isEqualTo("DDD")
+                .value().isEqualTo("CCC")
+                .value().isEqualTo("BBB")
+                .value().isEqualTo("AAA");
+
         Assertions.assertThat(new Request(ds, "select * from example order by COL1 ASC"))
                 .column("COL1").value().isEqualTo("AAA");
-
-        // limit併用すればORDER BY自体が効いているのはわかる
-        Assertions.assertThat(new Request(ds, "select * from example order by COL1 DESC limit 2"))
-                // DDD,CCCの2件が取れた後にassertj-dbのsortで順序が逆転する
-                .column("COL1").hasValues("CCC", "DDD");
 
         // 普通にpreparedStatementも使える
         Assertions.assertThat(new Request(ds, "select col1,col2 from example where col1 = ?", "BBB"))
