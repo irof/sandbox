@@ -8,16 +8,17 @@ import java.util.Objects;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ * `Predicate`を使用した`matches`メソッドによる検証。
+ *
  * 任意の検証条件を作成する `Condition` があるが、匿名クラスでの実現になっている。
- * インタフェースではなくクラスのため直接Lambda式にはできないので、
- * `Predicate`を使用する`matches`メソッドが追加された。
+ * インタフェースではなくクラスのため直接Lambda式にはできないので、別メソッドの形で提供された。
  *
  * @author irof
  * @version assertj-core:3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-matches-assertions">Add matches assertion with Predicate parameter</a>
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-condition-predicate-support">Condition can be defined with Predicate</a>
  */
-public class PredicateAssertionTest {
+public class MatchesTest {
 
     @Test
     public void Predicateを検証条件とするmatchesが追加された() throws Exception {
