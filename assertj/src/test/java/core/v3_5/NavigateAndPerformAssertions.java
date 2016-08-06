@@ -1,4 +1,4 @@
-package core;
+package core.v3_5;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
