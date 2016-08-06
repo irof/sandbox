@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-matches-assertions">Add matches assertion with Predicate parameter</a>
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-condition-predicate-support">Condition can be defined with Predicate</a>
  */
-public class MatchesTest {
+public class MatchesPredicateTest {
 
     @Test
     public void Predicateを検証条件とするmatchesが追加された() throws Exception {

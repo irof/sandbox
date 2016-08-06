@@ -9,18 +9,17 @@ import java.util.function.Consumer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * satisfiesメソッドによる検証。
+ * Consumerを使用したsatisfiesメソッドによる検証。
  *
- * {@link java.util.function.Predicate}を使用するmatchesメソッドがv3.0.0で追加されたが、
- * こちらは{@link java.util.function.Consumer}を与える。
+ * v3.0で追加された{@link java.util.function.Predicate}を使用するmatchesメソッドに対し、
+ * 検証自体も渡してしまう{@link java.util.function.Consumer}を使用するメソッドである。
  *
- * Consumerは値を返さないので、検証を記述する形。
- * 複数の検証をまとめて行いたいならばこちらになる？
+ * 複数の検証をまとめて行いたい場合に。
  *
  * @author irof
  * @version 3.5.0
  */
-public class SatisfiesTest {
+public class SatisfiesConsumerTest {
 
     @Test
     public void 検証のまとまりをConsumerで記述する() throws Exception {
