@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * Predicateはfilterなどの条件として使用され、主にlambdaで記述される。
  * そのlambdaを検証したい機会もあるかもしれない。
  *
- * @author iro
- * @version assertj-core:3.5.0
+ * @author irof
+ * @version 3.5.0
  * @see <a href="httphttp://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.5.0-predicate">Add Predicate assertions</a>
  */
 public class PredicateAssertionTest {

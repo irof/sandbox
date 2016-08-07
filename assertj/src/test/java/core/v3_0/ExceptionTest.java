@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.*;
  * と言うことで、この形式の例外検証は現時点での理想的妥協点だと思う。
  *
  * @author irof
- * @version assertj-core:3.0.0
+ * @version 3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-thrown-by">Java 8 friendly exceptions/throwables testing</a>
  */
 public class ExceptionTest {

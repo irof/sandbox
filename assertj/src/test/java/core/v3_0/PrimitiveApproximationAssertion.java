@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.*;
  * というか範囲での検証ってしたいと思ったことがほとんどない。
  *
  * @author irof
- * @version assertj-core:3.0.0
+ * @version 3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-primitive-approximation-assertions">Extends primitive approximation assertions to int, long, short and byte</a>
  */
 public class PrimitiveApproximationAssertion {

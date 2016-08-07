@@ -13,7 +13,7 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
  * IterableAssertに追加された謎機能flatExtraction。
  *
  * @author irof
- * @version assertj-core:3.5.0
+ * @version 3.5.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.5.0-flat-extraction"></a>
  */
 public class FlatExtractionTest {

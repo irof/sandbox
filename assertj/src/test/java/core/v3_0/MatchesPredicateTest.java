@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * インタフェースではなくクラスのため直接Lambda式にはできないので、別メソッドの形で提供された。
  *
  * @author irof
- * @version assertj-core:3.0.0
+ * @version 3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-matches-assertions">Add matches assertion with Predicate parameter</a>
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-condition-predicate-support">Condition can be defined with Predicate</a>
  */

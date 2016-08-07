@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * 特にびっくりするような使い方はないので、使う時にメソッド眺めて適当に使えばよさそう。
  *
  * @author irof
- * @version assertj-core:3.0.0
+ * @version 3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-new-date-assertions"> Java 8 Date/Time assertions.</a>
  */
 public class DateAndTimeAssertionTest {

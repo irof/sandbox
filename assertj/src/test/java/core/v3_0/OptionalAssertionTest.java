@@ -12,8 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  * `isNotPresent`は`isEmpty`のエイリアス、`isNotEmpty`は`isPresent`のエイリアスとしてv3.4.0で追加された。
  * lambdaならではの `hasValueSatisfying` は、v3.4.0の`satisfies`メソッドに受け継がれていそう。
  *
+ * isNotPresent/isNotEmpty は 3.4.0 で追加された（面倒なのでここで書いておく）。
+ *
  * @author irof
- * @version assertj-core:3.0.0
+ * @version 3.0.0
  * @see <a href="http://joel-costigliola.github.io/assertj/assertj-core-news.html#assertj-core-3.0.0-optional-assertions">Optinal assersions</a>
  */
 public class OptionalAssertionTest {
