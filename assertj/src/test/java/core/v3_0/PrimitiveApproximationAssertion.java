@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
  * `Assertions.within`メソッドのstatic importで記述する形式になっているが、
  * AssertJを使うならstatic importはあまり使いたくないので、ちょい微妙。
  *
- * doubleやfloatに対する範囲検証は前からあった。
+ * doubleやfloat、プリミティブではないBigDecimalに対する範囲検証は 1.7.0 で追加されたもの。
  * （JUnitでdeltaを指定しないdoubleのassertEqualsが必ず失敗するのはよく知られた話）
  * それの他のプリミティブへの適用って感じだけど、実際の利用用途は違いそう。
  *
