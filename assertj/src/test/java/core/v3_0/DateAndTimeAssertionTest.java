@@ -2,6 +2,7 @@ package core.v3_0;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -53,5 +54,13 @@ public class DateAndTimeAssertionTest {
                 .isEqualTo("01:02:03")
                 .isEqualToIgnoringSeconds(LocalTime.parse("01:02:09"))
                 .isEqualToIgnoringNanos(LocalTime.parse("01:02:03.456"));
+    }
+
+    @Test
+    public void 今日の検証() throws Exception {
+        // v3.3.0で追加された
+        LocalDate now = LocalDate.now();
+
+        assertThat(now).isToday();
     }
 }
