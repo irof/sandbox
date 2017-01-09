@@ -1,14 +1,7 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.5.RELEASE")
-    }
+plugins {
+  id 'org.springframework.boot' version '1.4.3.RELEASE'
+  id 'java'
 }
-
-apply plugin: 'java'
-apply plugin: 'spring-boot'
 
 springBoot {
   mainClass = 'chirp.Application'
