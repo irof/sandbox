@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title th:text="${title}">タイトル</title>
-
+    <title>ログインフォーム </title>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"/>
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
@@ -18,30 +16,22 @@
         <div class="navbar-header">
             <a class="navbar-brand" href="./index.html" th:href="@{/}">実験場</a>
         </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li sec:authorize="isAuthenticated()"><a href="./secret/user.html" th:href="@{/secret/user}">マイページ</a>
-                </li>
-                <li sec:authorize="isAuthenticated()">
-                    <a href="#" onclick="document.getElementById('logoutForm').submit();">ログアウト</a>
-                    <form id="logoutForm" action="./index.html" th:action="@{/logout}" method="post">
-                    </form>
-                </li>
-                <li sec:authorize="!isAuthenticated()"><a href="./login.html" th:href="@{/login}">ログイン</a></li>
-            </ul>
-        </div>
     </div>
 </nav>
 
-<section class="container">
-    <div th:if="${param.logout}" class="alert alert-info">
-        ログアウトしました。
-    </div>
+<div class="container">
+    <form th:action="@{/login}" method="post" class="form-signin">
 
-    <h1>コンテンツ</h1>
+        <div th:if=" ${param.error}" class="alert alert-danger">
+            ユーザー名もしくはパスワードが違います。
+        </div>
 
-    <p th:text="${value}">特になし</p>
-</section>
+        <input type="text" name="username" class="form-control" placeholder="UserName"/>
+        <input type="password" name="password" class="form-control" placeholder="Password"/>
+
+        <input type="submit" value="Sign In" class="btn btn-lg btn-primary btn-block"/>
+    </form>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"
         th:src="@{/webjars/jquery/1.11.1/jquery.min.js}"></script>

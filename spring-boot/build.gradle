@@ -10,7 +10,9 @@ repositories {
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    compile "org.webjars:bootstrap:3.2.0"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
+    compile "org.webjars:bootstrap:3.3.7"
 
     testCompile "junit:junit"
     testCompile "org.springframework.boot:spring-boot-starter-test"
