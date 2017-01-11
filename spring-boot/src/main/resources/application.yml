@@ -1,0 +1,9 @@
+server.port: 8081
+spring:
+    datasource:
+        username: se
+        password: se
+        url: jdbc:h2:mem:test
+    jpa:
+        show-sql: true
+        hibernate.ddl-auto: create-drop

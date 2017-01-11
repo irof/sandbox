@@ -1,16 +1,12 @@
 package fuga.spring.security;
 
-import fuga.domain.Account;
+import fuga.spring.data.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 
 /**
  * Spring4.1以降でUserDetailsServiceをBean定義していたら自動的に使われる。
@@ -22,19 +18,13 @@ import java.util.Collection;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private PasswordEncoder encoder;
+    AccountRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // どこかしらから取得してくる
-        String encodedPassword = encoder.encode("password");
-        Account account = Account.builder()
-                .username(username)
-                .password(encodedPassword)
-                .build();
-
-        Collection<? extends GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ROLE_USER");
-        return new MyUserDetails(account, authorities);
+        return new MyUserDetails(
+                repository.findByName(username),
+                AuthorityUtils.createAuthorityList("ROLE_SAMPLE"));
     }
 }
