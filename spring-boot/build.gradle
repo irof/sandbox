@@ -13,6 +13,7 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
+    compile "org.thymeleaf.extras:thymeleaf-extras-java8time"
     compile "org.webjars:bootstrap:3.3.7"
 
     runtime "com.h2database:h2"
