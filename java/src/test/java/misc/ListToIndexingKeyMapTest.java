@@ -17,7 +17,7 @@ import static org.junit.Assert.assertThat;
  *
  * @author irof
  */
-public class StreamTest {
+public class ListToIndexingKeyMapTest {
 
     List<TargetObject> objects = Arrays.asList(
             new TargetObject("a1", "a2"),
