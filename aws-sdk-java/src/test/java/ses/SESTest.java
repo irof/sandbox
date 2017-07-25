@@ -1,7 +1,7 @@
 package ses;
 
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;
-import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClient;
+import com.amazonaws.services.simpleemail.AmazonSimpleEmailServiceClientBuilder;
 import com.amazonaws.services.simpleemail.model.*;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ public class SESTest {
 
     @Test
     public void 適当に送信する() throws Exception {
-        AmazonSimpleEmailService client = new AmazonSimpleEmailServiceClient();
+        AmazonSimpleEmailService client = AmazonSimpleEmailServiceClientBuilder.defaultClient();
 
         SendEmailResult result = client.sendEmail(
                 new SendEmailRequest()
