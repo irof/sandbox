@@ -2,21 +2,31 @@ plugins {
     id "org.flywaydb.flyway" version "4.2.0"
 }
 
-apply plugin: 'java'
+subprojects {
+  apply plugin: 'java'
 
-compileJava {
-  options.encoding = 'utf-8'
+  sourceCompatibility = targetCompatibility = '1.8'
+
+  def defaultEncoding = 'UTF-8'
+  tasks.withType(AbstractCompile).each { it.options.encoding = defaultEncoding }
+
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    compile 'org.flywaydb:flyway-core:4.2.0'
+    compile 'com.h2database:h2:1.4.196'
+    testCompile 'junit:junit:4.12'
+  }
 }
 
-sourceCompatibility = targetCompatibility = 1.8
-
-repositories {
-  jcenter()
+project(':standard') {
+  dependencies {
+  }
 }
 
-dependencies {
-  compile 'org.flywaydb:flyway-core:4.2.0'
-  compile 'com.h2database:h2:1.4.196'
-  testCompile 'junit:junit:4.12'
+project(':h2-schema') {
+  dependencies {
+  }
 }
-
