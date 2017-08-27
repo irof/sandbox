@@ -27,6 +27,13 @@ project(':standard') {
 }
 
 project(':h2-schema') {
+  apply plugin: 'org.flywaydb.flyway'
   dependencies {
+  }
+
+  flyway {
+    url = 'jdbc:h2:mem:test'
+    user = 'sa'
+    schemas = ['HOGE', 'FUGA']
   }
 }
