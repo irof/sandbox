@@ -27,15 +27,17 @@ public class ParallelStreamSample {
 
     @Test
     public void sample() throws Exception {
+        Thread testThread = Thread.currentThread();
+
         List<String> collected = IntStream.rangeClosed(1, 5)
                 // parallelメソッドを使用すると、各要素が並列に処理されます。
                 .parallel()
                 .mapToObj(i -> Thread.currentThread().getName())
                 .collect(toList());
 
-        // mainスレッドと、ForkJoinPool.commonPoolのスレッドが含まれていることを検証
+        // テスト実行されているスレッドと、ForkJoinPool.commonPoolのスレッドが含まれていることを検証
         assertThat(collected)
-                .contains("main")
+                .contains(testThread.getName())
                 .filteredOn(str -> str.startsWith("ForkJoinPool.commonPool-worker-")).isNotEmpty();
     }
 
