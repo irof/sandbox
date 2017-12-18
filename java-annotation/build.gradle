@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories.jcenter()
+
+ext.junitJupiterVersion = '5.0.2'
+
+dependencies {
+    testCompile("org.assertj:assertj-core:3.8.0")
+    testCompile("org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}")
+    testCompileOnly('org.apiguardian:apiguardian-api:1.0.0')
+    testRuntime("org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}")
+}
