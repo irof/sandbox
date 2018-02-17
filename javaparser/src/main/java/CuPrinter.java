@@ -18,6 +18,8 @@ public class CuPrinter {
             //System.out.println(cu.toString());
 
             cu.accept(visitor(), null);
+
+            System.out.println(cu);
         }
     }
 
@@ -27,6 +29,9 @@ public class CuPrinter {
             public void visit(MethodDeclaration n, Void arg) {
                 System.out.println(n.getName());
                 super.visit(n, arg);
+
+                n.setName(n.getNameAsString().toUpperCase());
+                n.addParameter("int", "value");
             }
         };
     }
