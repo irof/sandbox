@@ -1,5 +1,7 @@
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.FileInputStream;
 
@@ -13,8 +15,26 @@ public class CuPrinter {
             CompilationUnit cu = JavaParser.parse(in);
 
             // prints the resulting compilation unit to default system output
-            System.out.println(cu.toString());
+            //System.out.println(cu.toString());
 
+            cu.accept(visitor(), null);
         }
+    }
+
+    private static VoidVisitorAdapter<Void> visitor() {
+        return new VoidVisitorAdapter<Void>() {
+            @Override
+            public void visit(MethodDeclaration n, Void arg) {
+                System.out.println(n.getName());
+                super.visit(n, arg);
+            }
+        };
+    }
+
+    public void hoge() {
+    }
+
+    int fuga() {
+        return 0;
     }
 }
