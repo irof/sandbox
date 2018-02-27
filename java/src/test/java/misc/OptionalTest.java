@@ -13,11 +13,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static matchers.IsOptional.isEmpty;
-import static matchers.IsOptional.isValue;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author irof
@@ -39,7 +35,8 @@ public class OptionalTest {
         @Test
         public void of() throws Exception {
             Optional<String> sut = Optional.of("hoge");
-            assertThat(sut, isValue("hoge"));
+
+            assertThat(sut).containsSame("hoge");
         }
 
         @Test(expected = NullPointerException.class)
@@ -54,21 +51,23 @@ public class OptionalTest {
         @Test
         public void empty() throws Exception {
             Optional<?> sut = Optional.empty();
-            assertThat(sut, isEmpty());
+            assertThat(sut).isEmpty();
         }
 
         @Test
         public void ofNullable() throws Exception {
             // nullでない限りはofと同じ挙動
             Optional<String> sut = Optional.ofNullable("hoge");
-            assertThat(sut, isValue("hoge"));
+
+            assertThat(sut).containsSame("hoge");
         }
 
         @Test
         public void ofNullable_nullを渡すとempty() throws Exception {
             // nullのときはemptyと同じ挙動
             Optional<Object> sut = Optional.ofNullable(null);
-            assertThat(sut, isEmpty());
+
+            assertThat(sut).isEmpty();
 
             // nullを渡すとemptyと同じインスタンスが使われる
             // ……のは実装の詳細で、たまたま。
@@ -95,7 +94,7 @@ public class OptionalTest {
             Object value = new Object();
             Optional<Object> sut = Optional.of(value);
 
-            assertTrue(sut.get() == value);
+            assertThat(sut).containsSame(value);
 
             // 同じインスタンスの検証には IsSame#sameInstance があるが、
             // 可読性は圧倒的にこちらの方が上。
@@ -119,15 +118,17 @@ public class OptionalTest {
             // この形式のAPIは Properties#getProperty とか他にもあるので、
             // それほど違和感なく使えると思う。
             Object value = sut.orElse("fuga");
-            assertThat(value, is("hoge"));
+
+            assertThat(value).isEqualTo("hoge");
         }
 
         @Test
         public void orElse_empty() throws Exception {
             Optional<Object> sut = Optional.empty();
             Object value = sut.orElse("fuga");
+
             // emptyなのでorElseで指定した値が取得される。
-            assertThat(value, is("fuga"));
+            assertThat(value).isEqualTo("fuga");
         }
 
         @Test
@@ -136,7 +137,8 @@ public class OptionalTest {
             // orElseの派生で、lambdaな知識が必要なもの。
             // デフォルト値を作るSupplierを渡す。
             String value = sut.orElseGet(String::new);
-            assertThat(value, is(""));
+
+            assertThat(value).isEmpty();
 
             // Supplierを要求する orElseGet や orElseThrow に対し、
             // メソッド参照できないときにlambdaを書くと、途端に読みづらくなる。
@@ -151,7 +153,7 @@ public class OptionalTest {
             AtomicInteger sut = new AtomicInteger(0);
             Optional.of("hoge").ifPresent(value -> sut.getAndAdd(value.length()));
 
-            assertThat(sut.get(), is(4));
+            assertThat(sut).hasValue(4);
 
             // 単に置き換えるだけだとなんの嬉しさもない。
             // 既存のifブロックとlambdaを比べると、内外の影響力が大きく変わる。（例えば実質的finalなど。）
@@ -171,14 +173,16 @@ public class OptionalTest {
             //「単なるnullチェックじゃね？」その通り。
             // しかし「値は要らないが有無は知りたい」場面で get系は使えないのだ。
             Optional<?> sut = Optional.of(new Object());
-            assertTrue(sut.isPresent());
+
+            assertThat(sut.isPresent()).isTrue();
         }
 
         @Test
         public void isPresent_empty() throws Exception {
             // emptyだとfalseになる。特筆することは無い。
             Optional<?> sut = Optional.empty();
-            assertFalse(sut.isPresent());
+
+            assertThat(sut.isPresent()).isFalse();
         }
 
         @Test
@@ -187,7 +191,8 @@ public class OptionalTest {
             Optional<Object> sut = Optional.of(value);
             // emptyでないので普通にvalueが取得される。
             Object value2 = sut.orElseThrow(IllegalStateException::new);
-            assertTrue(value2 == value);
+
+            assertThat(value2).isSameAs(value);
         }
 
         @Test(expected = Exception.class)
@@ -225,9 +230,11 @@ public class OptionalTest {
         @Test
         public void map() throws Exception {
             Optional<Object> sut = Optional.of("hoge");
-            Optional<Object> mapped = sut.map(a -> new Object());
             // valueを弄って別のOptionalを作る。
-            assertThat(mapped, not(isValue("hoge")));
+            Optional<Object> mapped = sut.map(a -> new Object());
+
+            assertThat(mapped.get())
+                    .isNotEqualTo("hoge");
 
             // 当然だけど、元のOptionalインスタンスは変更されない。
             // これも当然だけど、valueの中身を変えたら影響は受ける。
@@ -238,8 +245,9 @@ public class OptionalTest {
         public void map_empty() throws Exception {
             Optional<Object> sut = Optional.empty();
             Optional<Object> mapped = sut.map(a -> new Object());
+
             // emptyをどんだけmapしてもemptyに変わりはない。
-            assertThat(mapped, isEmpty());
+            assertThat(mapped).isEmpty();
         }
 
         @Test
@@ -249,7 +257,7 @@ public class OptionalTest {
             // 値入ってるのをnullにしたらemptyになる。
             // APIに書かれている仕様化された挙動で現実解ではあるが、好きじゃない。
             // emptyにしたい条件があるならfilterを使って欲しい。
-            assertThat(mapped, isEmpty());
+            assertThat(mapped).isEmpty();
         }
 
         @Test
@@ -257,7 +265,7 @@ public class OptionalTest {
             Optional<String> sut = Optional.of("");
             // Predicateがtrueになる条件でfilterしてるのでなんの影響もない
             Optional<String> filtered = sut.filter(String::isEmpty);
-            assertThat(filtered, isValue(""));
+            assertThat(filtered).contains("");
         }
 
         @Test
@@ -265,7 +273,7 @@ public class OptionalTest {
             Optional<String> sut = Optional.of("abc");
             // Predicateがfalseなのでemptyになる
             Optional<String> filtered = sut.filter(String::isEmpty);
-            assertThat(filtered, isEmpty());
+            assertThat(filtered).isEmpty();
         }
 
         @Test
@@ -275,14 +283,16 @@ public class OptionalTest {
                     .flatMap(value -> Optional.of(value + "fuga"))
                     .flatMap(Optional::of)
                     .flatMap(value -> Optional.of(value + "piyo"));
-            assertThat(result, isValue("hogefugapiyo"));
+            assertThat(result).contains("hogefugapiyo");
 
             // 単にmapに Function<String, Optional<String>> を渡してたとしたら素敵なことになる。
             Optional<Object> result2 = Optional.of("hoge")
                     .map(value -> Optional.of(value + "fuga"))
                     .map(Optional::of)
                     .map(value -> Optional.of(value + "piyo"));
-            assertThat(result2.toString(), is("Optional[Optional[Optional[Optional[hogefuga]]piyo]]"));
+
+            assertThat(result2.toString())
+                    .isEqualTo("Optional[Optional[Optional[Optional[hogefuga]]piyo]]");
 
             // flatMapは「Optionalを返すメソッド」などがある程度作られてから効果を発揮するので、
             // 使い始めのときはそれほど出番は無いと思われる。

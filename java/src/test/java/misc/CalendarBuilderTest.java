@@ -7,10 +7,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author irof
@@ -21,27 +18,29 @@ public class CalendarBuilderTest {
     public void 昔ながらのCalendarの作り方_getInstance() throws Exception {
         Calendar calendar = Calendar.getInstance();
 
-        assertThat(calendar, is(notNullValue()));
+        assertThat(calendar).isNotNull();
     }
 
     @Test
     public void 昔ながらのCalendarの作り方_GregorianCalendarのコンストラクタ() throws Exception {
         Calendar calendar = new GregorianCalendar(1970, 0, 1);
 
-        assertThat(calendar, is(notNullValue()));
+        assertThat(calendar).isNotNull();
     }
 
     @Test
     public void Builderを使用したCalendarインスタンスの作り方() throws Exception {
         Calendar calendar = new Calendar.Builder().build();
 
-        assertThat(calendar, is(notNullValue()));
+        assertThat(calendar).isNotNull();
 
         // どのフィールドも何も設定されていないみたいなインスタンスができる。
         // TimeZoneとLocale(由来で設定されるfirstDayOfWeek,minimalDaysInFirstWeek)は、
         // それぞれデフォルト値が設定されることになる。
         //System.out.println(calendar);
-        assertThat(calendar.getTimeZone(), is(TimeZone.getDefault()));
+        assertThat(calendar)
+                .extracting(Calendar::getTimeZone)
+                .containsExactly(TimeZone.getDefault());
     }
 
     @Test
@@ -53,7 +52,7 @@ public class CalendarBuilderTest {
         Calendar cal1 = new Calendar.Builder().setInstant(12345).build();
         Calendar cal2 = new Calendar.Builder().setInstant(new Date(12345)).build();
 
-        assertTrue(cal1.equals(cal2));
+        assertThat(cal1).isEqualTo(cal2);
     }
 
     @Test
@@ -66,7 +65,7 @@ public class CalendarBuilderTest {
         Calendar cal2 = Calendar.getInstance();
         cal2.setTimeInMillis(67890);
 
-        assertTrue(cal1.equals(cal2));
+        assertThat(cal1).isEqualTo(cal2);
     }
 
     @Test
@@ -76,7 +75,7 @@ public class CalendarBuilderTest {
 
         Calendar newCalendar = new Calendar.Builder().setInstant(12345).build();
 
-        assertTrue(oldCalendar.equals(newCalendar));
+        assertThat(oldCalendar).isEqualTo(newCalendar);
     }
 
     @Test(expected = IllegalStateException.class)

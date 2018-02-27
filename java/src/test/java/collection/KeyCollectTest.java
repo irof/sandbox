@@ -12,10 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.emptyCollectionOf;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author irof
@@ -44,14 +41,16 @@ public class KeyCollectTest {
     public void 元データが何もないなら空のリスト() throws Exception {
         List<KeyCollect.Input> data = Collections.emptyList();
         Collection<KeyCollect.Output> result = sut.collectByKey(data);
-        assertThat(result, is(emptyCollectionOf(KeyCollect.Output.class)));
+
+        assertThat(result).isEmpty();
     }
 
     @Test
     public void 元データが1件なら1件ののリスト() throws Exception {
         List<KeyCollect.Input> data = Collections.singletonList(new KeyCollect.Input("A01", "hoge", 100));
         Collection<KeyCollect.Output> result = sut.collectByKey(data);
-        assertThat(result, is(containsInAnyOrder(new KeyCollect.Output("A01", 100))));
+
+        assertThat(result).containsExactly(new KeyCollect.Output("A01", 100));
     }
 
     @Test
@@ -64,10 +63,12 @@ public class KeyCollectTest {
                 new KeyCollect.Input("A03", "piyo", 500));
 
         Collection<KeyCollect.Output> result = sut.collectByKey(data);
-        assertThat(result, is(containsInAnyOrder(
-                new KeyCollect.Output("A01", 300),
-                new KeyCollect.Output("A02", 300),
-                new KeyCollect.Output("A03", 900)
-        )));
+
+        assertThat(result)
+                .containsExactlyInAnyOrder(
+                        new KeyCollect.Output("A01", 300),
+                        new KeyCollect.Output("A02", 300),
+                        new KeyCollect.Output("A03", 900)
+                );
     }
 }

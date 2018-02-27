@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasEntry;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 
 /**
  * オブジェクトのリストをインデックスつきの項目名でMapに詰める
@@ -34,7 +33,11 @@ public class ListToIndexingKeyMapTest {
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        assertion(result);
+        assertThat(result).containsOnly(
+                entry("key.0.hoge", "a1"),
+                entry("key.0.fuga", "a2"),
+                entry("key.1.hoge", "b1"),
+                entry("key.1.fuga", "b2"));
     }
 
     @Test
@@ -45,16 +48,13 @@ public class ListToIndexingKeyMapTest {
                     map.put("key." + objects.indexOf(t) + ".fuga", t.fuga);
                 }, HashMap::putAll);
 
-        assertion(result);
+        assertThat(result).containsOnly(
+                entry("key.0.hoge", "a1"),
+                entry("key.0.fuga", "a2"),
+                entry("key.1.hoge", "b1"),
+                entry("key.1.fuga", "b2"));
     }
 
-    private void assertion(Map<String, String> result) {
-        assertThat(result, is(hasEntry("key.0.hoge", "a1")));
-        assertThat(result, is(hasEntry("key.0.hoge", "a1")));
-        assertThat(result, is(hasEntry("key.0.fuga", "a2")));
-        assertThat(result, is(hasEntry("key.1.hoge", "b1")));
-        assertThat(result, is(hasEntry("key.1.fuga", "b2")));
-    }
 
     /**
      * 対象のオブジェクト

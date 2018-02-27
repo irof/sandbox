@@ -5,9 +5,8 @@ import sun.misc.Service;
 
 import java.util.Iterator;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 
 /**
  * @author irof
@@ -18,9 +17,12 @@ public class HelloTest {
     public void ファイルに書いたのが全部返ってくる() throws Exception {
         Iterator<HelloSPI> iterator = Service.providers(HelloSPI.class);
 
-        assertThat(iterator.next(), is(instanceOf(HelloHoge.class)));
-        assertThat(iterator.next(), is(instanceOf(HelloFuga.class)));
-        assertThat(iterator.hasNext(), is(false));
+        assertThat(iterator)
+                .hasSize(2)
+                .extracting(element -> element.getClass().getCanonicalName())
+                .containsExactlyInAnyOrder(
+                        HelloHoge.class.getCanonicalName(),
+                        HelloFuga.class.getCanonicalName());
     }
 
     @Test
@@ -28,28 +30,21 @@ public class HelloTest {
         Iterator<HelloSPI> iter1 = Service.providers(HelloSPI.class);
         Iterator<HelloSPI> iter2 = Service.providers(HelloSPI.class);
 
-        assertTrue(iter1.next() != iter2.next());
-    }
-
-    @Test
-    public void 取れてくるのはクラスの直接のインスタンス() throws Exception {
-        Iterator<HelloSPI> iterator = Service.providers(HelloSPI.class);
-
-        // 特にDynamicProxyとかじゃなく普通のクラス
-        assertTrue(iterator.next().getClass() == HelloHoge.class);
+        assertThat(iter1.next()).isNotSameAs(iter2.next());
     }
 
     @Test
     public void 普通に動くよねと() throws Exception {
         Iterator<HelloSPI> iterator = Service.providers(HelloSPI.class);
 
-        assertThat(iterator.next().hello(), is("HOGE"));
+        HelloSPI instance = iterator.next();
+        assertThat(instance.hello()).isEqualTo("HOGE");
     }
 
     @Test
     public void プロバイダ構成ファイルが無くてもキレたりしない() throws Exception {
         Iterator<ByeSPI> iterator = Service.providers(ByeSPI.class);
 
-        assertFalse(iterator.hasNext());
+        assertThat(iterator).isEmpty();
     }
 }
