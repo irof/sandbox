@@ -1,4 +1,4 @@
-package sample.annotations;
+package annotation;
 
 public @interface RetentionNoneAnnotation {
 }
