@@ -1,0 +1,22 @@
+plugins {
+    id 'org.springframework.boot' version '2.0.0.RELEASE'
+}
+
+apply plugin: 'java'
+apply plugin: 'io.spring.dependency-management'
+
+sourceCompatibility = targetCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.springframework.boot:spring-boot-starter'
+
+    testCompile 'junit:junit'
+    testCompile 'org.assertj:assertj-core'
+
+    testCompile 'com.icegreen:greenmail:1.5.7'
+}
+
