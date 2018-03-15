@@ -19,6 +19,6 @@ dependencies {
     testCompile 'junit:junit'
     testCompile 'org.assertj:assertj-core'
 
-    testCompile 'com.icegreen:greenmail:1.5.7'
+    compile 'com.icegreen:greenmail:1.5.7'
 }
 
