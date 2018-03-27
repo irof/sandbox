@@ -1,0 +1,1 @@
+delete hoge where a = '1'

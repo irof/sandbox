@@ -1,0 +1,1 @@
+select nextval('hoge_seq');
