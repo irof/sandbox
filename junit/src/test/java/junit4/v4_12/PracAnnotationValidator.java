@@ -1,4 +1,4 @@
-package pracswing.v4_12;
+package junit4.v4_12;
 
 import org.junit.Test;
 import org.junit.runners.model.TestClass;
